@@ -1,0 +1,11 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Shape {
+  appearance Appearance {
+    material Material { emissiveColor 1 0 0 }
+  }
+  geometry Extrusion {
+  }
+}

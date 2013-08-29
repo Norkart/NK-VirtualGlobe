@@ -1,0 +1,54 @@
+#VRML V2.0 utf8
+
+# Check that the USE of the ORIGIN field is still there
+
+EXTERNPROTO GeoOrigin [
+ exposedField  MFString  geoSystem    # [ "GDC" ]
+ exposedField  SFString  geoCoords    # ""
+ field         SFBool    rotateYUp    # FALSE
+] [
+    "GeoVRML/1.1/protos/GeoOrigin.wrl#GeoOrigin"
+    "../../GeoVRML/1.1/protos/GeoOrigin.wrl#GeoOrigin"
+    "file:///C:/Program%20Files/GeoVRML/1.1/protos/GeoOrigin.wrl#GeoOrigin"
+    "file:///C|/Program Files/GeoVRML/1.1/protos/GeoOrigin.wrl#GeoOrigin"
+    "urn:web3d:geovrml:1.0/protos/GeoOrigin.wrl#GeoOrigin"
+    "http://www.geovrml.org/1.0/protos/GeoOrigin.wrl#GeoOrigin"
+  ]
+EXTERNPROTO GeoElevationGrid [
+  field         SFNode    geoOrigin         # NULL
+  field         MFString  geoSystem         # [ "GDC" ]
+  field         SFString  geoGridOrigin     # "0 0 0"
+  field         SFInt32   xDimension        # 0
+  field         SFString  xSpacing          # "1.0"
+  field         SFInt32   zDimension        # 0
+  field         SFString  zSpacing          # "1.0"
+  field         SFFloat   yScale            # 1.0
+  field         MFFloat   height            # []
+  eventIn       SFFloat   set_yScale
+  eventIn       MFFloat   set_height
+  exposedField  SFNode    color             # NULL
+  exposedField  SFNode    texCoord          # NULL
+  exposedField  SFNode    normal            # NULL
+  field         SFBool    normalPerVertex   # TRUE
+  field         SFBool    ccw               # TRUE
+  field         SFBool    colorPerVertex    # TRUE
+  field         SFFloat   creaseAngle       # 0
+  field         SFBool    solid             # TRUE
+] [
+    "GeoVRML/1.1/protos/GeoElevationGrid.wrl#GeoElevationGrid"
+    "../../GeoVRML/1.1/protos/GeoElevationGrid.wrl#GeoElevationGrid"
+    "file:///C:/Program%20Files/GeoVRML/1.1/protos/GeoElevationGrid.wrl#GeoElevationGrid"
+    "file:///C|/Program Files/GeoVRML/1.1/protos/GeoElevationGrid.wrl#GeoElevationGrid"
+    "urn:web3d:geovrml:1.0/protos/GeoElevationGrid.wrl#GeoElevationGrid"
+    "http://www.geovrml.org/1.0/protos/GeoElevationGrid.wrl#GeoElevationGrid"
+  ]
+
+# [Scene]
+
+DEF ORIGIN GeoOrigin {
+  geoCoords "38.0 127.0 0.0"
+}
+
+GeoElevationGrid {
+   geoOrigin USE ORIGIN
+}

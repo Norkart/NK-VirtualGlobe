@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+
+<X3D profile="Immersive">
+  <Scene>
+  <ExternProtoDeclare name="test" url="proto_decl.x3d">
+     <field accessType="initializeOnly" name="color" type="SFColor"/>
+  </ExternProtoDeclare>
+  
+    <Transform>
+        <ProtoInstance name="test">
+          <fieldValue name="color" value="1 1 0"/>
+        </ProtoInstance>    
+    </Transform>
+  </Scene>
+</X3D>

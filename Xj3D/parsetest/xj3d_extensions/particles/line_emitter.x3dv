@@ -1,0 +1,23 @@
+#X3D V3.0 utf8
+
+PROFILE Interactive
+COMPONENT xj3d_ParticleSystem:1
+
+Viewpoint {
+  position 0 0 4
+}
+
+ParticleSystem {
+  geometryType "POINT"
+  maxParticles 1000
+  emitter PolylineEmitter {
+    speed 0.1
+    coords Coordinate { 
+      point [ 0.5 0 0 -0.5 0 0 ]
+    }
+    coordIndex [0 1]
+  }
+  appearance Appearance {
+    material Material { diffuseColor 1 0 0 }
+  }
+}

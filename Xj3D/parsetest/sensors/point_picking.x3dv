@@ -1,0 +1,90 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_PickingUtilities:1
+
+# Move a point picker location through an object. When the pick intersects, the
+# indicator will change colour. 
+
+# Indicator box that changes colour
+Transform {
+  translation 0 -2 0
+  children Shape {
+    appearance Appearance {
+      material DEF Mat Material {
+        diffuseColor 1 0 0
+      }
+    }
+    geometry Box { size 0.5 0.5 0.5 }
+  }
+}
+
+# Semi transparent box that indicates the picking bounds
+DEF PickedVolume Shape {
+  appearance Appearance {
+    material Material {
+      diffuseColor 0 0 1
+      transparency 0.1
+    }
+  }
+  geometry Box {}
+}
+
+#Indicator of the picking shape 
+Shape {
+  appearance Appearance {
+    material Material {
+      emissiveColor 0 1 0
+    }
+  }
+  geometry DEF PointGeometry PointSet {
+    coord DEF PointCoords Coordinate {
+      point [ 4 0 0 ]
+    }
+  }
+}
+
+DEF Picker PointPicker {
+  pickingGeometry USE PointGeometry 
+  enabled TRUE
+  pickTarget [
+    USE PickedVolume
+  ]
+}
+
+# Script to do the simple colour changing when a pick is active
+DEF ColourScript Script {
+  inputOnly SFBool active 
+  outputOnly SFColor colour_changed
+  url "ecmascript:
+    function active(val) {
+      Browser.println('done');
+      if(val)
+        colour_changed = new SFColor(0, 1, 0);
+      else
+        colour_changed = new SFColor(1, 0, 0);
+    }
+  "
+}
+
+ROUTE Picker.isActive TO ColourScript.active
+ROUTE ColourScript.colour_changed TO Mat.set_diffuseColor
+
+# Coordinate mover for the picking point so that it automatically moves 
+# through the target volume
+
+DEF CoordinateMover CoordinateInterpolator {
+  key [0 0.5 1]
+  keyValue [ 4 0 0, -4 0 0, 4 0 0 ]
+}
+
+DEF Timer TimeSensor {
+  cycleInterval 5
+  loop TRUE
+  enabled TRUE
+  stopTime -1
+  startTime 0
+}
+
+ROUTE Timer.fraction_changed TO CoordinateMover.set_fraction
+ROUTE CoordinateMover.value_changed TO PointCoords.set_point

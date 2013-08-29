@@ -1,0 +1,126 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+PROTO MyBox [
+  inputOutput SFColor color 0 0 0
+]
+{
+  Group {
+    children [
+      Transform {
+        translation 0 1 0
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor IS color
+              }
+            }
+            geometry DEF BOX Box { size 0.5 0.5 0.5 }
+          }
+        ]
+      }
+      Transform {
+        translation 0 0 0
+        children [
+          Shape {
+            appearance Appearance {
+              texture ImageTexture {
+                url ["x3d2-s.gif"]
+              }
+            }
+            geometry USE BOX
+          }
+        ]
+      }
+      Transform {
+        translation 0 -1 0
+        children [
+          DEF TG Transform {
+            rotation 0 1 0 0.78
+            children Shape {
+              geometry USE BOX
+              appearance Appearance {
+                material Material {
+                  diffuseColor 1 0 0
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+
+  DEF TS TimeSensor {
+    cycleInterval 10
+    loop TRUE
+  }
+
+  DEF PI PositionInterpolator {
+    key [ 0 0.25 0.5 0.75 1 ]
+    keyValue [
+       0.25  0.25 0
+      -0.25  0.25 0
+      -0.25 -0.25 0
+       0.25 -0.25 0
+       0.25  0.25 0
+    ]
+  }
+
+  ROUTE TS.fraction_changed TO PI.set_fraction
+  ROUTE PI.value_changed TO TG.translation
+}
+
+NavigationInfo {
+   type ["EXAMINE"]
+}
+
+DEF Target_TX Transform {
+  translation 2 0 0
+}
+
+DEF Alt_Target_TX Transform {
+  translation -2 0 0
+}
+
+
+DEF SC Script {
+  mustEvaluate TRUE
+  directOutput TRUE
+  inputOnly SFTime touchInput
+  initializeOnly SFNode target USE Target_TX
+  outputOnly MFNode altOutput
+  url [ "CreateProtoTest.class" ]
+}
+
+Group {
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 0 0
+        }
+        texture ImageTexture {
+          url ["x3d2-s.gif"]
+        }
+      }
+      geometry Box {}
+    }
+    DEF TS TouchSensor {}
+  ]
+}
+
+Transform {
+  translation 0 2 0
+  children Transform {
+    rotation 0 0 1 1.5714
+    children MyBox {
+      color 0 1 0
+    }
+  }
+}
+
+ROUTE TS.touchTime TO SC.touchInput
+ROUTE SC.altOutput TO Alt_Target_TX.addChildren

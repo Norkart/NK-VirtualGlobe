@@ -1,0 +1,54 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+DEF TS TimeSensor {
+   cycleTime 4
+   loop TRUE
+}
+
+DEF SC Script {
+   inputOnly SFFloat fraction
+   outputOnly SFColor color
+   url ["ecmascript:
+      function initialize() {
+         color = new SFColor(0,1,0);
+      }
+      
+      function fraction(val) {
+         if (val > 0.75)
+            color = new SFColor(0,0,1);
+      }
+   "]
+}
+
+
+Transform {
+   translation -2 0 0
+   children [
+      Shape {
+         appearance Appearance {
+            material DEF MAT1 Material {
+            }
+         }
+         geometry Box {}
+      }
+   ]
+}
+
+Transform {
+   translation 2 0 0
+   children [
+      Shape {
+         appearance Appearance {
+            material DEF MAT2 Material {
+            }
+         }
+         geometry Box {}
+      }
+   ]
+}
+
+ROUTE TS.fraction_changed TO SC.fraction
+ROUTE SC.color TO MAT1.set_diffuseColor
+ROUTE SC.color TO MAT2.set_diffuseColor

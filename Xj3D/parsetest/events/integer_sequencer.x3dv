@@ -1,0 +1,36 @@
+#X3D V3.0 utf8
+
+PROFILE Interactive
+
+DEF Seq IntegerSequencer {
+    key [ 0, 0.33, 0.67 ]
+    keyValue [0 1 2]
+}
+
+
+DEF SW Switch {
+   whichChoice 0
+   choice [
+      Shape {
+         geometry Box {}
+         appearance Appearance {material Material { diffuseColor 1 0 0}}
+      }
+      Shape {
+         geometry Sphere {}
+         appearance Appearance {material Material { diffuseColor 0 1 0}}
+      }
+      Shape {
+         geometry Cone {}
+         appearance Appearance {material Material { diffuseColor 0 0 1}}
+      }
+
+   ]
+}
+
+DEF Time TimeSensor {
+   cycleInterval 3
+   loop TRUE
+}
+
+ROUTE Time.fraction_changed TO Seq.set_fraction
+ROUTE Seq.value_changed TO SW.set_whichChoice

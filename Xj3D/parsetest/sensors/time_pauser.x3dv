@@ -1,0 +1,99 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Viewpoint { description "V1" }
+Viewpoint { description "V2" }
+
+DEF TS TimeSensor {
+  cycleInterval 10
+  loop TRUE
+}
+
+DEF TG Transform {
+  rotation 0 1 0 0.78
+  children [
+     Shape {
+    geometry Box {}
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+  }
+  DEF TOUCH TouchSensor {}
+  ]
+}
+
+DEF PI PositionInterpolator {
+  key [ 0 0.25 0.5 0.75 1 ]
+  keyValue [
+     0 0 0
+    -1 0 0
+    -1 1 0
+     0 1 0
+     0 0 0
+  ]
+}
+
+ROUTE TS.fraction_changed TO PI.set_fraction
+ROUTE PI.value_changed TO TG.translation
+
+DEF PAUSER Script {
+   inputOnly SFTime touchTime
+   outputOnly SFTime pauseTime
+   outputOnly SFTime resumeTime
+   url ["ecmascript:
+      var paused = false;
+      
+      function touchTime(val) {
+      	 if (!paused) {      	 
+            pauseTime = val;
+            paused = true;
+         } else {
+            resumeTime = val;
+            paused = false;
+         }
+      }
+    "]
+ }
+ 
+ ROUTE TOUCH.touchTime TO PAUSER.touchTime
+ ROUTE PAUSER.pauseTime TO TS.pauseTime
+ ROUTE PAUSER.resumeTime TO TS.resumeTime
+ 
+ Transform {
+    translation -4 -2 0
+    children [
+	    Shape {
+	       geometry Text {
+		  string ["Elapsed Time:"]
+	       }
+	    }
+    ]
+ }
+ 
+ Transform {
+      translation 1 -2 0
+      children [
+  	    Shape {
+  	       geometry DEF TEXT Text {
+  		  string ["0"]
+  	       }
+  	    }
+      ]
+ }
+ 
+ DEF PRINTER Script {
+    inputOnly SFTime elapsedTime
+    outputOnly MFString outString
+    url ["ecmascript:
+       function elapsedTime(val) {
+          outString = new MFString(val);
+       }
+    "]
+ }
+ 
+ ROUTE TS.elapsedTime TO PRINTER.elapsedTime
+ ROUTE PRINTER.outString TO TEXT.string
+ 

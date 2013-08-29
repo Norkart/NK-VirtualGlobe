@@ -1,0 +1,19 @@
+#X3D V3.0 utf8
+
+PROFILE Interactive
+COMPONENT Grouping:3
+
+StaticGroup {
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 0 0
+        }
+      }
+      geometry Box {
+        size 3 4 1
+      }
+    }
+  ]
+}

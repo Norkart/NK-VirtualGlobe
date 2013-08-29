@@ -1,0 +1,144 @@
+#X3D V3.1 utf8
+
+PROFILE Immersive
+COMPONENT EnvironmentalEffects:4
+
+Background {
+  skyColor [ 0 0 0.5 ]
+}
+
+Viewpoint {
+  position 0 1 1.5 
+  orientation 1 0 0 -0.6
+}
+
+Fog {
+  color 0.5 0.5 0.5
+  visibilityRange 3
+}
+
+DEF ROOT_TX Transform {
+  children [
+    Group {
+      children [
+        Transform {
+          translation -0.5 0 0
+          children [
+            LocalFog {
+              color 0 0 0.5
+              visibilityRange 2.5
+            }
+            Shape {
+              appearance DEF SHARED_APPEARANCE Appearance {
+                material Material {
+                  emissiveColor 1 0 0
+                }
+              }
+              geometry Box { size 0.125 0.125 0.125 }
+            }
+
+            Transform {
+              translation 0 0.25 0 
+              children Billboard {
+                axisOfRotation 0 1 0
+                children Shape {
+                  geometry Text {
+                    fontStyle DEF FONT FontStyle {
+                      size 0.125
+                      justify [ "MIDDLE" "MIDDLE" ]
+                    }
+                    string "Blue Fog"
+                  }
+                }
+              }
+            }
+          ]
+        }
+        Transform {
+          translation 0 0 0.5
+          children [
+            Shape {
+              appearance USE SHARED_APPEARANCE 
+              geometry Cone { bottomRadius 0.125 height 0.25 }
+            }
+            Transform {
+              translation 0 0.25 0 
+              children Billboard {
+                axisOfRotation 0 1 0
+                children Shape {
+                  geometry Text {
+                    fontStyle USE FONT 
+                    string "Global Fog"
+                  }
+                }
+              }
+            }
+          ]
+        }
+        Transform {
+          translation 0 0 -0.5
+          children [
+            Shape {
+              appearance USE SHARED_APPEARANCE 
+              geometry Cylinder { radius 0.125 height 0.25 }
+            }
+            Transform {
+              translation 0 0.25 0 
+              children Billboard {
+                axisOfRotation 0 1 0
+                children Shape {
+                  geometry Text {
+                    fontStyle USE FONT 
+                    string "Global Fog"
+                  }
+                }
+              }
+            }
+          ]
+        }
+        Transform {
+          translation 0.5 0 0
+          children [
+            LocalFog {
+              color 0 0.5 0
+              visibilityRange 2.5
+            }
+            Shape {
+              appearance USE SHARED_APPEARANCE 
+              geometry Sphere { radius 0.125 }
+            }
+            Transform {
+              translation 0 0.25 0 
+              children Billboard {
+                axisOfRotation 0 1 0
+                children Shape {
+                  geometry Text {
+                    fontStyle USE FONT 
+                    string "Green Fog"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+DEF TS TimeSensor {
+  cycleInterval 20
+  loop TRUE
+}
+
+DEF OI OrientationInterpolator {
+  key [ 0 0.25 0.5 0.75 1 ]
+  keyValue [ 0 1 0 0
+             0 1 0 1.5707
+             0 1 0 3.142
+             0 1 0 4.712
+             0 1 0 6.2832 ]
+}
+
+ROUTE TS.fraction_changed TO OI.set_fraction
+ROUTE OI.value_changed TO ROOT_TX.set_rotation

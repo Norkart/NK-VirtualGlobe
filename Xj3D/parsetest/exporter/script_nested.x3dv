@@ -1,0 +1,48 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+PROTO CharacterControl [
+  inputOutput MFNode characters [ ]
+  outputOnly SFNode CharacterControlScript
+] {
+
+Group {
+  children [
+    Group { children IS characters }
+  ]
+}
+
+} # END CharacterControl PROTO
+
+DEF SC1 Script {
+  directOutput TRUE
+  url "ecmascript:
+  function initialize() {}"
+}
+
+DEF SC2 Script {
+  inputOutput MFNode slave [
+     USE SC1
+     DEF SC3 Script {
+        url "ecmascript:
+           function initialize() {}"     
+     }
+  ]
+  url "ecmascript:
+  function initialize() {}"
+}
+
+DEF NAVROT Transform {
+ rotation 0 1 0 -0.125
+ children [
+    DEF control CharacterControl {
+      characters [
+        USE SC2
+        Shape {
+           geometry Box {}
+        }
+      ]
+    }
+  ]
+}

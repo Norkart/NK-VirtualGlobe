@@ -1,0 +1,92 @@
+Check TODO list
+Stop addRoute unless script has directOutput set
+Don't perform view-pick if no visDependent nodes
+MFNode constructor does not work with SFNodes, like sensor.watchList = new MFNode(resetNode) seems related to event delivery
+Proximity or VisSensor not working right if its in initial view, sometimes(bookcases don't show on dirbs when in initial view)
+
+Overall
+-------
+
+- Make sure all set methods check for valid VRML field values
+- Handle DOMRemoved events
+- Handle setBind(false) events for all bindables
+- Implement the rest of core:  background, switch, KeySensor
+- Make sure hasChanged events are not generated while parsing
+- VRMLParserFactory needs methods to access FieldParser instances
+- J3DNodeFactory should create new instances for each request rather than
+returning the same one
+- VRMLExternalNode needs some feedback mechanism to allow changing of the URL
+- Implementing an on-disk cache for loaded files.
+- Change all rendering node implementation field declarations. Currently for
+  each fieldMap.put() a new Integer is being created for each put() request
+  rather than sharing it across all calls.
+-Support compressed(gz) VRML files
+
+Node Specific
+-------------
+J3DImageTexture
+	Scaling images looks awful.
+	Need to change over to the j3d.org TextureCache system
+	Very slow loading.  Maybe due to thread priority
+
+J3DMaterial
+	Look at turning lighting off for emissive only decls
+
+J3DPixelTexture
+	support hex encoding of values
+	test alpha channel usage
+
+J3DIndexedFaceSet
+	Fail events/coordmorph-ifs02.wrl
+		-is the test wrong?
+
+J3DSpotLight
+	Not really complete.  Workds mostly as a Point light
+	BeamWidth is currently ignored.  Need to convert to spreadAngle
+	radius is currently ignored.  Need to convert to spreadAngle
+
+J3DSwitch
+	Could not test routing
+
+J3DDirectionalLight
+	Needs to be scoped by sibling geometry
+
+J3DProximitySensor
+	No support for position_changed/orientation_changed
+	Detects all viewpoints not just currently bound
+
+Scripting:
+    Spec requires that scripts in the main file require loading and
+    initialize() before starting to run the world.
+
+    Implement replaceWorld() for all scripting + EAI. Issue: does replaceWorld
+	where the nested nodes have a ROUTE between them keep the route or is it
+	just standalone nodes now? What about first-bindable node handling?
+
+Ecmascript
+	VrmlMatrix setTransform() only partially implemented. Full code
+	needs verification of matrix calcs
+
+
+EAI
+	Event buffering needs implementation
+
+Documentation
+-------------
+Architecture Documents for DOMtoJ3D
+Design/Implementation Notes
+	"All MFVec field types are represented internally as a flat array". If
+	an outsider user asks for that field value, then we do a conversion at
+	that point, but internally, for all routing, we handle them as a flat
+	array all the time.
+Design docs for:
+    Javascript
+	Ecmascript
+	Proto/Externproto
+
+Examples
+--------
+Program which determines the profile of a given file.  Could be implemented
+at the createVMRLNode level but I doubt its necessary.  Just load a scene then
+walk the tree and determine profiles used.  Likely would need a hardcoded
+list of nodes/levels/profiles or can we determine that somewhere(DTD?)

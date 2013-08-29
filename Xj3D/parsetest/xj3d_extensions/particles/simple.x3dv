@@ -1,0 +1,10 @@
+#X3D V3.0 utf8
+
+PROFILE Interactive
+COMPONENT xj3d_ParticleSystem:1
+
+ParticleSystem {
+  appearance Appearance {
+    material Material { diffuseColor 1 0 0 }
+  }
+}

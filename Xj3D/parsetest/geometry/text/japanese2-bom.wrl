@@ -1,0 +1,32 @@
+﻿#VRML V2.0 utf8
+# Modified to specify topToBottom and
+# rightToLeft.
+# The joys of the big and large versions
+# of the katakana and hiragana in text.
+# Big katakana, little katakana, little
+# hiragana, big hiragana
+# a,i,u,e,o,tsu
+Transform {
+  translation 1 0 0
+  children Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+    geometry Text {
+      fontStyle FontStyle {
+      horizontal FALSE
+      topToBottom TRUE
+      leftToRight FALSE
+      }
+      string [ 
+"アァぁあ"
+"イィぃい"
+"ウゥぅう"
+"エェぇえ"
+"オォぉお"
+"ツッっつ" ]
+    }
+  }
+}

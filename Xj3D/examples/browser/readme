@@ -1,0 +1,15 @@
+                        VRML Browser examples
+
+A series of examples showing how to set up a VRML/X3D browsers in various
+configurations. The codebase provides a number of different forms of
+constructing viewers of VRML/X3D content.
+
+We start with a DIY browser. Assembling all the needed parts together to
+provide a view of VRML content using the Java3D renderer. The rest of the browser
+functionality is illustrated by the name - OGL/Multiwall etc.
+
+The code in this directory is licensed under the BSD license. See
+$PROJECT/docs/BSD.txt for the text of the license.
+
+Justin Couch
+18 April 2005

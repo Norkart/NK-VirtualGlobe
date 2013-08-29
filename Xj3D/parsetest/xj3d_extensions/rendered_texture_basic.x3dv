@@ -1,0 +1,26 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_RenderedTexture:1
+
+Shape {
+  appearance Appearance {
+    texture RenderedTexture {
+      update "NEXT_FRAME_ONLY"
+      scene Group {
+        children Shape {
+          geometry IndexedFaceSet {
+            coord Coordinate { 
+              point [ 0.25 0 -1, 0.25 0.25 -1, 0 0.25 -1, 0 0 -1 ]
+            }
+            coordIndex [ 0 1 2 3 ]
+            color Color {
+              color [ 1 0 0, 0 1 0, 0 0 1, 1 1 1 ]
+            }
+          }
+        }
+      }
+    }
+  }
+  geometry Box {}
+}

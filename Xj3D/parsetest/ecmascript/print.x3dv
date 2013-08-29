@@ -1,0 +1,16 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Script {
+  url [ "ecmascript:
+        function initialize() {
+            Browser.println('Testing println');
+            Browser.println('Testing print');
+        }
+      "]
+}
+
+Shape {
+   geometry Box {}
+}

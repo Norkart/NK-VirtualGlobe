@@ -1,0 +1,21 @@
+#VRML V2.0 utf8
+#Random comments about a TV show...
+Transform {
+  translation 1 0 0
+  children Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+    geometry Text {
+      string [ 
+"キャプテンハーロックの第40語"
+"「その時天使は歌った」"
+"古いアニメからちょっとおかしい科学です。"
+"アケディア号の外に戦う。"
+"「ふたさとさ」は意味？"
+]
+    }
+  }
+}

@@ -1,0 +1,2 @@
+tar cvzf Xj3D-tarball-M5.tar.gz x3d/DTD x3d/HowToInstall.html x3d/RE* x3d/docs x3d/examples x3d/images x3d/lib x3d/make x3d/src
+echo "Have you copied the extra jars like: js.jar, dom2.jar, SaiX3D.jar into lib?" 

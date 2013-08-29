@@ -1,0 +1,60 @@
+#VRML V2.0 utf8
+
+Viewpoint {}
+
+DEF TS TimeSensor {
+   cycleInterval 1
+   loop TRUE
+}
+
+DEF SC Script {
+   eventIn SFTime cycleTime
+   eventOut SFInt32 choice
+
+   url ["javascript:
+       var last = 0;
+
+       function cycleTime(val) {
+          if (last == 0) {
+             last=1;
+             choice=1;
+          } else {
+             last=0;
+             choice=0;
+          }
+       }
+       "]
+}
+
+DEF SW Switch {
+    whichChoice 0
+    choice [
+        Transform {
+           translation 0 0 -10
+           children [
+        Shape {
+            appearance Appearance {
+               material Material {
+                  diffuseColor 1 0 0
+               }
+            }
+            geometry Box {}
+        }
+        ]}
+        Transform {
+           translation 0 0 -20
+           children [
+        Shape {
+            appearance Appearance {
+               material Material {
+                  diffuseColor 0 0 1
+               }
+            }
+            geometry Box    {}
+        }
+        ]}
+    ]
+}
+
+ROUTE TS.cycleTime TO SC.cycleTime
+ROUTE SC.choice TO SW.set_whichChoice

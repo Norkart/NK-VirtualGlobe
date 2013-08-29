@@ -1,0 +1,28 @@
+#VRML V2.0 utf8
+
+Group {
+  children [
+    Shape {
+      geometry Box {}
+      appearance Appearance {
+        material DEF MAT Material {
+          diffuseColor 1 0 0
+        }
+      }
+    }
+    DEF TS TouchSensor {}
+  ]
+}
+
+DEF SM ScalarInterpolator {
+  key [0,1]
+  keyValue [0 1]
+}
+
+DEF TIME TimeSensor {
+  cycleInterval 3
+}
+
+ROUTE TS.touchTime TO TIME.startTime
+ROUTE TIME.fraction_changed TO SM.set_fraction
+ROUTE SM.value_changed TO MAT.transparency

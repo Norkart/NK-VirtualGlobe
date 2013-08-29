@@ -1,0 +1,59 @@
+#X3D V3.0 utf8
+
+PROFILE Interactive
+COMPONENT xj3d_overlay
+
+Overlay {
+  layout GroupLayout {
+    children [
+      DEF GRID BorderLayout  {
+        horizontalAlign "RIGHT"
+        horizontalFraction 1.0
+        children [
+          Image2D {
+            visible FALSE
+            bboxSize 128 128
+            texture DEF TEXTURE ImageTexture {
+              url "test_image.png"
+            }
+          }
+        ]
+      }
+      BorderLayout {
+        children [
+          DEF IMAGE Image2D {
+            visible FALSE
+            bboxSize 128 128
+            texture DEF TEXTURE2 ImageTexture {
+              url "vts.png"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+
+Transform {
+  translation -2 0 0
+  children [
+    Shape {
+      geometry Box { size 0.5 0.5 0.5 }
+    }
+    DEF TS1 TouchSensor {}
+  ]
+}
+
+Transform {
+  translation 2 0 0
+  children [
+    Shape {
+      geometry Sphere { radius 0.25 }
+    }
+    DEF TS2 TouchSensor {}
+  ]
+}
+
+
+ROUTE TS1.isActive TO IMAGE.set_visible
+ROUTE TS2.isActive TO GRID.set_visible

@@ -1,0 +1,24 @@
+#X3D V3.2 utf8
+
+PROFILE Immersive
+COMPONENT Layering:1
+
+# The content defined for the base layer
+DEF TG Transform {
+  children Shape {
+    geometry Box {}
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+  }
+}
+
+# An empty set with only layer 0 defined for rendering
+LayerSet {
+  order [ 0 ]
+  layers [
+    Layer {}
+  ]
+}

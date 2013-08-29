@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D SYSTEM "http://www.web3d.org/TaskGroups/x3d/translation/x3d-compact.dtd">
+<X3D>
+<Scene>
+    <NavigationInfo type='"WALK"'/>
+    <!-- <Viewpoint position="0 0 10"/> -->
+    <Transform translation="0 0 0">
+        <Shape DEF="Shape1">
+      <Sphere DEF="Sphere1" radius="1"/>
+      <Appearance DEF="Appearance1">
+          <Material DEF="Material1" diffuseColor="1.0 1.0 1.0"/>  
+      </Appearance>
+  </Shape>
+    </Transform>
+    <Transform translation="0 4 0">
+        <Shape DEF="Shape2">
+      <Sphere DEF="Sphere2" radius="2"/>
+      <Appearance DEF="Appearance2">
+          <Material DEF="Material2" diffuseColor="1 0.0 0.0"/>  
+      </Appearance>
+  </Shape>
+    </Transform>
+</Scene>
+</X3D>

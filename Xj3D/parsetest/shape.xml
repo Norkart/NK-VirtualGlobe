@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D SYSTEM "http://www.web3d.org/TaskGroups/x3d/translation/x3d-compact.dtd">
+<X3D>
+  <Scene>
+    <Group>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor="(0.5 0.5 0.5)" />
+        </Appearance>
+        <Cone/>
+      </Shape>
+    </Group>
+  </Scene>
+</X3D>

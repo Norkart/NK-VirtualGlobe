@@ -1,0 +1,11 @@
+#X3D V3.0 utf8
+
+# Test of making sure we can just parse and create the basic structures for
+# import statements. The inline is deliberately empty - all we want to do is
+# test the import handling and ignore the export part for this test.
+
+PROFILE Immersive
+
+DEF INLINE Inline {}
+
+IMPORT INLINE.foo AS bar

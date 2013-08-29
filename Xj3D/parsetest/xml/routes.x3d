@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0 Interactive//EN" 
+  "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile="Immersive">
+  <Scene>
+    <Transform DEF="TG" rotation="0 1 0 0.78">
+      <Shape>
+        <Appearance>
+          <Material emissiveColor="1 0 0" />
+        </Appearance>
+        <Box/>
+      </Shape>
+    </Transform>
+	<PositionInterpolator DEF="PI"
+	  key="0 0.25 0.5 0.75 1" 
+	  keyValue="0 0 0 -1 0 0 -1 1 0 0 1 0 0 0 0"/>
+	<TimeSensor DEF="TS" cycleInterval="10" loop="true"/>
+
+	<ROUTE fromNode="TS" fromField="fraction_changed" 
+	       toNode="PI" toField="set_fraction"/>
+	<ROUTE fromNode="PI" fromField="value_changed" 
+	       toNode="TG" toField="translation"/>
+  </Scene>
+</X3D>

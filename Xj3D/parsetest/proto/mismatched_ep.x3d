@@ -1,0 +1,17 @@
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0 Interactive//EN" 
+  "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile="Immersive" version="3.0">
+
+<Scene>
+
+<ExternProtoDeclare name="TestProto" url="test_prototype.x3d">
+    <field name="bearingRT" type="SFRotation" accessType="inputOutput"/>
+</ExternProtoDeclare>
+
+<ProtoInstance name="TestProto">
+    <fieldValue name="bearingRT" value="0.0 0.0 0.0 0.0"/>
+</ProtoInstance>
+
+
+</Scene>
+</X3D>

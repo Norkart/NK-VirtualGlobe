@@ -1,0 +1,66 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_Clipping:1
+COMPONENT xj3d_Shape:1
+
+Viewpoint {
+  description "Offset viewpoint"
+  position -4 0 10
+  orientation 0 1 0 -0.12
+}
+
+Viewpoint {
+  description "Left viewpoint"
+  position -10 0 0
+  orientation 0 1 0 -1.572
+}
+
+Background {
+  skyColor [ 0 0 0.5 ]
+}
+
+Group {
+  children [
+    ClipPlane {
+    }
+    Transform {
+      translation -2 0 0
+      children [
+        ClipPlane {
+          plane 1 0 0 0
+        }
+        Shape {
+          appearance Appearance {
+            material TwoSidedMaterial {
+              diffuseColor 0 1 0
+              shininess 0.6
+              backDiffuseColor 0 1 1
+              backShininess 0.8
+              separateBackColor TRUE
+            }
+          }
+          geometry DEF SPHERE_GEOM Sphere { radius 2 solid FALSE}
+        }
+      ]
+    }
+    Transform {
+      translation 2 0 0
+      children [
+        ClipPlane {
+          plane 1 1 0 0
+        }
+        Shape {
+          appearance Appearance {
+            material TwoSidedMaterial {
+              emissiveColor 1 0 0
+              backEmissiveColor 1 0 1
+              separateBackColor TRUE
+            }
+          }
+          geometry Sphere { radius 1 solid FALSE }
+        }
+      ]
+    }
+  ]
+}

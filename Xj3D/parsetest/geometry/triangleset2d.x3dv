@@ -1,0 +1,17 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Shape {
+   appearance Appearance {
+      material Material {
+          diffuseColor 0 0 1
+      }
+   }
+   geometry TriangleSet2D {
+      vertices [
+      	0.0 0.0, 0.5 0.5, -0.5 0.5
+      	0.0 0.0, -0.5 -0.5, 0.5 -0.5
+      ]
+   }
+}

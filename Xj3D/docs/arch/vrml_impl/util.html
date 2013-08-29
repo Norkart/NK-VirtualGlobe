@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<TITLE>Xj3D VRML Util Package</TITLE>
+</HEAD>
+<BODY>
+
+<H1 ALIGN="center">Xj3D VRML Utilities Package</H1>
+
+Author: <I>Justin Couch</I><BR>
+Last updated: <I>$Date: 2001/04/30 09:01:02 $</I><BR>
+Revision: <I>$Revision: 1.1 $</I>
+
+<A NAME="intro">
+<H2>Intro</H2>
+</A>
+
+The util package contains utility classes that help build content and
+implementations of the other interfaces in this component. For example, the
+basic interfaces just provide raw field information is it is read from a file.
+Before using this information, we want to check that the values are within
+range etc for that field. The utils classes provide easy, convenient handling
+of this.
+
+<H3>Background</H3>
+
+The utilities package consists of a single class - the field validator
+currently. We expect over time that it will contain more functionality.
+
+<H3>Motivation</H3>
+
+<P>
+<HR>
+
+<A NAME="structure">
+<H2>Structural Overview</H2>
+</A>
+
+The code is a single package with no sub-packages.
+
+<H3>Code Layout</H3>
+
+There is currently only one class in the package.
+
+<P>
+<CENTER>
+<A HREF="util_structure.png">
+<IMG SRC="util_structure_small.png" WIDTH="148" HEIGHT="104"></A><BR>
+<B>Figure 1:</B> UML Structure diagram of the VRML Utility classes
+</CENTER>
+<P>
+
+
+<H3>FieldValidator</H3>
+
+The <CODE>FieldValidator</CODE> class is designed to be used as a standalone
+checker for field values just after they have been parsed or set in a field.
+As all the nodes may through a FieldValueException, the validator will take
+care of this. If the field value passes the requirements for that field, it
+will return from the method. If it does not pass the requirements, it will
+automatically create and throw the exception. This saves the user the need
+to write error generation code for every time a field is checked.
+
+<P>
+<HR>
+
+<A NAME="runtime">
+<H2>Runtime Semantics</H2>
+</A>
+
+There is no specific runtime issues associated wit the code. The validator
+is a single class instance with static methods so it does not need to be
+instantiated.
+
+<P>
+<HR>
+
+<A NAME="extending">
+<H2>Extending the Code</H2>
+</A>
+
+N/A
+
+<P>
+<HR>
+
+<H2>References</H2>
+
+<UL>
+<LI><A HREF="http://www.web3d.org/Specifications/VRML97/">VRML97 Specification</A></LI>
+<LI><A HREF="http://www.web3d.org/TaskGroups/x3d/specification-2000july/part1/Part1Index.html">
+    VRML 2000x Draft Specification</A></LI>
+</UL>
+
+</BODY>
+</HTML>

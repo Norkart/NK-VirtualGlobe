@@ -1,0 +1,11 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_RigidBodyPhysics:1
+
+RigidBodyCollection {
+  bodies [ 
+    RigidBody {}
+    RigidBody {}
+  ]  
+}

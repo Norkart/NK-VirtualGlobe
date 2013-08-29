@@ -1,0 +1,321 @@
+<!--
+		GeoSpatial (GeoVrml 1.0) Document Type Definition (DTD)
+
+ Description:	Define the GeoSpatial tag and attribute profile for X3D.
+		These X3D native nodes correspond to VRML ExternProto declarations.
+
+ 		Elements in this tagset are enabled by setting the 
+		GeoSpatialProfile entity to "INCLUDE" at the top of an 
+		X3D scene file, as shown in several examples such as
+		examples/GeoSpatial/newGeoSpatialScene.xml.  This flag then 
+		triggers inclusion of the GeoSpatial tags in the 
+		x3d-compromise.dtd tagset.  Thus the GeoSpatial.dtd
+		demonstrates X3D extensibility for profiles.
+
+ Status:	Testing results satisfactory.  Compact form also needed.
+
+ Authors:	Martin Reddy and GeoVrml Working Group for GeoVrml specifications
+		Don Brutzman produced XML encoding for X3D
+ 
+ Reference:	GeoVrml 1.0 Specification, http://www.geovrml.org/1.0
+
+ Address:	http://www.web3D.org/TaskGroups/x3d/translation/GeoSpatial-compact.dtd
+
+ Created:	16 May 2000
+
+ Revised:	10 November 2002
+-->
+
+<!-- Double types declared in x3d-compact.dtd -->
+
+<!-- supported GeoSystem values:  GDC UTM GCC -->
+
+<!ENTITY % GeoSystemType ' CDATA "GDC" ' >
+
+
+<!-- field tags for contained nodes:  only rootNode needed -->
+
+<!-- GeoSpatial's rootNode depends on profile-specific parameter-entity definitions,
+     so it appears inside the X3D DTD rather than in GeoSpatial.dtd:
+
+     <!ELEMENT rootNode ( %ChildrenNodes; | %WildcardNodes; )* >
+ -->
+
+<!-- element nodes -->
+
+<!ELEMENT GeoCoordinate ( IS?, GeoOrigin? ) >
+<!ATTLIST GeoCoordinate
+	geoSystem	%GeoSystemType;
+	point		%MFVec3d;	#IMPLIED
+	nodeType	NMTOKEN		#FIXED	"Coordinate"
+	containerField NMTOKEN "coord"
+	class         	CDATA		""
+	DEF		ID		#IMPLIED
+	USE		IDREF		#IMPLIED>
+
+<!--
+   (GeoOrigin, ((color,	((normal,texCoord?) | (texCoord,normal)?)?) |
+		(normal,((color,texCoord?) | (texCoord,color?))?) |
+		(texCoord,((color,normal?) | (normal,color?))?) )? )
+ | (color, (	(GeoOrigin, ((normal,texCoord?) | (texCoord,normal)?)?) |
+		(normal,((GeoOrigin,texCoord?) | (texCoord,GeoOrigin?))?) |
+		(texCoord,((GeoOrigin,normal?) | (normal,GeoOrigin?))?) )? )
+ | (normal, (	(color,	((GeoOrigin,texCoord?) | (texCoord,GeoOrigin?))?) |
+		(GeoOrigin,((color,texCoord?) | (texCoord,color?))?) |
+		(texCoord,((color,GeoOrigin?) | (GeoOrigin,color?))?) )? )
+ | (texCoord, (	(color,	((GeoOrigin,normal?) | (normal,GeoOrigin?))?) |
+		(GeoOrigin,((color,normal?) | (normal,color?))?) |
+		(normal,((color,GeoOrigin?) | (GeoOrigin,color?))?) )? )?
+-->
+<!ELEMENT GeoElevationGrid (IS?, (
+ ((%ColorNodes;), (
+ 	(GeoOrigin, (	((%NormalNodes;),((%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+				((%TextureCoordinateNodes;),((%NormalNodes;)|%WildcardNodes;)?) |
+				(%WildcardNodes;,((%NormalNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) )? )
+	| ((%NormalNodes;), (	(GeoOrigin,((%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+	   			((%TextureCoordinateNodes;),(GeoOrigin|%WildcardNodes;)?) |
+	   			(%WildcardNodes;,(GeoOrigin|(%TextureCoordinateNodes;)|%WildcardNodes;)?) )? )
+	| ((%TextureCoordinateNodes;), (
+				(GeoOrigin,((%NormalNodes;)|%WildcardNodes;)?) |
+	 			((%NormalNodes;),(GeoOrigin|%WildcardNodes;)?) |
+	 			(%WildcardNodes;,(GeoOrigin|(%NormalNodes;)|%WildcardNodes;)?) )? )
+	| (%WildcardNodes;, (	(GeoOrigin,((%NormalNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+	 			((%NormalNodes;),(GeoOrigin|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+	 			((%TextureCoordinateNodes;),((%NormalNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+	 			(%WildcardNodes;,(GeoOrigin|(%NormalNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) )? ) )? )
+ | (GeoOrigin, (
+	((%ColorNodes;), (	((%NormalNodes;),((%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+	  			((%TextureCoordinateNodes;),((%NormalNodes;)|%WildcardNodes;)?) |
+	  			(%WildcardNodes;,((%NormalNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) )? )
+	| ((%NormalNodes;), (	((%ColorNodes;),((%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+				((%TextureCoordinateNodes;),((%ColorNodes;)|%WildcardNodes;)?) |
+				(%WildcardNodes;,((%ColorNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) )? )
+	| ((%TextureCoordinateNodes;), (
+				((%ColorNodes;),((%NormalNodes;)|%WildcardNodes;)?) |
+				((%NormalNodes;),((%ColorNodes;)|%WildcardNodes;)?) |
+				(%WildcardNodes;,((%ColorNodes;)|(%NormalNodes;)|%WildcardNodes;)?) )? )
+	| (%WildcardNodes;, (	((%ColorNodes;),((%NormalNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+				((%NormalNodes;),((%ColorNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+				((%TextureCoordinateNodes;),((%NormalNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+				(%WildcardNodes;,((%ColorNodes;)|(%NormalNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) )? ) )? )
+ | ((%NormalNodes;),  (
+ 	((%ColorNodes;), (	(GeoOrigin,((%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+ 				((%TextureCoordinateNodes;),(GeoOrigin|%WildcardNodes;)?) |
+ 				(%WildcardNodes;,(GeoOrigin|(%TextureCoordinateNodes;)|%WildcardNodes;)?) )? )
+ 	| (GeoOrigin,(((%ColorNodes;),((%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+ 				((%TextureCoordinateNodes;),((%ColorNodes;)|%WildcardNodes;)?) |
+ 				(%WildcardNodes;,((%ColorNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) )? )
+ 	| ((%TextureCoordinateNodes;), (
+ 				((%ColorNodes;),(GeoOrigin|%WildcardNodes;)?) |
+ 				(GeoOrigin,((%ColorNodes;)|%WildcardNodes;)?) |
+ 				(%WildcardNodes;,((%ColorNodes;)|GeoOrigin|%WildcardNodes;)?) )? )
+ 	| (%WildcardNodes;, (	((%ColorNodes;),(GeoOrigin|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+ 				(GeoOrigin,((%ColorNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+ 				((%TextureCoordinateNodes;),((%ColorNodes;)|GeoOrigin|%WildcardNodes;)?) |
+ 				(%WildcardNodes;,((%ColorNodes;)|GeoOrigin|(%TextureCoordinateNodes;)|%WildcardNodes;)?) )? ) )? )
+ | ((%TextureCoordinateNodes;), (
+	((%ColorNodes;), (	(GeoOrigin,((%NormalNodes;)|%WildcardNodes;)?) |
+				((%NormalNodes;),(GeoOrigin|%WildcardNodes;)?) |
+				(%WildcardNodes;,(GeoOrigin|(%NormalNodes;)|%WildcardNodes;)?) )? )
+ 	| (GeoOrigin,(((%ColorNodes;),((%NormalNodes;)|%WildcardNodes;)?) |
+ 				((%NormalNodes;),((%ColorNodes;)|%WildcardNodes;)?) |
+ 				(%WildcardNodes;,((%ColorNodes;)|(%NormalNodes;)|%WildcardNodes;)?) )? )
+ 	| ((%NormalNodes;), (	((%ColorNodes;),(GeoOrigin|%WildcardNodes;)?) |
+				(GeoOrigin,((%ColorNodes;)|%WildcardNodes;)?) |
+				(%WildcardNodes;,((%ColorNodes;)|GeoOrigin|%WildcardNodes;)?) )? )
+	| (%WildcardNodes;, (	((%ColorNodes;),((%NormalNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+				(GeoOrigin,((%ColorNodes;)|(%NormalNodes;)|%WildcardNodes;)?) |
+				((%NormalNodes;),((%ColorNodes;)|GeoOrigin|%WildcardNodes;)?) |
+				(%WildcardNodes;,((%ColorNodes;)|GeoOrigin|(%NormalNodes;)|%WildcardNodes;)?) )? ) )? )
+ | (%WildcardNodes;,  (
+	((%ColorNodes;), (	(GeoOrigin,((%NormalNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+				((%NormalNodes;),(GeoOrigin|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+				((%TextureCoordinateNodes;),(GeoOrigin|(%NormalNodes;)|%WildcardNodes;)?) |
+				(%WildcardNodes;,(GeoOrigin|(%NormalNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) )? )
+	| (GeoOrigin,(((%ColorNodes;),((%NormalNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+				((%NormalNodes;),((%ColorNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+				((%TextureCoordinateNodes;),((%ColorNodes;)|(%NormalNodes;)|%WildcardNodes;)?) |
+				(%WildcardNodes;,((%ColorNodes;)|(%NormalNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) )? )
+	| ((%NormalNodes;), (	((%ColorNodes;),(GeoOrigin|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+				(GeoOrigin,((%ColorNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+				((%TextureCoordinateNodes;),((%ColorNodes;)|GeoOrigin|%WildcardNodes;)?) |
+				(%WildcardNodes;,(GeoOrigin|(%ColorNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) )? )
+	| ((%TextureCoordinateNodes;), (
+				((%ColorNodes;),(GeoOrigin|(%NormalNodes;)|%WildcardNodes;)?) |
+				(GeoOrigin,((%ColorNodes;)|(%NormalNodes;)|%WildcardNodes;)?) |
+				((%NormalNodes;),((%ColorNodes;)|GeoOrigin|%WildcardNodes;)?) |
+				(%WildcardNodes;,((%ColorNodes;)|GeoOrigin|(%NormalNodes;)|%WildcardNodes;)?) )? )
+	| (%WildcardNodes;, (	((%ColorNodes;),(GeoOrigin|(%NormalNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+				(GeoOrigin,((%ColorNodes;)|(%NormalNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+				((%NormalNodes;),((%ColorNodes;)|GeoOrigin|(%TextureCoordinateNodes;)|%WildcardNodes;)?) |
+				((%TextureCoordinateNodes;),((%ColorNodes;)|GeoOrigin|(%NormalNodes;)|%WildcardNodes;)?) |
+				(%WildcardNodes;,((%ColorNodes;)|GeoOrigin|(%NormalNodes;)|(%TextureCoordinateNodes;)|%WildcardNodes;)?) )? ) )? )
+)? ) >
+
+<!ATTLIST GeoElevationGrid
+	geoSystem	%GeoSystemType;
+	geoGridOrigin	%SFVec3d;	"0 0 0"
+	xDimension	%SFInt32;	"0"
+	xSpacing	%SFDouble;	"1.0"
+	yScale		%SFFloat;	"1.0"
+	zDimension	%SFInt32;	"0"
+	zSpacing	%SFDouble;	"1.0"
+	height		%MFFloat; 	#IMPLIED
+	normalPerVertex	%SFBool;	"true"
+	ccw		%SFBool;	"true"
+	colorPerVertex	%SFBool;	"true"
+	creaseAngle	%SFFloat;	"0"
+	solid		%SFBool;	"true"
+	nodeType	NMTOKEN 	#FIXED	"ElevationGrid"
+	containerField NMTOKEN "geometry"
+	class         	CDATA		""
+	DEF		ID		#IMPLIED
+	USE		IDREF		#IMPLIED>
+	
+<!-- Inline may contain nodes once url is loaded.         -->
+<!-- This permits external access - open technical issue. -->
+<!-- Will be ( %SceneNodes; ) in x3d-compact.dtd form.    -->
+
+<!ELEMENT GeoInline (IS?, ( %ChildrenNodes; | %WildcardNodes; )* ) >
+<!ATTLIST GeoInline
+	url		%MFString;	#IMPLIED
+	load		%SFBool;	"true"	
+	bboxCenter	%SFVec3d;	"0 0 0"	
+	bboxSize	%SFVec3d;	"-1 -1 -1"	
+	nodeType	NMTOKEN 	#FIXED	"Inline"
+	containerField NMTOKEN "children"
+	class         	CDATA		""
+	DEF		ID		#IMPLIED
+	USE		IDREF		#IMPLIED>
+	
+<!--
+	((GeoOrigin, children?) | (children, GeoOrigin?))?
+-->
+<!ELEMENT GeoLocation (IS?,
+	( %ChildrenNodes; | %WildcardNodes; )*, (GeoOrigin, ( %ChildrenNodes; | %WildcardNodes; )* )?
+) >
+<!ATTLIST GeoLocation
+	geoSystem	%GeoSystemType;
+	geoCoords	%MFVec3d;	#IMPLIED
+	nodeType	NMTOKEN 	#FIXED	"Transform"
+	containerField NMTOKEN "children"
+	class         	CDATA		""
+	DEF		ID		#IMPLIED
+	USE		IDREF		#IMPLIED>
+
+<!--
+	(GeoOrigin, ((children, rootNode?) | (rootNode, children?))? ) |
+	(children, ((GeoOrigin, rootNode?) | (rootNode, GeoOrigin?))? ) |
+	(rootNode, ((children, GeoOrigin?) | (GeoOrigin, children?))? )?
+-->
+<!ELEMENT GeoLOD (IS?, (
+	( %ChildrenNodes; | %WildcardNodes; )*,
+		( (GeoOrigin?, ( %ChildrenNodes; | %WildcardNodes; )*, rootNode?,  ( %ChildrenNodes; | %WildcardNodes; )* )? | 
+		  (rootNode,   ( %ChildrenNodes; | %WildcardNodes; )*, GeoOrigin?, ( %ChildrenNodes; | %WildcardNodes; )* )? )
+)? ) >
+
+<!ATTLIST GeoLOD
+	geoSystem	%GeoSystemType;
+	rootUrl	 	%MFString;	#IMPLIED
+	child1Url	%MFString;	#IMPLIED
+	child2Url	%MFString;	#IMPLIED
+	child3Url	%MFString;	#IMPLIED
+	child4Url 	%MFString;	#IMPLIED
+	range		%SFDouble;	#IMPLIED
+	center		%SFVec3d;	#IMPLIED
+	nodeType	NMTOKEN 	#FIXED	"LOD"
+	containerField NMTOKEN "children"
+	class         	CDATA		""
+	DEF		ID		#IMPLIED
+	USE		IDREF		#IMPLIED>
+
+<!-- GeoMetadata includes proposed itemization of specified 'summary' attributes in the X3D encoding -->
+
+<!ELEMENT GeoMetadata (IS?) >
+<!ATTLIST GeoMetadata
+	url		%MFString;	#IMPLIED
+	data		IDREFS		#IMPLIED
+	summary		%MFString;	#IMPLIED
+	title		%SFString;	#IMPLIED
+	description	%SFString;	#IMPLIED
+	coordinateSystem %SFString;	#IMPLIED
+	horizontalDatum	%SFString;	#IMPLIED
+	verticalDatum	%SFString;	#IMPLIED
+	ellipsoid	%SFString;	#IMPLIED
+	extent		%SFString;	#IMPLIED
+	resolution	%SFString;	#IMPLIED
+	originator	%SFString;	#IMPLIED
+	copyright	%SFString;	#IMPLIED
+	date		%SFString;	#IMPLIED
+	metadataFormat	%SFString;	#IMPLIED
+	dataUrl		%SFString;	#IMPLIED
+	dataFormat	%SFString;	#IMPLIED
+	nodeType	NMTOKEN 	#FIXED	"WorldInfo"
+	containerField NMTOKEN "children"
+	class         	CDATA		""
+	DEF		ID		#IMPLIED
+	USE		IDREF		#IMPLIED>
+	
+<!ELEMENT GeoOrigin (IS?) >
+<!ATTLIST GeoOrigin
+	geoSystem	%GeoSystemType;
+	geoCoords	%MFVec3d;	#IMPLIED
+	rotateYUp	%SFBool;	"false"
+	nodeType	NMTOKEN 	#FIXED	"geoOrigin"
+	containerField NMTOKEN "geoOrigin"
+	class         	CDATA		""
+	DEF		ID		#IMPLIED
+	USE		IDREF		#IMPLIED>
+
+<!ELEMENT GeoPositionInterpolator ( IS?, GeoOrigin? ) >
+<!ATTLIST GeoPositionInterpolator
+	geoSystem	%GeoSystemType;
+	key		%MFFloat;	#IMPLIED
+	keyValue	%MFVec3d;	#IMPLIED
+	set_fraction	%SFFloat;	#FIXED ""
+	value_changed	%SFVec3f;	#FIXED ""
+	geoValue	%SFVec3d;	#IMPLIED
+	nodeType	NMTOKEN #FIXED	"PositionInterpolator"
+	containerField NMTOKEN "children"
+	class         	CDATA		""
+	DEF		ID	#IMPLIED
+	USE		IDREF	#IMPLIED>
+
+<!ELEMENT GeoTouchSensor ( IS?, GeoOrigin? ) >
+<!ATTLIST GeoTouchSensor	
+	geoSystem	%GeoSystemType;
+	enabled		%SFBool;	"true"
+	hitNormal	%SFVec3f;	#IMPLIED
+	hitGeoCoordinate %SFVec3d;	#IMPLIED
+	hitPoint	%SFVec3f;	#IMPLIED
+	hitTexCoord	%SFVec2f;	#IMPLIED
+	isActive	%SFBool;	#IMPLIED
+	isOver		%SFBool;	#IMPLIED
+	touchTime	%SFTime;	#IMPLIED
+	nodeType	NMTOKEN #FIXED	"TouchSensor"
+	containerField NMTOKEN "children"
+	class         	CDATA		""
+	DEF		ID	#IMPLIED
+	USE		IDREF	#IMPLIED>
+
+<!ELEMENT GeoViewpoint ( IS?, GeoOrigin? ) >
+<!ATTLIST GeoViewpoint
+	geoSystem	%GeoSystemType;
+	position	%SFVec3d;	"0 0 100000"
+	orientation	%SFRotation;	"0 0 1 0"
+	fieldOfView	%SFFloat;	"0.785398"
+	jump		%SFBool;	"true"
+	navType		%MFString;	#IMPLIED
+	headlight	%SFBool;	"true"
+	description	%SFString;	#IMPLIED
+	speed		%SFFloat;	"1"
+	set_bind        CDATA      #FIXED ""
+	bindTime        %SFTime;   #FIXED ""
+	isBound         CDATA      #FIXED ""
+	examine		%SFVec3f;	"0 0 0"
+	nodeType	NMTOKEN 	#FIXED	"Viewpoint"
+	containerField NMTOKEN "children"
+	class         	CDATA		""
+	DEF		ID		#IMPLIED
+	USE		IDREF		#IMPLIED>
+

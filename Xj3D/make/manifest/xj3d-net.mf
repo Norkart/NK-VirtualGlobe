@@ -1,0 +1,7 @@
+Class-Path: xj3d-core_2.0.0.jar xj3d-sav_2.0.0.jar uri.jar
+Extension-Name: xj3d
+Specification-Vendor: Web3d Consortium
+Specification-Version: 3.0
+Implementation-Vendor-Id: com.yumetech
+Implementation-Vendor: Yumetech, Inc
+Implementation-Version: 1.0

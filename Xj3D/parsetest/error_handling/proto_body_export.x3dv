@@ -1,0 +1,22 @@
+#X3D V3.0 utf8
+
+# The spec does not permit the EXPORT statement to be used within a PROTO
+# body (either declaration or runtime). This test checks to make sure we
+# issue an appropriate error message when this situation is encountered.
+
+PROFILE Immersive
+
+PROTO ExportTest [] {
+  DEF INLINE Inline {}
+
+  DEF TS TimeSensor { 
+    cycleInterval 10
+    loop TRUE
+  }
+
+  EXPORT INLINE AS bar
+
+  ROUTE TS.fraction_changed TO bar.set_fraction
+}
+
+ExportTest {}

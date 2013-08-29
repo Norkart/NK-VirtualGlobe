@@ -1,0 +1,48 @@
+Xj3D Key Bindings:
+
+Viewpoint Navigation:
+
+Page-Down     Next viewpoint
+Page-Up       Previous viewpoint
+CTRL-R        Reset the current viewpoint
+
+Navigation Changes
+CTRL-F        Change to fly mode.  Only works if content has FLY or ANY in Navigation.mode
+CTRL-W        Change to walk mode.  Only works if content has WALK or ANY in Navigation.mode
+CTRL-L        Change to lookat mode. Only works if content has LOOKAT or ANY in Navigation.mode
+CTRL-E        Change to examine mode. Only works if content has EXAMINE or ANY in Navigation.mode
+              Fit to World
+              
+Spherical Mode:
+ALT-S         Cycle Spherical mode.  Only available on Windows.
+CTRL-1        1 Channel rendering
+CTRL-2        2 Channel rendering
+CTRL-3        3 Channel rendering
+CTRL-4        4 Channel rendering
+
+Other:
+
+ALT-A         Cycle Anti-aliasing mode.  Increases anti-aliasing till max, then resets
+CTRL-N        Cycle nice mode.  Nice mode limits framerate to 50 fps
+CTRL-O        Open a file 
+CTRL-P        Print the user position to the console
+ALT-V         View the scenegraph.  Debug option to print the current scenegraph
+ALT-W         Toggle wireframe rendering style mode
+ALT-P         Toggle point rendering style mode
+
+NOTE: You must click in the Xj3D window for the key binding to work.
+
+
+Xj3D Browser Command Line Options:
+
+Usage: Xj3DBrowser [options] [filename]
+  -help                   Prints out this help message
+  -spherical              Selects spherical mode
+  -fullscreen n           Runs the browser in fullscreen exclusive mode on screen n.  n is optional
+  -stereo quad|alternate  Enables stereo projection output and selects the mode
+  -antialias n            Use n number of multisamples to antialias scene
+  -useMipMaps TRUE|FALSE  Forces mipmap usage on all textures
+  -anisotropicDegree n    Forces anisotripic filtering of nTH degree
+  -numChannels n          Selects how many channels to use for Elumens mode(1-4)
+  -numCpus n              Select how many cpu's to use.  Defaults to 1
+  -nice                   Do not use all the CPU for rendering.

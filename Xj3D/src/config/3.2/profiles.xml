@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xj3d_config>
+    <rendererConfig>
+        <renderer type="java3d" prefix="J3D"/>
+        <renderer type="null" prefix="NR"/>
+        <renderer type="ogl" prefix="OGL"/>
+        <renderer type="mobile" prefix="Mobile"/>
+    </rendererConfig>
+    
+    <componentConfig>
+        <component name="CADGeometry" title="CAD geometry component" levels="2" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.cadgeometry"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.cadgeometry"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.cadgeometry"/>
+            <componentLevel level="1">
+                <!-- not implemented
+                <node name="IndexedQuadSet"/>
+                -->
+                <node name="QuadSet"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="CADAssembly"/>
+                <node name="CADPart"/>
+                <node name="CADFace"/>
+                <node name="CADLayer"/>
+            </componentLevel>
+        </component>
+        <component name="Core" title="Core component" levels="2" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.core"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.core"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.core"/>
+            <nodeLocation type="mobile" package="org.web3d.vrml.renderer.mobile.nodes.core"/>
+            <componentLevel level="1">
+                <!-- Note: WorldRoot is not a spec-ed node, but is required for Xj3D -->
+                <node name="WorldRoot"/>
+                <node name="MetadataInteger"/>
+                <node name="MetadataString"/>
+                <node name="MetadataFloat"/>
+                <node name="MetadataDouble"/>
+                <node name="MetadataSet"/>
+                <!-- this is in grouping, should be relo-ed here per the 3.2 spec
+                <node name="WorldInfo"/>
+                -->
+            </componentLevel>
+            <componentLevel level="2"/>
+        </component>
+        <!--
+        <component name="CubeMapTexturing" title="Cube map environmental texturing component" levels="3" url="http://www.yumetech.com/">
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.texture"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.texture"/>
+            <componentLevel level="1">
+                <node name="ComposedCubeMapTexture"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="ImageCubeMapTexture"/>
+            </componentLevel>
+            <componentLevel level="3">
+                <node name="GeneratedCubeMapTexture"/>
+            </componentLevel>
+        </component>
+        -->
+        <component name="DIS" title="DIS component" levels="2" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.dis"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.dis"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.dis"/>
+            <componentLevel level="1">
+                <node name="EspduTransform"/>
+                <!-- not implemented
+                <node name="ReceiverPDU"/>
+                <node name="SignalPDU"/>
+                <node name="TransmitterPDU"/>
+                -->
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="DISEntityManager"/>
+                <node name="DISEntityTypeMapping"/>
+            </componentLevel>
+        </component>
+        <component name="EnvironmentalEffects" title="Environmental Effects component" levels="4" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.enveffects"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.enveffects"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.enveffects"/>
+            <componentLevel level="1">
+                <node name="Background"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="Fog"/>
+            </componentLevel>
+            <componentLevel level="3">
+                <node name="TextureBackground"/>
+            </componentLevel>
+            <componentLevel level="4">
+                <node name="FogCoordinate"/>
+                <node name="LocalFog"/>
+            </componentLevel>
+        </component>
+        <component name="EnvironmentalSensor" title="Environmental Sensors component" levels="2" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.environment"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.environment"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.environment"/>
+            <componentLevel level="1">
+                <node name="ProximitySensor"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="VisibilitySensor"/>
+            </componentLevel>
+            <!--
+            <componentLevel level="2">
+                <node name="TransformSensor"/>
+            </componentLevel>
+            -->
+        </component>
+        <component name="EventUtilities" title="Event Utilities component" levels="1" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.eventutils"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.eventutils"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.eventutils"/>
+            <nodeLocation type="mobile" package="org.web3d.vrml.renderer.mobile.nodes.eventutils"/>
+            <componentLevel level="1">
+                <node name="BooleanFilter"/>
+                <node name="BooleanSequencer"/>
+                <node name="BooleanToggle"/>
+                <node name="BooleanTrigger"/>
+                <node name="IntegerSequencer"/>
+                <node name="IntegerTrigger"/>
+                <node name="TimeTrigger"/>
+            </componentLevel>
+        </component>
+        <!-- not implemented
+        <component name="Followers" title="Followers component" levels="1" url="http://www.yumetech.com/">
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.followers"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.followers"/>
+            <componentLevel level="1">
+                <node name="ColorDamper"/>
+                <node name="CoordinateDamper"/>
+                <node name="OrientationChaser"/>
+                <node name="OrientationDamper"/>
+                <node name="PositionChaser"/>
+                <node name="PositionChaser2D"/>
+                <node name="PositionDamper"/>
+                <node name="PositionDamper2D"/>
+                <node name="ScalerChaser"/>
+                <node name="TexCoordDamper"/>
+            </componentLevel>
+        </component>
+        -->
+        <!-- only level 1 components implemented
+        <component name="Geometry2D" title="2D Geometry component" levels="2" url="http://www.yumetech.com/">
+        -->
+        <component name="Geometry2D" title="2D Geometry component" levels="1" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.geom2d"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.geom2d"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.geom2d"/>
+            <componentLevel level="1">
+                <node name="Polyline2D"/>
+                <node name="Polypoint2D"/>
+                <node name="Rectangle2D"/>
+                <node name="TriangleSet2D"/> 
+            </componentLevel>
+            <!-- not implemented
+            <componentLevel level="2">
+                <node name="Arc2D"/>
+                <node name="ArcClose2D"/>
+                <node name="Circle2D"/>
+                <node name="Disk2D"/>
+            </componentLevel>
+            -->
+        </component>
+        <component name="Geometry3D" title="3D Geometry component" levels="3" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.geom3d"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.geom3d"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.geom3d"/>
+            <componentLevel level="1">
+                <node name="Box"/>
+                <node name="Cone"/>
+                <node name="Cylinder"/>
+                <node name="Sphere"/> 
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="IndexedFaceSet"/>
+            </componentLevel>
+            <componentLevel level="3">
+                <node name="ElevationGrid"/>
+            </componentLevel>
+            <componentLevel level="3">
+                <node name="Extrusion"/>
+            </componentLevel>
+        </component>
+        <component name="Geospatial" title="Geospatial Rendering component" levels="2" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.geospatial"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.geospatial"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.geospatial"/>
+            <componentLevel level="1">
+                <node name="GeoCoordinate"/>
+                <node name="GeoElevationGrid"/>
+                <node name="GeoLocation"/>
+                <node name="GeoLOD"/>
+                <node name="GeoMetadata"/>
+                <node name="GeoOrigin"/>
+                <node name="GeoPositionInterpolator"/>
+                <node name="GeoTouchSensor"/>
+                <node name="GeoViewpoint"/>
+            </componentLevel>
+            <componentLevel level="2">
+				<!-- not implemented
+                <node name="GeoProximitySensor"/>
+            	-->
+				<node name="GeoTransform"/>
+            </componentLevel>
+        </component>
+        <component name="Grouping" title="Grouping component" levels="3" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.group"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.group"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.group"/>
+            <componentLevel level="1">
+                <node name="Group"/>
+                <node name="Transform"/>
+                <node name="WorldInfo"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="Switch"/>
+            </componentLevel>
+            <componentLevel level="3">
+                <node name="StaticGroup"/>
+            </componentLevel>
+        </component>
+        <component name="H-Anim" title="Humanoid Animation component" levels="1" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.hanim"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.hanim"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.hanim"/>
+            <componentLevel level="1">
+                <node name="HAnimDisplacer"/>
+                <node name="HAnimHumanoid"/>
+                <node name="HAnimJoint"/>
+                <node name="HAnimSegment"/>
+                <node name="HAnimSite"/>
+            </componentLevel>
+        </component>
+        <component name="Interpolation" title="Interpolation component" levels="3" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.interpolator"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.interpolator"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.interpolator"/>
+            <nodeLocation type="mobile" package="org.web3d.vrml.renderer.mobile.nodes.interpolator"/>
+            <componentLevel level="1">
+                <node name="CoordinateInterpolator"/>
+                <node name="OrientationInterpolator"/>
+                <node name="PositionInterpolator"/>
+                <node name="ScalarInterpolator"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="ColorInterpolator"/>
+                <node name="NormalInterpolator"/>
+            </componentLevel>
+            <componentLevel level="3">
+                <node name="CoordinateInterpolator2D"/>
+                <node name="PositionInterpolator2D"/>
+            </componentLevel>
+            <!-- not implemented
+            <componentLevel level="4">
+                <node name="EaseInEaseOut"/>
+                <node name="SplinePositionInterpolator"/>
+                <node name="SplinePositionInterpolator2D"/>
+                <node name="SplineScalarInterpolator"/>
+            </componentLevel>
+            <componentLevel level="5">
+                <node name="SquadOrientationInterpolator"/>
+            </componentLevel>
+            -->
+        </component>
+        <component name="KeyDeviceSensor" title="Key Device Sensor component" levels="2" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.sensor"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.sensor"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.sensor"/>
+            <nodeLocation type="mobile" package="org.web3d.vrml.renderer.mobile.nodes.sensor"/>
+            <componentLevel level="1">
+                <node name="KeySensor"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="StringSensor"/>
+            </componentLevel>
+        </component>
+        <!-- partial implementation - still in flux -->
+        <component name="Layering" title="Layering component" levels="2" url="http://www.yumetech.com/">
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.layering"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.layering"/>
+            <componentLevel level="1">
+                <node name="Layer"/>
+                <node name="LayerSet"/>
+                <node name="Viewport"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="CustomViewport"/>
+                <node name="FixedViewport"/>
+                <node name="ProportionalViewport"/>
+            </componentLevel>
+        </component>
+        <!--
+        <component name="Layout" title="Layout component" levels="2" url="http://www.yumetech.com/">
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.layout"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.layout"/>
+            <componentLevel level="1">
+                <node name="Layout"/>
+                <node name="LayoutGroup"/>
+                <node name="LayoutLayer"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="ScreenFontStyle"/>
+                <node name="ScreenGroup"/>
+            </componentLevel>
+        </component>
+        -->
+        <component name="Lighting" title="Lighting component" levels="3" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.lighting"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.lighting"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.lighting"/>
+            <nodeLocation type="mobile" package="org.web3d.vrml.renderer.mobile.nodes.lighting"/>
+            <componentLevel level="1">
+                <node name="DirectionalLight"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="PointLight"/>
+                <node name="SpotLight"/>
+            </componentLevel>
+            <componentLevel level="3"/>
+        </component>
+        <component name="Navigation" title="Navigation component" levels="3" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.navigation"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.navigation"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.navigation"/>
+            <nodeLocation type="mobile" package="org.web3d.vrml.renderer.mobile.nodes.navigation"/>
+            <componentLevel level="1">
+                <node name="NavigationInfo"/>
+                <node name="Viewpoint"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="Billboard"/>
+                <node name="Collision"/>
+                <node name="LOD"/>
+            </componentLevel>
+            <componentLevel level="3">
+                <node name="OrthoViewpoint"/>
+                <!-- not implemented
+                <node name="ViewpointGroup"/>
+                -->
+            </componentLevel>
+        </component>
+        <component name="Networking" title="Networking component" levels="3" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.networking"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.networking"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.networking"/>
+            <nodeLocation type="mobile" package="org.web3d.vrml.renderer.mobile.nodes.networking"/>
+            <componentLevel level="1"/>
+            <componentLevel level="2">
+                <node name="Anchor"/>
+                <node name="Inline"/>
+            </componentLevel>
+            <componentLevel level="3">
+                <node name="LoadSensor"/>
+            </componentLevel>
+            <!-- protocol, https support ???
+            <componentLevel level="4"/>
+            -->
+        </component>
+        <!--
+        <component name="NURBS" title="NURBS component" levels="4" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.nurbs"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.nurbs"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.nurbs"/>
+            <componentLevel level="1">
+                <node name="CoordinateDouble"/>
+                <node name="NurbsCurve"/>
+                <node name="NurbsOrientationInterpolator"/>
+                <node name="NurbsPatchSurface"/>
+                <node name="NurbsPositionInterpolator"/>
+                <node name="NurbsSurfaceInterpolator"/>
+                <node name="NurbsTextureoordinate"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="NurbsSet"/>
+            </componentLevel>
+            <componentLevel level="3">
+                <node name="NurbsCurve2D"/>
+                <node name="ContourPolyline2D"/>
+                <node name="NurbsSweptSurface"/>
+                <node name="NurbsSwungSurface"/>
+            </componentLevel>
+            <componentLevel level="4">
+                <node name="Contour2D"/>
+                <node name="NurbsTrimmedSurface"/>
+            </componentLevel>
+        </component>
+        -->
+        <!--
+        <component name="ParticleSystems" title="Particle Systems component" levels="3" url="http://www.yumetech.com/">
+        -->
+        <component name="ParticleSystems" title="Particle Systems component" levels="1" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.particle"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.particle"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.particle"/>
+            <componentLevel level="1">
+                <!-- not implemented
+                <node name="ConeEmitter"/>
+                -->
+                <node name="ExplosionEmitter"/>
+                <node name="GravityPhysicsModel"/>
+                <node name="ParticleSystem"/>
+                <node name="PointEmitter"/>
+                <node name="PolylineEmitter"/>
+                <node name="WindPhysicsModel"/>
+            </componentLevel>
+            <!-- not implemented
+            <componentLevel level="2">
+                <node name="BoundedPhysicsModel"/>
+                <node name="SurfaceEmitter"/>
+                <node name="VolumeEmitter"/>
+            </componentLevel>
+            <componentLevel level="3"/>
+            -->
+        </component>
+        <component name="PickingSensor" title="Picking Sensor component" levels="3" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.picking"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.picking"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.picking"/>
+            <componentLevel level="1">
+                <node name="LinePicker"/>
+                <node name="PickableGroup"/>
+                <node name="PointPicker"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="PrimitivePicker"/>
+            </componentLevel>
+            <componentLevel level="3">
+                <node name="VolumePicker"/>
+            </componentLevel>
+        </component>
+        <component name="PointingDeviceSensor" title="Pointing Device component" levels="2" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.sensor"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.sensor"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.sensor"/>
+            <nodeLocation type="mobile" package="org.web3d.vrml.renderer.mobile.nodes.sensor"/>
+            <componentLevel level="1">
+                <node name="CylinderSensor"/>
+                <node name="PlaneSensor"/>
+                <node name="SphereSensor"/>
+                <node name="TouchSensor"/>
+            </componentLevel>
+            <componentLevel level="2"/>
+        </component>
+        <component name="Rendering" title="Rendering component" levels="3" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.render"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.render"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.render"/>
+            <nodeLocation type="mobile" package="org.web3d.vrml.renderer.mobile.nodes.render"/>
+            <componentLevel level="1">
+                <node name="Color"/>
+                <node name="ColorRGBA"/>
+                <node name="Coordinate"/>
+                <node name="IndexedLineSet"/>
+                <node name="LineSet"/>
+                <node name="PointSet"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="Normal"/>
+            </componentLevel>
+            <componentLevel level="3">
+                <node name="IndexedTriangleFanSet"/>
+                <node name="IndexedTriangleSet"/>
+                <node name="IndexedTriangleStripSet"/>
+                <node name="TriangleFanSet"/>
+                <node name="TriangleSet"/>
+                <node name="TriangleStripSet"/>
+            </componentLevel>
+            <!--
+            <componentLevel level="4"/>
+            </componentLevel>
+            <componentLevel level="5">
+                <node name="ClipPlane"/>
+            </componentLevel>
+            -->
+        </component>
+        <component name="RigidBodyPhysics" title="Rigid body physics component" levels="2" url="http://www.yumetech.com/">
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.rigidphysics"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.rigidphysics"/>
+            <componentLevel level="1">
+                <node name="CollidableOffset"/>
+                <node name="CollidableShape"/>
+                <node name="CollisionCollection"/>
+                <node name="CollisionSensor"/>
+                <node name="CollisionSpace"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="BallJoint"/>
+                <node name="Contact"/>
+                <node name="DoubleAxisHingeJoint"/>
+                <node name="MotorJoint"/>
+                <node name="RigidBody"/>
+                <node name="RigidBodyCollection"/>
+                <node name="SingleAxisHingeJoint"/>
+                <node name="SliderJoint"/>
+                <node name="UniversalJoint"/>
+            </componentLevel>
+        </component>
+        <component name="Scripting" title="Scripting component" levels="1" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.scripting"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.scripting"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.scripting"/>
+            <nodeLocation type="mobile" package="org.web3d.vrml.renderer.mobile.nodes.scripting"/>
+            <componentLevel level="1">
+                <node name="Script"/>
+            </componentLevel>
+        </component>
+        <!--
+        <component name="Shaders" title="Programmable shaders component" levels="1" url="http://www.yumetech.com/">
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.shaders"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.shaders"/>
+            <componentLevel level="1">
+                <node name="FloatVertexAttribute"/>
+                <node name="ComposedShader"/>
+                <node name="ShaderPart"/>
+                <node name="ProgramShader"/>
+                <node name="ShaderProgram"/>
+                <node name="Matrix3VertexAttribute"/>
+                <node name="Matrix4VertexAttribute"/>
+                <node name="PackagedShader"/>
+            </componentLevel>
+        </component>
+        -->
+        <component name="Shape" title="Shape component" levels="4" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.shape"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.shape"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.shape"/>
+            <nodeLocation type="mobile" package="org.web3d.vrml.renderer.mobile.nodes.shape"/>
+            <componentLevel level="1">
+                <node name="Appearance"/>
+                <node name="Material"/>
+                <node name="Shape"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="LineProperties"/>
+            </componentLevel>
+            <componentLevel level="3">
+                <!-- doesn't compile......
+                <node name="FillProperties"/>
+                -->
+            </componentLevel>
+            <componentLevel level="4">
+                <node name="TwoSidedMaterial"/>
+            </componentLevel>
+        </component>
+        <component name="Sound" title="Sound component" levels="1" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.sound"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.sound"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.sound"/>
+            <componentLevel level="1">
+                <node name="AudioClip"/>
+                <node name="Sound"/>
+            </componentLevel>
+        </component>
+        <component name="Text" title="Text component" levels="1" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.text"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.text"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.text"/>
+            <componentLevel level="1">
+                <node name="FontStyle"/>
+                <node name="Text"/>
+            </componentLevel>
+        </component>
+        <component name="Texturing" title="Texturing component" levels="3" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.texture"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.texture"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.texture"/>
+            <componentLevel level="1">
+                <node name="ImageTexture"/>
+                <node name="PixelTexture"/>
+                <node name="TextureCoordinate"/>
+                <node name="TextureTransform"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="MultiTexture"/>
+                <node name="MultiTextureCoordinate"/>
+                <node name="MultiTextureTransform"/>
+                <node name="TextureCoordinateGenerator"/>
+                <node name="TextureProperties"/>
+            </componentLevel>
+            <componentLevel level="3">
+                <node name="MovieTexture"/>
+            </componentLevel>
+        </component>
+        <!-- partial implementation - still in flux
+        <component name="Texturing3D" title="Texturing3D Component" levels="2" url="http://www.yumetech.com/">
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.texture"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.texture"/>
+            <componentLevel level="1">
+                <node name="TextureMatrixTransform"/>
+                <node name="TextureTransform3D"/>
+                <node name="TextureCoordinate3D"/>
+                <node name="TextureCoordinate4D"/>
+                <node name="Composed3DTexture"/>
+                <node name="Pixel3DTexture"/>
+            </componentLevel>
+            <componentLevel level="2">
+                <node name="Image3DTexture"/>
+            </componentLevel>
+        </component>
+        -->
+        <component name="Time" title="Time component" levels="1" url="http://www.yumetech.com/">
+            <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.time"/>
+            <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.time"/>
+            <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.time"/>
+            <nodeLocation type="mobile" package="org.web3d.vrml.renderer.mobile.nodes.time"/>
+            <componentLevel level="1">
+                <node name="TimeSensor"/>
+            </componentLevel>
+        </component>
+    </componentConfig>
+    
+    <profileConfig>
+        <profile name="Core" title="Core profile">
+            <component name="Core" level="1"/>
+        </profile>
+        <profile name="Interchange" title="Interchange profile">
+            <component name="Core" level="1"/>
+            <component name="Time" level="1"/>
+            <component name="Networking" level="1"/>
+            <component name="Grouping" level="1"/>
+            <component name="Rendering" level="3"/>
+            <component name="Shape" level="1"/>
+            <component name="Geometry3D" level="2"/>
+            <component name="Lighting" level="1"/>
+            <component name="Texturing" level="2"/>
+            <component name="Interpolation" level="2"/>
+            <component name="Navigation" level="1"/>
+            <component name="EnvironmentalEffects" level="1"/>
+        </profile>
+        <profile name="Interactive" title="Interactive profile">
+            <component name="Core" level="1"/>
+            <component name="Time" level="1"/>
+            <component name="Networking" level="2"/>
+            <component name="Grouping" level="2"/>
+            <component name="Rendering" level="3"/>
+            <component name="Shape" level="1"/>
+            <component name="Geometry3D" level="3"/>
+            <component name="Lighting" level="2"/>
+            <component name="Texturing" level="2"/>
+            <component name="Interpolation" level="2"/>
+            <component name="PointingDeviceSensor" level="1"/>
+            <component name="KeyDeviceSensor" level="1"/>
+            <component name="EnvironmentalSensor" level="1"/>
+            <component name="Navigation" level="1"/>
+            <component name="EnvironmentalEffects" level="1"/>
+            <component name="EventUtilities" level="1"/>
+        </profile>
+        <profile name="MPEG-4" title="MPEG-4 Interactive profile">
+            <component name="Core" level="1"/>
+            <component name="Time" level="1"/>
+            <component name="Networking" level="2"/>
+            <component name="Grouping" level="2"/>
+            <component name="Rendering" level="1"/>
+            <component name="Shape" level="1"/>
+            <component name="Geometry3D" level="2"/>
+            <component name="Lighting" level="2"/>
+            <component name="Texturing" level="1"/>
+            <component name="Interpolation" level="2"/>
+            <component name="PointingDeviceSensor" level="1"/>
+            <component name="EnvironmentalSensor" level="1"/>
+            <component name="Navigation" level="1"/>
+            <component name="EnvironmentalEffects" level="1"/>
+        </profile>
+        <profile name="Immersive" title="Immersive profile">
+            <component name="Core" level="2"/>
+            <component name="Time" level="1"/>
+            <component name="Networking" level="3"/>
+            <component name="Grouping" level="2"/>
+            <component name="Rendering" level="3"/>
+            <component name="Shape" level="2"/>
+            <component name="Geometry2D" level="1"/>
+            <component name="Geometry3D" level="4"/>
+            <component name="Text" level="1"/>
+            <component name="Sound" level="1"/>
+            <component name="Lighting" level="2"/>
+            <component name="Texturing" level="3"/>
+            <component name="Interpolation" level="2"/>
+            <component name="PointingDeviceSensor" level="1"/>
+            <component name="KeyDeviceSensor" level="2"/>
+            <component name="EnvironmentalSensor" level="2"/>
+            <component name="Navigation" level="2"/>
+            <component name="EnvironmentalEffects" level="2"/>
+            <component name="Scripting" level="1"/>
+            <component name="EventUtilities" level="1"/>
+        </profile>
+        <profile name="CADInterchange" title="CADInterchange profile">
+            <component name="Core" level="1"/>
+            <component name="Networking" level="1"/>
+            <component name="Grouping" level="1"/>
+            <component name="Rendering" level="4"/>
+            <component name="Shape" level="2"/>
+            <component name="Geometry3D" level="1"/>
+            <component name="Lighting" level="1"/>
+            <component name="Texturing" level="2"/>
+            <component name="Navigation" level="2"/>
+            <!--
+            <component name="Shaders" level="1"/>
+            -->
+            <component name="CADGeometry" level="2"/>
+        </profile>
+    </profileConfig>
+</xj3d_config>

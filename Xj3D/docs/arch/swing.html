@@ -1,0 +1,254 @@
+<HTML>
+<HEAD>
+<TITLE>Xj3D Swing Implementation</TITLE>
+</HEAD>
+<BODY>
+
+<H1 ALIGN="center">Xj3D Swing Implementation</H1>
+
+Author: <I>Justin Couch</I><BR>
+Last updated: <I>$Date: 2001/03/15 04:37:33 $</I><BR>
+Revision: <I>$Revision: 1.1 $</I>
+
+<A NAME="intro">
+<H2>Intro</H2>
+</A>
+
+Apart from the basic representation of X3D structure, a lot of applications
+require a user interface that also presents information on the scene graph.
+Within Java, Swing is the standard interface that is used to provide this
+user interface. This component provides a collection of classes that allow
+you to view DOM, and hence X3D, content in a Swing based user interface.
+
+<H3>Background</H3>
+
+When first working on the X3D code, we needed to produce a number of example
+applications that would show X3D content and how the Xj3D library was used.
+Swing was the user interface for this. One of the standard systems that we
+dealt with was a JTree as that heirarchical structure nicely reflects the DOM
+structure. So, as we thought it would be useful to users of the codebase all
+over, we decided to expend a little extra effort in building a complete JTree
+implementation that would interact with the DOM.
+
+<H3>Motivation</H3>
+
+As the code was going to be publically used we wanted to make sure that it
+functioned nicely. A simple hack was not going to be appropriate. The code
+had to support the full capabilities of our implementation of the DOM. To
+do this, we provided both static and dynamic aspects of the DOM specifications.
+Also, as the user might only want parts of it, we decided to provide a full
+range of options for swing pieces to be used.
+
+<P>
+<HR>
+
+<A NAME="structure">
+<H2>Structural Overview</H2>
+</A>
+
+The current implementation code focusses on building a custom data model for
+Swing's JTree class. We have not worked on any other part of Swing yet.
+Everything is based around the <CODE>TreeModel</CODE> class from Swing. Also,
+we make use of a few pieces from the Utils component to make life easier.
+
+<H3>Code Layout</H3>
+
+Our code is centered around the classes defined in Figure 1. The
+<CODE>DOMTreeModel</CODE> is used to present swing our model of the tree
+information. Unlike most other packages, this component does not contain any
+private classes to do extra work. Everything is public, as it is all usable
+in a public manner.
+
+<P>
+<CENTER>
+<A HREF="swing_structure.png">
+<IMG SRC="swing_structure_small.png" WIDTH="196" HEIGHT="172"></A><BR>
+<B>Figure 1:</B> UML Structure diagram of the Swing implementation
+</CENTER>
+<P>
+
+The tree model is responsible for creating and maintaining tree node instances.
+This is so that swing can query it for new information about changes in the
+underlying model. The <CODE>DOMTreeNode</CODE> represents a single node in
+the tree for both DOM and Swing. It does not attempt to do anything except
+hold data.
+<P>
+
+The cell renderer and editor classes are standalone. You may use these in any
+tree that has DOM classes available. There is no direct relationship between
+these classes and the tree model.
+
+<H3>Core Implementation</H3>
+
+The main point of interest is the <CODE>DOMTreeModel</CODE> class. This
+provides the glue between the DOM tree and the Swing view of it. To do this,
+it must be able to handle requests for new information and also keep up with
+changes in the underlying DOM tree.
+<P>
+
+To maintain a watch on the DOM information, the tree model will attach itself
+as a DOM Event listener if the Document says that it supports the feature
+"DOMMutationEvents" of version 2.0 or greater. This looks for mutation events
+for "DOMNodeInserted", "DOMNodeRemoved" and "DOMAttrModified".
+<P>
+
+Changes driven from the user interface end are only partially supported in the
+current implementation. If the value of a node changes it will be reflected
+in the DOM, but it does not support structural changes such as adding new
+nodes. If you need to add new nodes to the tree then this should be through
+the DOM methods directly.
+
+<H3>Modifiable Nodes</H3>
+
+Only certain parts of the DOM tree are editable as far as the user interface
+is concerned. Some of this is linked to what we have so far implemented and
+sometimes it just doesn't make sense. When editing nodes, we only change nodes
+where the DOM says it is legal to change their value with
+<CODE>setNodeValue()</CODE>.
+<P>
+
+In summary, the only nodes that we permit to be modified are:
+
+<UL>
+<LI>Attributes
+<LI>Text
+<LI>Comments
+<LI>CDATA sections
+</UL>
+
+<H3>Node rendering</H3>
+
+The <CODE>DOMTreeCellRenderer</CODE> provides the ability to render a node in
+the tree. When it encounters an Element, it will ask the
+<CODE>IconLoader</CODE> whether it has an icon for that element. If it does,
+it is set. If there is no icon then it will just use the label describing the
+node's name.
+<P>
+
+For all the other nodes, we only use text, but what is used for the text
+changes over time. Attributes are rendered in the form
+<PRE>
+  <I>attribute_name</I>=<I>attribute_value</I>
+</PRE>
+
+Text, CDATA and comments are rendered as (using comment as an example):
+<PRE>
+  Comment "<I>comment_text</I>"
+</PRE>
+
+Document and document fragments are just rendered using their node names of
+"Document" and "Document Fragment" directly. All other node types just use
+the standard DOM node name (the one that has # in front).
+<P>
+<HR>
+
+<A NAME="runtime">
+<H2>Runtime Semantics</H2>
+</A>
+
+Runtime changes in the code are based around listening for DOM events to
+structural changes in the tree. When the DOM changes, we want to update the
+screen. All changes in structure are driven by the DOM, but value changes at
+a given node may also go from Swing back to DOM.
+
+<H3>Adding and Removing Nodes</H3>
+
+The process of adding a new node as described in Figure 2 starts with the
+creation of a new node. Somewhere in userland code they ask the
+<CODE>Document</CODE> to create a new node instance such as an element. Then
+this is passed to the DOM model at the point where it should be inserted.
+
+<P>
+<CENTER>
+<A HREF="swing_event_add_sequence.png">
+<IMG SRC="swing_event_add_sequence_small.png" WIDTH="258" HEIGHT="170"></A><BR>
+<B>Figure 2:</B> UML sequence diagram showing the flow of calls during the
+   addition of a new DOM node.
+</CENTER>
+<P>
+
+If the DOM model supports DOM events (<A HREF="dom.html">our implementation</A>
+does, but it is not guaranteed by other implementations such as the default
+that comes with JAXP) this will trigger a mutation event. The mutation event
+is received by the <CODE>DOMTreeModel</CODE>. This then builds a swing
+representation of the tree node, adds it to the parent tree node and then
+dispatches an event to Swing. One of the listeners for the event is the
+<CODE>JTree</CODE> that the model instance belongs to. It then queries the
+model for the tree node information, requests a renderer for that DOM element
+and updates the on-screen representation. After this, the Swing listener
+returns, allowing the DOM listener to return and we exit out of all the layers
+until we arrive back at userland code.
+
+<H3>Changing Attribute Values</H3>
+
+To change the value of an attribute we may start with userland code or
+through user interface based editing. Figure 3 illustrates the sequence of
+events when user code changes a DOM value and figure 4 shows what happens when
+the JTree editing capabilities are used.
+
+<P>
+<CENTER>
+<A HREF="swing_event_update_sequence.png">
+<IMG SRC="swing_event_update_sequence_small.png" WIDTH="126" HEIGHT="138"></A><BR>
+<B>Figure 3:</B> UML sequence diagram showing the flow of calls during the
+   updating of an attribute node from the DOM perspective.
+</CENTER>
+<P>
+
+This event flow is fairly simple. As the user changes an attribute value, it
+fires a DOM event sequence. The tree, as a listener picks this up, finds the
+tree node associated with it and creates a tree event. The JTree will then
+query back for the value and update the screen.
+<P>
+
+For user interface events from the JTree, we use the capabilities of the
+<CODE>CellEditor</CODE> interface. This is queried to see if the node is
+editable (see above for details). If it is, an editor component is fetched,
+filled with the appropriate values and then we wait for keyboard input. When
+the input is an ENTER or ESC then we deliver an event to tell the system that
+editing is finished (either complete or cancelled accordingly). This in turn
+results with the tree making queries back to the editor to get the value and
+then informing our tree model. Once the tree model has the update it passes
+it through to the appropriate DOM value.
+
+<P>
+<CENTER>
+<A HREF="swing_event_gui_sequence.png">
+<IMG SRC="swing_event_gui_sequence_small.png" WIDTH="158" HEIGHT="234"></A><BR>
+<B>Figure 4:</B> UML sequence diagram showing the flow of calls during the
+   updating of an attribute node driven from the JTree user interface.
+</CENTER>
+<P>
+
+<P>
+<HR>
+
+<A NAME="extending">
+<H2>Extending the Code</H2>
+</A>
+
+The current code has no knowledge of X3D specific items. That is, the items in
+the tree could come from any form of document.
+
+<H3>New Element Types</H3>
+
+If you only want to show new element types, there is nothing that needs to be
+done. A new element, if an icon cannot be found for it, will appear as plain
+text on the tree. If you would like an icon for it, all you need to do is
+find the <CODE>images</CODE> directory in your CLASSPATH. In there, add a GIF
+file that has the same name (including case) as the tag name of the element.
+Next time that element appears in the tree it will use your new icon.
+
+<P>
+<HR>
+
+<H2>References</H2>
+
+<UL>
+<LI><A HREF="dom.html">Xj3D DOM implementation</A>
+<LI><A HREF="http://www.w3.org/TR/DOM-Level-2-Core">W3C Document Object Model Level 2 Core Recommendation</A>
+<LI><A HREF="http://www.w3.org/TR/DOM-Level-2-Events">W3C Document Object Model Level 2 Events Recommendation</A>
+</UL>
+
+</BODY>
+</HTML>

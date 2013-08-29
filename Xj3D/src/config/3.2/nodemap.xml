@@ -1,0 +1,870 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- 
+configuration file containing the abstract type
+inheritance of X3D nodes and abstract types
+-->
+<nodemap>
+<node name="Anchor">
+<parent name="X3DGroupingNode"/>
+</node>
+<node name="Appearance">
+<parent name="X3DAppearanceNode"/>
+</node>
+<node name="Arc2D">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="ArcClose2D">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="AudioClip">
+<parent name="X3DSoundSourceNode"/>
+<parent name="X3DUrlObject"/>
+</node>
+<node name="Background">
+<parent name="X3DBackgroundNode"/>
+</node>
+<node name="BallJoint">
+<parent name="X3DRigidJointNode"/>
+</node>
+<node name="Billboard">
+<parent name="X3DGroupingNode"/>
+</node>
+<node name="BooleanFilter">
+<parent name="X3DChildNode"/>
+</node>
+<node name="BooleanSequencer">
+<parent name="X3DSequencerNode"/>
+</node>
+<node name="BooleanToggle">
+<parent name="X3DChildNode"/>
+</node>
+<node name="BooleanTrigger">
+<parent name="X3DTriggerNode"/>
+</node>
+<node name="BoundedPhysicsModel">
+<parent name="X3DParticlePhysicsModelNode"/>
+</node>
+<node name="Box">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="CADAssembly">
+<parent name="X3DGroupingNode"/>
+<parent name="X3DProductStructureChildNode"/>
+</node>
+<node name="CADFace">
+<parent name="X3DProductStructureChildNode"/>
+<parent name="X3DBoundedObject"/>
+</node>
+<node name="CADLayer">
+<parent name="X3DGroupingNode"/>
+</node>
+<node name="CADPart">
+<parent name="X3DGroupingNode"/>
+<parent name="X3DProductStructureChildNode"/>
+</node>
+<node name="Circle2D">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="ClipPlane">
+<parent name="X3DChildNode"/>
+</node>
+<node name="CollidableOffset">
+<parent name="X3DNBodyCollidableNode"/>
+</node>
+<node name="CollidableShape">
+<parent name="X3DNBodyCollidableNode"/>
+</node>
+<node name="Collision">
+<parent name="X3DGroupingNode"/>
+<parent name="X3DSensorNode"/>
+</node>
+<node name="CollisionCollection">
+<parent name="X3DChildNode"/>
+</node>
+<node name="CollisionSensor">
+<parent name="X3DSensorNode"/>
+</node>
+<node name="CollisionSpace">
+<parent name="X3DNBodyCollisionSpaceNode"/>
+</node>
+<node name="Color">
+<parent name="X3DColorNode"/>
+</node>
+<node name="ColorDamper">
+<parent name="X3DDamperNode"/>
+</node>
+<node name="ColorInterpolator">
+<parent name="X3DInterpolatorNode"/>
+</node>
+<node name="ColorRGBA">
+<parent name="X3DColorNode"/>
+</node>
+<node name="ComposedCubeMapTexture">
+<parent name="X3DEnvironmentTextureNode"/>
+</node>
+<node name="ComposedShader">
+<parent name="X3DShaderNode"/>
+<parent name="X3DProgrammableShaderObject"/>
+</node>
+<node name="ComposedTexture3D">
+<parent name="X3DTexture3DNode"/>
+</node>
+<node name="Cone">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="ConeEmitter">
+<parent name="X3DParticleEmitterNode"/>
+</node>
+<node name="Contact">
+<parent name="X3DNode"/>
+</node>
+<node name="Contour2D">
+<parent name="X3DNode"/>
+</node>
+<node name="ContourPolyline2D">
+<parent name="X3DNurbsControlCurveNode"/>
+</node>
+<node name="Coordinate">
+<parent name="X3DCoordinateNode"/>
+</node>
+<node name="CoordinateDamper">
+<parent name="X3DDamperNode"/>
+</node>
+<node name="CoordinateDouble">
+<parent name="X3DCoordinateNode"/>
+</node>
+<node name="CoordinateInterpolator">
+<parent name="X3DInterpolatorNode"/>
+</node>
+<node name="CoordinateInterpolator2D">
+<parent name="X3DInterpolatorNode"/>
+</node>
+<node name="Cylinder">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="CylinderSensor">
+<parent name="X3DDragSensorNode"/>
+</node>
+<node name="DISEntityManager">
+<parent name="X3DChildNode"/>
+</node>
+<node name="DISEntityTypeMapping">
+<parent name="X3DInfoNode"/>
+</node>
+<node name="DirectionalLight">
+<parent name="X3DLightNode"/>
+</node>
+<node name="Disk2D">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="DoubleAxisHingeJoint">
+<parent name="X3DRigidJointNode"/>
+</node>
+<node name="EaseInEaseOut">
+<parent name="X3DNode"/>
+</node>
+<node name="ElevationGrid">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="EspduTransform">
+<parent name="X3DGroupingNode"/>
+<parent name="X3DSensorNode"/>
+</node>
+<node name="ExplosionEmitter">
+<parent name="X3DParticleEmitterNode"/>
+</node>
+<node name="Extrusion">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="FillProperties">
+<parent name="X3DAppearanceChildNode"/>
+</node>
+<node name="FloatVertexAttribute">
+<parent name="X3DVertexAttributeNode"/>
+</node>
+<node name="Fog">
+<parent name="X3DBindableNode"/>
+<parent name="X3DFogObject"/>
+</node>
+<node name="FogCoordinate">
+<parent name="X3DGeometricPropertyNode"/>
+</node>
+<node name="FontStyle">
+<parent name="X3DFontStyleNode"/>
+</node>
+<node name="GeneratedCubeMapTexture">
+<parent name="X3DEnvironmentTextureNode"/>
+</node>
+<node name="GeoCoordinate">
+<parent name="X3DCoordinateNode"/>
+</node>
+<node name="GeoElevationGrid">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="GeoLOD">
+<parent name="X3DChildNode"/>
+<parent name="X3DBoundedObject"/>
+</node>
+<node name="GeoLocation">
+<parent name="X3DGroupingNode"/>
+</node>
+<node name="GeoMetadata">
+<parent name="X3DInfoNode"/>
+</node>
+<node name="GeoOrigin">
+<parent name="X3DNode"/>
+</node>
+<node name="GeoPositionInterpolator">
+<parent name="X3DInterpolatorNode"/>
+</node>
+<node name="GeoProximitySensor">
+<parent name="X3DEnvironmentalSensorNode"/>
+</node>
+<node name="GeoTouchSensor">
+<parent name="X3DTouchSensorNode"/>
+</node>
+<node name="GeoTransform">
+<parent name="X3DGroupingNode"/>
+</node>
+<node name="GeoViewpoint">
+<parent name="X3DViewpointNode"/>
+</node>
+<node name="GravityPhysicsModel">
+<parent name="X3DParticlePhysicsModelNode"/>
+</node>
+<node name="Group">
+<parent name="X3DGroupingNode"/>
+</node>
+<node name="HAnimDisplacer">
+<parent name="X3DGeometricPropertyNode"/>
+</node>
+<node name="HAnimHumanoid">
+<parent name="X3DChildNode"/>
+<parent name="X3DBoundedObject"/>
+</node>
+<node name="HAnimJoint">
+<parent name="X3DGroupingNode"/>
+</node>
+<node name="HAnimSegment">
+<parent name="X3DGroupingNode"/>
+</node>
+<node name="HAnimSite">
+<parent name="X3DGroupingNode"/>
+</node>
+<node name="ImageCubeMapTexture">
+<parent name="X3DEnvironmentTextureNode"/>
+<parent name="X3DUrlObject"/>
+</node>
+<node name="ImageTexture">
+<parent name="X3DTexture2DNode"/>
+</node>
+<node name="ImageTexture3D">
+<parent name="X3DTexture3DNode"/>
+<parent name="X3DUrlObject"/>
+</node>
+<node name="IndexedFaceSet">
+<parent name="X3DComposedGeometryNode"/>
+</node>
+<node name="IndexedLineSet">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="IndexedQuadSet">
+<parent name="X3DComposedGeometryNode"/>
+</node>
+<node name="IndexedTriangleFanSet">
+<parent name="X3DComposedGeometryNode"/>
+</node>
+<node name="IndexedTriangleSet">
+<parent name="X3DComposedGeometryNode"/>
+</node>
+<node name="IndexedTriangleStripSet">
+<parent name="X3DComposedGeometryNode"/>
+</node>
+<node name="Inline">
+<parent name="X3DChildNode"/>
+<parent name="X3DBoundedObject"/>
+<parent name="X3DUrlObject"/>
+</node>
+<node name="IntegerSequencer">
+<parent name="X3DSequencerNode"/>
+</node>
+<node name="IntegerTrigger">
+<parent name="X3DTriggerNode"/>
+</node>
+<node name="KeySensor">
+<parent name="X3DKeyDeviceSensorNode"/>
+</node>
+<node name="LOD">
+<parent name="X3DGroupingNode"/>
+</node>
+<node name="Layer">
+<parent name="X3DLayerNode"/>
+</node>
+<node name="LayerSet">
+<parent name="X3DNode"/>
+</node>
+<node name="Layout">
+<parent name="X3DLayoutNode"/>
+</node>
+<node name="LayoutGroup">
+<parent name="X3DGroupingNode"/>
+</node>
+<node name="LayoutLayer">
+<parent name="X3DLayerNode"/>
+</node>
+<node name="LinePicker">
+<parent name="X3DPickingNode"/>
+</node>
+<node name="LineProperties">
+<parent name="X3DAppearanceChildNode"/>
+</node>
+<node name="LineSet">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="LoadSensor">
+<parent name="X3DNetworkSensorNode"/>
+</node>
+<node name="LocalFog">
+<parent name="X3DChildNode"/>
+<parent name="X3DFogObject"/>
+</node>
+<node name="Material">
+<parent name="X3DMaterialNode"/>
+</node>
+<node name="Matrix3VertexAttribute">
+<parent name="X3DVertexAttributeNode"/>
+</node>
+<node name="Matrix4VertexAttribute">
+<parent name="X3DVertexAttributeNode"/>
+</node>
+<node name="MetadataDouble">
+<parent name="X3DNode"/>
+<parent name="X3DMetadataObject"/>
+</node>
+<node name="MetadataFloat">
+<parent name="X3DNode"/>
+<parent name="X3DMetadataObject"/>
+</node>
+<node name="MetadataInteger">
+<parent name="X3DNode"/>
+<parent name="X3DMetadataObject"/>
+</node>
+<node name="MetadataSet">
+<parent name="X3DNode"/>
+<parent name="X3DMetadataObject"/>
+</node>
+<node name="MetadataString">
+<parent name="X3DNode"/>
+<parent name="X3DMetadataObject"/>
+</node>
+<node name="MotorJoint">
+<parent name="X3DRigidJointNode"/>
+</node>
+<node name="MovieTexture">
+<parent name="X3DTexture2DNode"/>
+<parent name="X3DSoundSourceNode"/>
+<parent name="X3DUrlObject"/>
+</node>
+<node name="MultiTexture">
+<parent name="X3DTextureNode"/>
+</node>
+<node name="MultiTextureCoordinate">
+<parent name="X3DTextureCoordinateNode"/>
+</node>
+<node name="MultiTextureTransform">
+<parent name="X3DTextureTransformNode"/>
+</node>
+<node name="NavigationInfo">
+<parent name="X3DBindableNode"/>
+</node>
+<node name="Normal">
+<parent name="X3DNormalNode"/>
+</node>
+<node name="NormalInterpolator">
+<parent name="X3DInterpolatorNode"/>
+</node>
+<node name="NurbsCurve">
+<parent name="X3DParametricGeometryNode"/>
+</node>
+<node name="NurbsCurve2D">
+<parent name="X3DNurbsControlCurveNode"/>
+</node>
+<node name="NurbsOrientationInterpolator">
+<parent name="X3DChildNode"/>
+</node>
+<node name="NurbsPatchSurface">
+<parent name="X3DNurbsSurfaceGeometryNode"/>
+</node>
+<node name="NurbsPositionInterpolator">
+<parent name="X3DChildNode"/>
+</node>
+<node name="NurbsSet">
+<parent name="X3DChildNode"/>
+<parent name="X3DBoundedObject"/>
+</node>
+<node name="NurbsSurfaceInterpolator">
+<parent name="X3DChildNode"/>
+</node>
+<node name="NurbsSweptSurface">
+<parent name="X3DParametricGeometryNode"/>
+</node>
+<node name="NurbsSwungSurface">
+<parent name="X3DParametricGeometryNode"/>
+</node>
+<node name="NurbsTextureCoordinate">
+<parent name="X3DNode"/>
+</node>
+<node name="NurbsTrimmedSurface">
+<parent name="X3DNurbsSurfaceGeometryNode"/>
+</node>
+<node name="OrientationChaser">
+<parent name="X3DChaserNode"/>
+</node>
+<node name="OrientationDamper">
+<parent name="X3DDamperNode"/>
+</node>
+<node name="OrientationInterpolator">
+<parent name="X3DInterpolatorNode"/>
+</node>
+<node name="OrthoViewpoint">
+<parent name="X3DViewpointNode"/>
+</node>
+<node name="PackagedShader">
+<parent name="X3DShaderNode"/>
+<parent name="X3DUrlObject"/>
+<parent name="X3DProgrammableShaderObject"/>
+</node>
+<node name="ParticleSystem">
+<parent name="X3DShapeNode"/>
+</node>
+<node name="PickableGroup">
+<parent name="X3DGroupingNode"/>
+<parent name="X3DPickableObject"/>
+</node>
+<node name="PixelTexture">
+<parent name="X3DTexture2DNode"/>
+</node>
+<node name="PixelTexture3D">
+<parent name="X3DTexture3DNode"/>
+</node>
+<node name="PlaneSensor">
+<parent name="X3DDragSensorNode"/>
+</node>
+<node name="PointEmitter">
+<parent name="X3DParticleEmitterNode"/>
+</node>
+<node name="PointLight">
+<parent name="X3DLightNode"/>
+</node>
+<node name="PointPicker">
+<parent name="X3DPickingNode"/>
+</node>
+<node name="PointProperties">
+<parent name="X3DAppearanceChildNode"/>
+</node>
+<node name="PointSet">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="Polyline2D">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="PolylineEmitter">
+<parent name="X3DParticleEmitterNode"/>
+</node>
+<node name="Polypoint2D">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="PositionChaser2D">
+<parent name="X3DChaserNode"/>
+</node>
+<node name="PositionChaser">
+<parent name="X3DChaserNode"/>
+</node>
+<node name="PositionDamper2D">
+<parent name="X3DDamperNode"/>
+</node>
+<node name="PositionDamper">
+<parent name="X3DDamperNode"/>
+</node>
+<node name="PositionInterpolator">
+<parent name="X3DInterpolatorNode"/>
+</node>
+<node name="PositionInterpolator2D">
+<parent name="X3DInterpolatorNode"/>
+</node>
+<node name="PrimitivePicker">
+<parent name="X3DPickingNode"/>
+</node>
+<node name="ProgramShader">
+<parent name="X3DShaderNode"/>
+</node>
+<node name="ProximitySensor">
+<parent name="X3DEnvironmentalSensorNode"/>
+</node>
+<node name="QuadSet">
+<parent name="X3DComposedGeometryNode"/>
+</node>
+<node name="ReceiverPdu">
+<parent name="X3DSensorNode"/>
+<parent name="X3DBoundedObject"/>
+</node>
+<node name="Rectangle2D">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="RigidBody">
+<parent name="X3DNode"/>
+</node>
+<node name="RigidBodyCollection">
+<parent name="X3DChildNode"/>
+</node>
+<node name="ScalarChaser">
+<parent name="X3DChaserNode"/>
+</node>
+<node name="ScalarInterpolator">
+<parent name="X3DInterpolatorNode"/>
+</node>
+<node name="ScreenFontStyle">
+<parent name="X3DFontStyleNode"/>
+</node>
+<node name="ScreenGroup">
+<parent name="X3DGroupingNode"/>
+</node>
+<node name="Script">
+<parent name="X3DScriptNode"/>
+</node>
+<node name="ShaderPart">
+<parent name="X3DNode"/>
+<parent name="X3DUrlObject"/>
+</node>
+<node name="ShaderProgram">
+<parent name="X3DNode"/>
+<parent name="X3DUrlObject"/>
+<parent name="X3DProgrammableShaderObject"/>
+</node>
+<node name="Shape">
+<parent name="X3DShapeNode"/>
+</node>
+<node name="SignalPdu">
+<parent name="X3DSensorNode"/>
+<parent name="X3DBoundedObject"/>
+</node>
+<node name="SingleAxisHingeJoint">
+<parent name="X3DRigidJointNode"/>
+</node>
+<node name="SliderJoint">
+<parent name="X3DRigidJointNode"/>
+</node>
+<node name="Sound">
+<parent name="X3DSoundNode"/>
+</node>
+<node name="Sphere">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="SphereSensor">
+<parent name="X3DDragSensorNode"/>
+</node>
+<node name="SplinePositionInterpolator">
+<parent name="X3DInterpolatorNode"/>
+</node>
+<node name="SplinePositionInterpolator2D">
+<parent name="X3DInterpolatorNode"/>
+</node>
+<node name="SplineScalarInterpolator">
+<parent name="X3DInterpolatorNode"/>
+</node>
+<node name="SpotLight">
+<parent name="X3DLightNode"/>
+</node>
+<node name="SquadOrientationInterpolator">
+<parent name="X3DInterpolatorNode"/>
+</node>
+<node name="StaticGroup">
+<parent name="X3DChildNode"/>
+<parent name="X3DBoundedObject"/>
+</node>
+<node name="StringSensor">
+<parent name="X3DKeyDeviceSensorNode"/>
+</node>
+<node name="SurfaceEmitter">
+<parent name="X3DParticleEmitterNode"/>
+</node>
+<node name="Switch">
+<parent name="X3DGroupingNode"/>
+</node>
+<node name="TexCoordDamper">
+<parent name="X3DDamperNode"/>
+</node>
+<node name="Text">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="TextureBackground">
+<parent name="X3DBackgroundNode"/>
+</node>
+<node name="TextureCoordinate">
+<parent name="X3DTextureCoordinateNode"/>
+</node>
+<node name="TextureCoordinate3D">
+<parent name="X3DTextureCoordinateNode"/>
+</node>
+<node name="TextureCoordinate4D">
+<parent name="X3DTextureCoordinateNode"/>
+</node>
+<node name="TextureCoordinateGenerator">
+<parent name="X3DTextureCoordinateNode"/>
+</node>
+<node name="TextureProperties">
+<parent name="X3DNode"/>
+</node>
+<node name="TextureTransform">
+<parent name="X3DTextureTransformNode"/>
+</node>
+<node name="TextureTransform3D">
+<parent name="X3DTextureTransformNode"/>
+</node>
+<node name="TextureTransformMatrix3D">
+<parent name="X3DTextureTransformNode"/>
+</node>
+<node name="TimeSensor">
+<parent name="X3DTimeDependentNode"/>
+<parent name="X3DSensorNode"/>
+</node>
+<node name="TimeTrigger">
+<parent name="X3DTriggerNode"/>
+</node>
+<node name="TouchSensor">
+<parent name="X3DTouchSensorNode"/>
+</node>
+<node name="Transform">
+<parent name="X3DGroupingNode"/>
+</node>
+<node name="TransformSensor">
+<parent name="X3DEnvironmentalSensorNode"/>
+</node>
+<node name="TransmitterPdu">
+<parent name="X3DSensorNode"/>
+<parent name="X3DBoundedObject"/>
+</node>
+<node name="TriangleFanSet">
+<parent name="X3DComposedGeometryNode"/>
+</node>
+<node name="TriangleSet">
+<parent name="X3DComposedGeometryNode"/>
+</node>
+<node name="TriangleSet2D">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="TriangleStripSet">
+<parent name="X3DComposedGeometryNode"/>
+</node>
+<node name="TwoSidedMaterial">
+<parent name="X3DMaterialNode"/>
+</node>
+<node name="UniversalJoint">
+<parent name="X3DRigidJointNode"/>
+</node>
+<node name="Viewpoint">
+<parent name="X3DViewpointNode"/>
+</node>
+<node name="Viewport">
+<parent name="X3DGroupingNode"/>
+<parent name="X3DBoundedObject"/>
+</node>
+<node name="VisibilitySensor">
+<parent name="X3DEnvironmentalSensorNode"/>
+</node>
+<node name="VolumeEmitter">
+<parent name="X3DParticleEmitterNode"/>
+</node>
+<node name="VolumePicker">
+<parent name="X3DPickingNode"/>
+</node>
+<node name="WindPhysicsModel">
+<parent name="X3DParticlePhysicsModelNode"/>
+</node>
+<node name="WorldInfo">
+<parent name="X3DInfoNode"/>
+</node>
+<node name="X3DBoundedObject"/>
+<node name="X3DFogObject"/>
+<node name="X3DMetadataObject"/>
+<node name="X3DPickableObject"/>
+<node name="X3DUrlObject"/>
+<node name="X3DNode"/>
+<node name="X3DAppearanceChildNode">
+<parent name="X3DNode"/>
+</node>
+<node name="X3DAppearanceNode">
+<parent name="X3DNode"/>
+</node>
+<node name="X3DBackgroundNode">
+<parent name="X3DBindableNode"/>
+</node>
+<node name="X3DBindableNode">
+<parent name="X3DChildNode"/>
+</node>
+<node name="X3DChaserNode">
+<parent name="X3DFollowerNode"/>
+</node>
+<node name="X3DChildNode">
+<parent name="X3DNode"/>
+</node>
+<node name="X3DColorNode">
+<parent name="X3DGeometricPropertyNode"/>
+</node>
+<node name="X3DComposedGeometryNode">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="X3DCoordinateNode">
+<parent name="X3DGeometricPropertyNode"/>
+</node>
+<node name="X3DDamperNode">
+<parent name="X3DFollowerNode"/>
+</node>
+<node name="X3DDragSensorNode">
+<parent name="X3DPointingDeviceSensorNode"/>
+</node>
+<node name="X3DEnvironmentTextureNode">
+<parent name="X3DTextureNode"/>
+</node>
+<node name="X3DEnvironmentalSensorNode">
+<parent name="X3DSensorNode"/>
+</node>
+<node name="X3DFollowerNode">
+<parent name="X3DChildNode"/>
+</node>
+<node name="X3DFontStyleNode">
+<parent name="X3DNode"/>
+</node>
+<node name="X3DGeometricPropertyNode">
+<parent name="X3DNode"/>
+</node>
+<node name="X3DGeometryNode">
+<parent name="X3DChildNode"/>
+</node>
+<node name="X3DGroupingNode">
+<parent name="X3DChildNode"/>
+<parent name="X3DBoundedObject"/>
+</node>
+<node name="X3DInfoNode">
+<parent name="X3DChildNode"/>
+</node>
+<node name="X3DInterpolatorNode">
+<parent name="X3DChildNode"/>
+</node>
+<node name="X3DKeyDeviceSensorNode">
+<parent name="X3DSensorNode"/>
+</node>
+<node name="X3DLayerNode">
+<parent name="X3DNode"/>
+</node>
+<node name="X3DLayoutNode">
+<parent name="X3DChildNode"/>
+</node>
+<node name="X3DLightNode">
+<parent name="X3DChildNode"/>
+</node>
+<node name="X3DMaterialNode">
+<parent name="X3DAppearanceChildNode"/>
+</node>
+<node name="X3DNBodyCollidableNode">
+<parent name="X3DChildNode"/>
+<parent name="X3DBoundedObject"/>
+</node>
+<node name="X3DNBodyCollisionSpaceNode">
+<parent name="X3DNode"/>
+<parent name="X3DBoundedObject"/>
+</node>
+<node name="X3DNetworkSensorNode">
+<parent name="X3DSensorNode"/>
+</node>
+<node name="X3DNormalNode">
+<parent name="X3DGeometricPropertyNode"/>
+</node>
+<node name="X3DNurbsControlCurveNode">
+<parent name="X3DNode"/>
+</node>
+<node name="X3DNurbsSurfaceGeometryNode">
+<parent name="X3DParametricGeometryNode"/>
+</node>
+<node name="X3DParametricGeometryNode">
+<parent name="X3DGeometryNode"/>
+</node>
+<node name="X3DParticleEmitterNode">
+<parent name="X3DNode"/>
+</node>
+<node name="X3DParticlePhysicsModelNode">
+<parent name="X3DNode"/>
+</node>
+<node name="X3DPickingNode">
+<parent name="X3DSensorNode"/>
+</node>
+<node name="X3DPointingDeviceSensorNode">
+<parent name="X3DSensorNode"/>
+</node>
+<node name="X3DProductStructureChildNode">
+<parent name="X3DChildNode"/>
+</node>
+<node name="X3DPrototypeInstance">
+<parent name="X3DNode"/>
+</node>
+<node name="X3DRigidJointNode">
+<parent name="X3DNode"/>
+</node>
+<node name="X3DScriptNode">
+<parent name="X3DChildNode"/>
+<parent name="X3DUrlObject"/>
+</node>
+<node name="X3DSensorNode">
+<parent name="X3DChildNode"/>
+</node>
+<node name="X3DSequencerNode">
+<parent name="X3DChildNode"/>
+</node>
+<node name="X3DShaderNode">
+<parent name="X3DAppearanceChildNode"/>
+</node>
+<node name="X3DShapeNode">
+<parent name="X3DChildNode"/>
+<parent name="X3DBoundedObject"/>
+</node>
+<node name="X3DSoundNode">
+<parent name="X3DChildNode"/>
+</node>
+<node name="X3DSoundSourceNode">
+<parent name="X3DTimeDependentNode"/>
+</node>
+<node name="X3DTexture2DNode">
+<parent name="X3DTextureNode"/>
+</node>
+<node name="X3DTexture3DNode">
+<parent name="X3DTextureNode"/>
+</node>
+<node name="X3DTextureCoordinateNode">
+<parent name="X3DGeometricPropertyNode"/>
+</node>
+<node name="X3DTextureNode">
+<parent name="X3DAppearanceChildNode"/>
+</node>
+<node name="X3DTextureTransformNode">
+<parent name="X3DAppearanceChildNode"/>
+</node>
+<node name="X3DTimeDependentNode">
+<parent name="X3DChildNode"/>
+</node>
+<node name="X3DTouchSensorNode">
+<parent name="X3DPointingDeviceSensorNode"/>
+</node>
+<node name="X3DTriggerNode">
+<parent name="X3DChildNode"/>
+</node>
+<node name="X3DVertexAttributeNode">
+<parent name="X3DGeometricPropertyNode"/>
+</node>
+<node name="X3DViewpointNode">
+<parent name="X3DBindableNode"/>
+</node>
+<node name="X3DViewportNode">
+<parent name="X3DGroupingNode"/>
+<parent name="X3DBoundedObject"/>
+</node>
+</nodemap>

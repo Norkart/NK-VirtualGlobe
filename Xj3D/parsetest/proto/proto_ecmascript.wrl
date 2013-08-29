@@ -1,0 +1,40 @@
+#VRML V2.0 utf8
+
+PROTO TouchyBox [
+]
+{
+  Group {
+    children [
+      Shape {
+        appearance Appearance {
+            material Material { diffuseColor 1 0 0 }
+          }
+        geometry Box {}
+      }
+      DEF TS TouchSensor {}
+
+      DEF SC Script {
+        eventIn SFTime touchInput
+
+        url [ "javascript:
+          function initialize() {
+            Browser.println('Initialise called');
+          }
+          
+          function touchInput() {
+            Browser.println('Got touchInput');
+          }
+
+          function shutdown() {
+            Browser.println('Shutdown called');
+          }
+        " ]
+      }
+
+    ]    
+  }
+
+  ROUTE TS.touchTime TO SC.touchInput
+}
+
+TouchyBox {}

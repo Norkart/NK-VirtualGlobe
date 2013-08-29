@@ -1,0 +1,61 @@
+#*********************************************************************
+#
+#  (C) 2001 - 2006 Web3d Consortium
+#    http://www.web3d.org/
+#
+# Package makefile producing xj3d-j3d.jar
+#
+# Author: Justin Couch
+# Version: $Revision: 1.21 $
+#
+#*********************************************************************
+
+# A version number we tack onto the JAR file name for eclipse versioning
+# purposes.
+JAR_VERSION=2.0.0
+
+# Describe every directory that you want included in the JAR file here.
+# This is not recursive, so if you want parent directory and the
+# sub-directory, say so. These directories should not have '/' appended.
+JAR_CONTENT=org/web3d/vrml/renderer/j3d \
+	org/web3d/vrml/renderer/j3d/input \
+	org/web3d/vrml/renderer/j3d/browser \
+	org/web3d/vrml/renderer/j3d/nodes \
+	org/web3d/vrml/renderer/j3d/nodes/core \
+	org/web3d/vrml/renderer/j3d/nodes/cadgeometry \
+	org/web3d/vrml/renderer/j3d/nodes/dis \
+	org/web3d/vrml/renderer/j3d/nodes/enveffects \
+	org/web3d/vrml/renderer/j3d/nodes/environment \
+	org/web3d/vrml/renderer/j3d/nodes/eventutils \
+	org/web3d/vrml/renderer/j3d/nodes/extensions \
+	org/web3d/vrml/renderer/j3d/nodes/geom2d \
+	org/web3d/vrml/renderer/j3d/nodes/geom3d \
+	org/web3d/vrml/renderer/j3d/nodes/geospatial \
+	org/web3d/vrml/renderer/j3d/nodes/group \
+	org/web3d/vrml/renderer/j3d/nodes/interpolator \
+	org/web3d/vrml/renderer/j3d/nodes/lighting \
+	org/web3d/vrml/renderer/j3d/nodes/navigation \
+	org/web3d/vrml/renderer/j3d/nodes/networking \
+	org/web3d/vrml/renderer/j3d/nodes/nurbs \
+	org/web3d/vrml/renderer/j3d/nodes/render \
+	org/web3d/vrml/renderer/j3d/nodes/rigidphysics \
+	org/web3d/vrml/renderer/j3d/nodes/picking \
+	org/web3d/vrml/renderer/j3d/nodes/scripting \
+	org/web3d/vrml/renderer/j3d/nodes/sensor \
+	org/web3d/vrml/renderer/j3d/nodes/shape \
+	org/web3d/vrml/renderer/j3d/nodes/sound \
+	org/web3d/vrml/renderer/j3d/nodes/surface \
+	org/web3d/vrml/renderer/j3d/nodes/text \
+	org/web3d/vrml/renderer/j3d/nodes/texture \
+	org/web3d/vrml/renderer/j3d/nodes/time \
+	org/xj3d/loaders/j3d \
+	org/xj3d/ui/awt/browser/j3d \
+	org/xj3d/ui/awt/device/j3d/mouse \
+	org/xj3d/ui/awt/device/j3d/elumens \
+	org/xj3d/ui/awt/device/keyboard \
+	org/xj3d/ui/awt/widgets \
+
+# Manifest file name. Stored in the make/manifest directory
+MANIFEST=xj3d-j3d.mf
+
+include ${PROJECT_ROOT}/make/Makefile.jav

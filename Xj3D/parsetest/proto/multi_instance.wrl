@@ -1,0 +1,21 @@
+#VRML V2.0 utf8
+
+PROTO MyBox [] 
+{
+  Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+    geometry Box {
+    }
+  }
+}
+
+MyBox {}
+
+Transform {
+  translation 1 1 0
+  children MyBox {}
+}

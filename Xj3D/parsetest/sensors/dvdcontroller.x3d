@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile="Immersive">
+<Scene>
+
+    <ExternProtoDeclare name="ControllableTimeSensor" url="&quot;ControllableTimeSensorPrototype.x3dv">
+      <field accessType="inputOutput" name="speedMultiplier" type="SFFloat"/>
+      <field accessType="inputOutput" name="reverse" type="SFBool"/>
+      <field accessType="inputOnly" name="set_fraction" type="SFFloat"/>
+      <field accessType="inputOutput" name="cycleInterval" type="SFTime"/>
+      <field accessType="inputOutput" name="enabled" type="SFBool"/>
+      <field accessType="inputOutput" name="loop" type="SFBool"/>
+      <field accessType="inputOutput" name="metadata" type="SFNode"/>
+      <field accessType="inputOutput" name="pauseTime" type="SFTime"/>
+      <field accessType="inputOutput" name="resumeTime" type="SFTime"/>
+      <field accessType="inputOutput" name="startTime" type="SFTime"/>
+      <field accessType="inputOutput" name="stopTime" type="SFTime"/>
+      <field accessType="outputOnly" name="cycleTime" type="SFTime"/>
+      <field accessType="outputOnly" name="elapsedTime" type="SFTime"/>
+      <field accessType="outputOnly" name="fraction_changed" type="SFFloat"/>
+      <field accessType="outputOnly" name="isActive" type="SFBool"/>
+      <field accessType="outputOnly" name="isPaused" type="SFBool"/>
+      <field accessType="outputOnly" name="time" type="SFTime"/>
+</ExternProtoDeclare>
+
+<Transform DEF="TG"
+rotation=" 0 1 0 0.78"><Shape><Box></Box><Appearance><Material
+diffuseColor=" 1 0 0"></Material></Appearance></Shape></Transform>
+<PositionInterpolator DEF="PI"
+key='0 0.25 0.5 0.75 1 '
+
+keyValue='0 0 0 -1 0 0 -1 1 0 0 1 0 0 0 0 '
+></PositionInterpolator>
+<Transform
+translation=" 0 -2 0"><Shape><Text
+string="FF"></Text></Shape><Transform
+translation=" 0.44 -0.7 -0"><Shape><Appearance><Material
+transparency=" 1"></Material></Appearance><Box
+size=" 0.84 0.7 0.1"></Box></Shape><TouchSensor DEF="FFTS"></TouchSensor></Transform></Transform>
+<Transform
+translation=" 1 -2 0"><Shape><Text
+string="SF"></Text></Shape><Transform
+translation=" 0.44 -0.7 -0"><Shape><Appearance><Material
+transparency=" 1"></Material></Appearance><Box
+size=" 0.84 0.7 0.1"></Box></Shape><TouchSensor DEF="SFTS"></TouchSensor></Transform></Transform>
+<Transform
+translation=" -2 -2 0"><Shape><Text
+string="0.1"></Text></Shape><Transform
+translation=" 0.54 -0.7 -0"><Shape><Appearance><Material
+transparency=" 1"></Material></Appearance><Box
+size=" 1.1 0.7 0.1"></Box></Shape><TouchSensor DEF="JUMPTS"></TouchSensor></Transform></Transform>
+<Transform
+translation=" 2 -2 0"><Shape><Text
+string="RV"></Text></Shape><Transform
+translation=" 0.54 -0.7 -0"><Shape><Appearance><Material
+transparency=" 1"></Material></Appearance><Box
+size=" 1.1 0.7 0.1"></Box></Shape><TouchSensor DEF="RVTS"></TouchSensor></Transform></Transform>
+
+
+
+
+
+
+
+<Script DEF="UILogic"><field name="firstJump" accessType="inputOnly" type="SFTime"></field>
+<field name="fastForward" accessType="inputOnly" type="SFTime"></field>
+<field name="slowForward" accessType="inputOnly" type="SFTime"></field>
+<field name="reverse" accessType="inputOnly" type="SFTime"></field>
+<field name="fraction" accessType="outputOnly" type="SFFloat"></field>
+<field name="speedMultiplier" accessType="outputOnly" type="SFFloat"></field>
+<field name="reverseDir" accessType="outputOnly" type="SFBool"></field><![CDATA[
+ecmascript:
+      var speedMult = 1;
+      var reversed = false;
+      
+      function firstJump(val) {
+         fraction = 0.1;         
+      }
+   
+      function reverse(val) {
+      	 reversed = !reversed;
+         reverseDir = reversed;
+      }
+      
+      function fastForward(val) {
+      	 if (speedMult < 1)
+      	    speedMult = 2.0;
+      	 else
+      	    speedMult = speedMult * 2;
+         speedMultiplier = speedMult;
+      }
+
+      function slowForward(val) {
+      	 if (speedMult > 1)
+      	    speedMult = 0.5;
+      	 else
+      	    speedMult = speedMult * 0.5;
+         speedMultiplier = speedMult;
+      }
+      
+      function play(val) {
+         speedMult = 1;
+         speedMultiplier = speedMult;
+      }
+   
+]]></Script>
+
+<ProtoInstance name="ControllableTimeSensor" DEF="TS">
+   <fieldValue name="cycleInterval" value="10" />
+   <fieldValue name="loop" value="true" />
+</ProtoInstance>
+
+<ROUTE fromNode="FFTS" fromField="touchTime" toNode="UILogic" toField="fastForward"/>
+<ROUTE fromNode="SFTS" fromField="touchTime" toNode="UILogic" toField="slowForward"/>
+<ROUTE fromNode="JUMPTS" fromField="touchTime" toNode="UILogic" toField="firstJump"/>
+<ROUTE fromNode="RVTS" fromField="touchTime" toNode="UILogic" toField="reverse"/>
+
+<ROUTE fromNode="UILogic" fromField="fraction" toNode="TS" toField="set_fraction" />
+<ROUTE fromNode="UILogic" fromField="speedMultiplier" toNode="TS" toField="speedMultiplier" />
+<ROUTE fromNode="UILogic" fromField="reverseDir" toNode="TS" toField="reverse" />
+<ROUTE fromNode="TS" fromField="fraction_changed" toNode="PI" toField="set_fraction" />
+<ROUTE fromNode="PI" fromField="value_changed" toNode="TG" toField="translation" />
+
+</Scene>
+</X3D>

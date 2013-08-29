@@ -1,0 +1,30 @@
+#X3D V3.0 utf8
+
+PROFILE Interactive
+COMPONENT xj3d_overlay
+
+Overlay {
+  layout [
+    GridLayout {
+      gridSize 2 2
+      children [
+        Image2D {
+          bboxSize 64 32
+          texture ImageTexture { url "test_image.gif" }
+        }
+        Image2D {
+          bboxSize 64 32
+          texture ImageTexture { url "test_image.gif" }
+        }
+        Image2D {
+          bboxSize 64 32
+          texture ImageTexture { url "test_image.gif" }
+        }
+        Image2D {
+          bboxSize 64 32
+          texture ImageTexture { url "test_image.gif" }
+        }
+      ]
+    }
+  ]
+}

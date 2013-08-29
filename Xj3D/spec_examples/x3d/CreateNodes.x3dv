@@ -1,0 +1,15 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+DEF HOLDER Transform {
+    translation -2 0 0
+}
+
+DEF SC Script {
+    outputOnly MFNode children
+
+    url ["SAIExample2.class"]
+}
+
+ROUTE SC.children1 TO HOLDER.children

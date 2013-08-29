@@ -1,0 +1,11 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Script {
+  mustEvaluate TRUE
+  directOutput FALSE
+  initializeOnly SFInt32 testIntField 20
+
+  url [ "FieldValueTest.class" ]
+}

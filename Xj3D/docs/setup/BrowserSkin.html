@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+<title>EAI and SAI Browser Skins</title>
+</head>
+<body>
+
+The Swing versions of the EAI and SAI browser panels for Xj3D are
+customizable in appearance.  The J3DBrowserFactoryImpl, X3DJ3DBrowserFactoryImpl,
+VRMLOGLBrowserFactoryImpl, and X3DOGLBrowserFactoryImpl factories attempt to
+load the properties file xj3d-skins.properties when first instanced.  This properties file
+defines the cursors to use for each navigation mode, the images to use for the
+buttons in the navigation toolbar, the images for the viewpoint navigation toolbar
+and the image for the show browser console button.
+<P>
+The browser factories search in various places and use the first copy of xj3d-skins.properties
+located.  Default property values are used if the loaded property file does
+not specify a value for the property and are NOT substituted in the event of an error.
+<P>
+The default images are located in the src/images directory of the Xj3D codebase.
+<DL>
+<DT>
+touchSensor.cursor
+<DD>
+Cursor for mouse over enabled touch sensor.  
+Default is images/navigation/CursorTarget.gif
+<DT>
+dragSensor.cursor
+<DD>
+Cursor for mouse dragging on enabled touch sensor.
+Default is images/navigation/drag.gif
+<DT>
+anchor.cursor
+<DD>
+Cursor for mouse over enabled anchor.
+Default is images/navigation/link.gif
+<DT>
+WALK.cursor
+<DD>
+Cursor for walk mode.
+Default is images/navigation/CursorWalk.gif
+<DT>
+EXAMINE.cursor
+<DD>
+Cursor for examine mode.
+Default is images/navigation/CursorExamine.gif
+<DT>
+PAN.cursor
+<DD>
+Cursor for pan/slide mode.
+Default is images/navigation/CursorPan.gif
+<DT>
+FLY.cursor
+<DD>
+Cursor for fly mode.
+Default is images/navigation/CursorFly.gif
+<DT>
+TILT.cursor
+<DD>
+Cursor for tilt or rotate in place mode.
+Default is images/navigation/CursorTilt.gif
+<DT>
+WALK.button
+<DD>
+Button image to select walk mode.
+Default is images/navigation/ButtonWalk.gif
+<DT>
+FLY.button
+<DD>
+Button image to select fly mode.
+Default is images/navigation/ButtonFly.gif
+<DT>
+EXAMINE.button
+<DD>
+Button image to select examine mode.
+Default is images/navigation/ButtonExamine.gif
+<DT>
+PAN.button
+<DD>
+Button image to select pan/slide mode.
+Default is images/navigation/ButtonPan.gif
+<DT>
+TILT.button
+<DD>
+Button image to select tilt/rotate in place mode.
+Default is images/navigation/ButtonTilt.gif
+<DT>
+CONSOLE.button
+<DD>
+Button image to show browser console window.
+Default is images/navigation/ButtonConsole.gif
+<DT>
+HOME.button
+<DD>
+Button image for the viewpoint home button.
+Default is images/navigation/ButtonHome.gif
+<DT>
+PREVIOUSVIEW.button
+<DD>
+Button image for the previous viewpoint button.
+Default is images/navigation/ButtonBack.gif
+<DT>
+NEXTVIEW.button
+<DD>
+Button image for the next viewpoint button.
+Default is images/navigation/ButtonForward.gif
+</DL>
+<I>Last Revised: $Date: 2004/07/15 23:04:15 $</I>
+</body>
+</html>

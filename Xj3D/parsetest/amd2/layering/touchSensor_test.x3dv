@@ -1,0 +1,147 @@
+#X3D V3.2 utf8
+
+PROFILE Immersive
+COMPONENT Layering:1
+COMPONENT EnvironmentalEffects:3
+
+# The content defined for the base layer
+DEF TG Transform {
+  children [
+	  Shape {
+		geometry Box {}
+		appearance Appearance {
+		  material DEF MAT1 Material {
+			diffuseColor 1 0 0
+		  }
+		}	  
+	  }
+	  DEF TS1 TouchSensor {}
+  ]
+}
+
+# A second layer to show that we do have stuff on screen
+LayerSet {  
+  order [ 0 1 2 ]
+  layers [
+    Layer {
+      children [
+        TextureBackground {
+            transparency 1
+        }
+        DEF TG_LAYER Transform {
+          translation 0.3 0.4 0
+          children [
+			  Shape {
+				geometry Box {}
+				appearance Appearance {
+				  material DEF MAT2 Material {
+					diffuseColor 0 1 0
+				  }
+				}
+			  }
+			  DEF TS2 TouchSensor {}
+		 ]
+        }
+      ]
+    }
+    Layer {
+      children [
+        TextureBackground {
+            transparency 1
+        }
+        DEF TG2_LAYER Transform {
+          translation 0.8 0.9 0
+          children [
+			  Shape {
+				geometry Box {}
+				appearance Appearance {
+				  material DEF MAT3 Material {
+					diffuseColor 0 0 1
+				  }
+				}
+			  }
+			  DEF TS3 TouchSensor {}
+		 ]
+        }
+      ]
+    }
+    
+  ]
+}
+
+DEF SC1 Script {
+   inputOnly SFBool isOver
+   inputOnly SFBool isActive
+   outputOnly SFColor color
+   outputOnly SFFloat transparency
+   url ["ecmascript:
+      function isOver(val) {
+         if (val)
+         	color = new SFColor(1,1,1);
+         else
+            color = new SFColor(1,0,0);
+      }
+      
+      function isActive(val) {
+         if (val)
+         	transparency = 0.8;
+         else
+         	transparency = 0;
+      }
+   "]
+}
+
+DEF SC2 Script {
+   inputOnly SFBool isOver
+   inputOnly SFBool isActive
+   outputOnly SFColor color
+   outputOnly SFFloat transparency
+   url ["ecmascript:
+      function isOver(val) {
+         if (val)
+         	color = new SFColor(1,1,1);
+         else
+            color = new SFColor(0,1,0);
+      }
+      function isActive(val) {
+         if (val)
+         	transparency = 0.8;
+         else
+         	transparency = 0;
+      }
+   "]
+}
+
+DEF SC3 Script {
+   inputOnly SFBool isOver
+   inputOnly SFBool isActive
+   outputOnly SFColor color
+   outputOnly SFFloat transparency
+   url ["ecmascript:
+      function isOver(val) {
+         if (val)
+         	color = new SFColor(1,1,1);
+         else
+            color = new SFColor(0,0,1);
+      }
+      function isActive(val) {
+         if (val)
+         	transparency = 0.8;
+         else
+         	transparency = 0;
+      }
+   "]
+}
+
+ROUTE TS1.isOver TO SC1.isOver
+ROUTE TS1.isActive TO SC1.isActive
+ROUTE TS2.isOver TO SC2.isOver
+ROUTE TS2.isActive TO SC2.isActive
+ROUTE TS3.isOver TO SC3.isOver
+ROUTE TS3.isActive TO SC3.isActive
+ROUTE SC1.color TO MAT1.diffuseColor
+ROUTE SC1.transparency TO MAT1.set_transparency
+ROUTE SC2.color TO MAT2.diffuseColor
+ROUTE SC2.transparency TO MAT2.set_transparency
+ROUTE SC3.color TO MAT3.diffuseColor
+ROUTE SC3.transparency TO MAT3.set_transparency

@@ -1,0 +1,12 @@
+#X3D V3.0 utf8
+
+PROFILE Interchange
+
+Group {
+  children Shape {
+    geometry Box {}
+    appearance Appearance {
+      material Material { diffuseColor 1 0 0 }
+    }
+  }
+}

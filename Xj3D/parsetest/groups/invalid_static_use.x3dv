@@ -1,0 +1,66 @@
+#X3D V3.0 utf8
+
+PROFILE Interactive
+COMPONENT Grouping:3
+
+# This should generate 2 different errors. In the first case, the node is being
+# USEd outside the scope of the static group. In the second case, the static 
+# group is USEing a node that is declared outside the static.
+
+Transform {
+  translation -1 1 0
+  children [
+    StaticGroup {
+      children [
+        Shape {
+          appearance DEF app Appearance {
+            material Material {
+              diffuseColor 1 0 0
+            }
+          }
+          geometry Box {
+            size 1 1 1
+          }
+        }
+      ]
+    }
+  ]
+}
+
+Transform {
+  translation 1 1 0 
+  children Shape {
+    appearance USE app 
+    geometry Box {
+      size 1 1 1
+    }
+  }
+}
+
+Transform {
+  translation -1 -1 0 
+  children Shape {
+    appearance DEF invalid_def Appearance {
+      material Material {
+        diffuseColor 0 1 0
+      } 
+    }
+    geometry Box {
+      size 1 1 1
+    }
+  }
+}
+
+Transform {
+  translation 1 -1 0
+  children StaticGroup {
+    children [
+      Shape {
+        appearance USE invalid_def
+        geometry Box {
+          size 1 1 1 
+        }
+      }
+    ]
+  }
+}

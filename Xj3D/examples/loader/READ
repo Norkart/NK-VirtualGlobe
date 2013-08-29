@@ -1,0 +1,9 @@
+This directory shows how to use Xj3D as a loader utility for different API's.  It is a
+very simple program to show basic usage.  For a complete browser check out
+the examples/browser program.
+
+Aviatrix3D:
+   java AV3DLoaderDemo test.wrl
+   
+Java3D:
+    java Java3DLoaderDemo test.wrl

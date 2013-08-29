@@ -1,0 +1,47 @@
+#X3D V3.1 utf8
+
+PROFILE Immersive
+COMPONENT EnvironmentalEffects:4
+
+Background {
+  skyColor [ 0 0 0.5 ]
+}
+
+Group {
+  children [
+    Transform {
+      translation -2 0 0
+      children [
+        LocalFog {
+    color 1 0 0
+    visibilityRange 17
+  }
+        Shape {
+          appearance Appearance {
+            material Material {
+              emissiveColor 0 1 0
+            }
+          }
+          geometry DEF SPHERE_GEOM Sphere { radius 2 }
+        }
+      ]
+    }
+    Transform {
+      translation 2 0 0
+      children [
+        LocalFog {
+    color 0 0 1
+    visibilityRange 17
+  }
+        Shape {
+          appearance Appearance {
+            material Material {
+              emissiveColor 1 0 0
+            }
+          }
+          geometry Sphere { radius 1 }
+        }
+      ]
+    }
+  ]
+}

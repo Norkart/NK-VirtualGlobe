@@ -1,0 +1,16 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Transform {
+   translation 0.25 -0.25 0
+   children [
+Shape {
+   appearance Appearance {
+      material Material {
+         diffuseColor 1 0 1
+      }
+   }
+   geometry Sphere { radius 0.25 }
+}
+]}

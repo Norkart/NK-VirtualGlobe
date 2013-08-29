@@ -1,0 +1,197 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_RigidBodyPhysics:2
+COMPONENT xj3d_IODevice:2
+
+# An example that combines the wheel to control a small cannon that fires
+# projectiles. The projectiles are controlled by the physics model.
+# The wheel controls the orientation
+# The throttle controls pitch
+# Button 1 fires a ball
+
+# Where are we viewing from?
+Viewpoint { 
+  position 0 2 5 
+  orientation 1 0 0 -0.2
+}
+
+NavigationInfo {
+  type "NONE"
+}
+
+# The cannon group
+Group {
+  children [
+    DEF CANNON-BODY Transform {
+      children [ 
+        DEF CANNON-BARREL Transform { 
+          children Transform {
+	    translation 0 -0.5 0
+	    rotation 1 0 0 1.572
+	    center 0 0.5 0
+    	    children Shape {
+	      appearance DEF CANNON-COLOUR Appearance {
+	        material Material {
+	          emissiveColor 0.6 0.6 0
+	        }
+	      }
+	      geometry Cylinder {
+	        height 1
+	        radius 0.1
+	      }
+	    }
+	  }
+        }
+        Shape {
+          appearance USE CANNON-COLOUR
+	  geometry Box { size 0.5 0.5 0.5 }
+        }
+      ]
+    }
+  ]
+}
+
+DEF CANNON-BODY-ORIENT OrientationInterpolator {
+  key [ -1 0 1 ]
+  keyValue [
+     0 1 0  1.572
+     0 1 0  0
+     0 1 0 -1.572
+  ]
+}
+
+DEF CANNON-BARREL-ORIENT OrientationInterpolator {
+  key [ -1 0 1 ]
+  keyValue [
+     1 0 0 1.572
+     1 0 0 0.71
+     1 0 0 0
+  ]
+}
+
+DEF WHEEL WheelSensor { name "Wheel-0" }
+DEF GAMEPAD GamepadSensor { name "Gamepad-0" }
+
+ROUTE WHEEL.wheelX TO CANNON-BODY-ORIENT.set_fraction
+ROUTE CANNON-BODY-ORIENT.value_changed TO CANNON-BODY.set_rotation
+
+ROUTE WHEEL.throttleSlider TO CANNON-BARREL-ORIENT.set_fraction
+ROUTE CANNON-BARREL-ORIENT.value_changed TO CANNON-BARREL.set_rotation
+
+ROUTE GAMEPAD.leftStickX TO CANNON-BODY-ORIENT.set_fraction
+ROUTE GAMEPAD.rightStickY TO CANNON-BARREL-ORIENT.set_fraction
+
+# This group contains all the renderable stuff in the scene
+Group {
+  children [
+    DEF BALL-CONTAINER Group {
+      children [
+        DEF BALL-GEOM CollidableShape {
+	  shape Shape {
+	    appearance Appearance {
+	      material Material {
+		emissiveColor 1 0 0 
+	      }
+	    }
+	    geometry Sphere { radius 0.1 }
+	  }
+	}
+      ] 
+    }
+    DEF GROUND-GEOM CollidableShape {
+      translation 0 -0.5 0
+      shape Shape {
+        appearance Appearance {
+          material Material {
+	    emissiveColor 0 1 0
+	  }
+	}
+	geometry Box {
+	  size 20 0.1 20
+	}
+      }
+    }
+  ]
+}
+
+# Put all the physics models stuff here. 
+DEF BODY-COLLECTION RigidBodyCollection {
+  bodies [
+    DEF BODY-1 RigidBody {
+      geometry USE BALL-GEOM
+    }
+  ]
+  collider DEF COLLISION-GROUP CollisionCollection {
+    bounce 0.5
+    collidables [
+      USE BALL-GEOM
+      USE GROUND-GEOM
+    ]
+  }
+}
+
+DEF COLLISION-OUTPUT CollisionSensor {
+  collidables USE COLLISION-GROUP
+}
+
+DEF FIRE-CONTROL Script {
+  directOutput TRUE
+  inputOnly SFBool fireNow 
+  inputOnly SFRotation cannonOrientation
+  inputOnly SFRotation cannonElevation
+  inputOutput SFFloat ballForce 1.5
+  outputOnly MFNode addCannonBall
+  outputOnly SFVec3f ballPosition
+  outputOnly SFVec3f ballLinearVelocity
+  outputOnly SFVec3f ballAngularVelocity
+  initializeOnly SFNode premadeBall Shape {
+    appearance Appearance {
+      material Material {
+	emissiveColor 1 0 0 
+      }
+    }
+    geometry Sphere { radius 0.1 }
+  }
+  url "CannonFireControl.class"
+}
+
+ROUTE WHEEL.button1 TO FIRE-CONTROL.fireNow
+ROUTE GAMEPAD.l1Button TO FIRE-CONTROL.fireNow
+ROUTE CANNON-BODY-ORIENT.value_changed TO FIRE-CONTROL.cannonOrientation
+ROUTE CANNON-BARREL-ORIENT.value_changed TO FIRE-CONTROL.cannonElevation
+ROUTE FIRE-CONTROL.addCannonBall TO BALL-CONTAINER.addChildren
+ROUTE FIRE-CONTROL.ballPosition TO BODY-1.set_position
+ROUTE FIRE-CONTROL.ballLinearVelocity TO BODY-1.set_linearVelocity
+ROUTE FIRE-CONTROL.ballAngularVelocity TO BODY-1.set_angularVelocity
+
+# A script to tell us when contacts occur
+DEF CONTACT-SCRIPT Script {
+  directOutput TRUE
+  inputOnly MFNode set_jointContacts
+  outputOnly MFNode correctedContacts
+  outputOnly SFColor indicatorColor
+  initializeOnly SFNode ground USE GROUND-GEOM
+  url "ecmascript:
+    function set_jointContacts(val) {
+      for(i = 0; i < val.length; i++) {
+        if(val[i].geometry1.equals(ground)) {
+	  val[i].geometry1 = null;
+	  val[i].body1 = null;
+	  val[i].bounce = 1;
+	}
+
+        if(val[i].geometry2.equals(ground)) {
+	  val[i].geometry2 = null;
+	  val[i].body2 = null;
+	  val[i].bounce = 1;
+	}
+
+	correctedContacts = val;
+      }
+    }
+  "
+}
+
+ROUTE COLLISION-OUTPUT.contacts TO CONTACT-SCRIPT.set_jointContacts
+ROUTE CONTACT-SCRIPT.correctedContacts TO BODY-COLLECTION.set_contacts

@@ -1,0 +1,28 @@
+#X3D V3.0 utf8
+
+# This tests recieving events through an import from an inlined world. The 
+# inline contains a TimeSensor and Interpolator and sends those values 
+# through an export into this parent world, which is then used to move the 
+# local box around
+
+PROFILE Immersive
+
+DEF TG Transform {
+  rotation 0 1 0 0.78
+  children Shape {
+    geometry Box {}
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+  }
+}
+
+DEF MVB_INLINE Inline {
+  url "moving_box_export2.x3dv"
+}
+
+IMPORT MVB_INLINE.POSTION_INTERP AS PI
+
+ROUTE PI.value_changed TO TG.set_translation

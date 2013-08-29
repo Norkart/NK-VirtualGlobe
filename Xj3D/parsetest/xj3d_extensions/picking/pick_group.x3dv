@@ -1,0 +1,122 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_PickingUtilities:1
+
+DEF TS TimeSensor {
+  cycleInterval 10
+  loop TRUE
+}
+
+DEF NOT_PICKABLE PickableGroup {
+  objectType "GROUP1"
+  children Transform {
+    translation -0.25 0 0 
+    children DEF NO_SHAPE Shape {
+      geometry Box { size 0.2 0.2 0.2 }
+      appearance Appearance {
+        material DEF MAT1 Material {
+          diffuseColor 0 0 1
+	}
+      }
+    }
+  }
+}
+
+DEF PICKABLE PickableGroup {
+  objectType "GROUP2"
+  children Transform {
+    translation 0.25 0 0 
+    children DEF YES_SHAPE Shape {
+      geometry Box { size 0.2 0.2 0.2 }
+      appearance Appearance {
+        material DEF MAT2 Material {
+          diffuseColor 1 0 0
+	}
+      }
+    }
+  }
+}
+
+
+DEF PI PositionInterpolator {
+  key [ 0 0.5 1 ]
+  keyValue [
+    -0.5 0 0
+     0   0 0
+     0.5 0 0
+  ]
+}
+
+DEF TG Transform {
+  children [
+    DEF PICKER PointPicker { 
+      objectType "GROUP2"
+      pickingGeometry DEF PICK_POINT PointSet { 
+        coord Coordinate { 
+          point [ 0 0 0 ]
+        }
+      }
+      pickTarget [ USE NOT_PICKABLE USE PICKABLE ]
+    }
+    Shape {
+      geometry USE PICK_POINT
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 0 1
+        }
+      }
+    }
+  ]
+}
+
+# put some geometry where the pick location is
+
+DEF S Script {
+  initializeOnly MFNode targets [ USE NOT_PICKABLE USE PICKABLE ]
+  inputOnly MFNode selectedGeom 
+  outputOnly SFColor object1_color
+  outputOnly SFColor object2_color
+  url "ecmascript:
+     function selectedGeom(value) {
+       if(value.length == 2) {
+         object1_color.r = 0;
+         object1_color.g = 1;
+         object1_color.b = 0;
+         object2_color.r = 0;
+         object2_color.g = 1;
+         object2_color.b = 0;
+       } else if(value.length == 1) {
+         if(value[0].equals(targets[0])) {
+           object1_color.r = 0;
+           object1_color.g = 1;
+           object1_color.b = 0;
+           object2_color.r = 1;
+           object2_color.g = 0;
+           object2_color.b = 0;
+         } else if(value[0].equals(targets[1])) {
+           object1_color.r = 0;
+           object1_color.g = 0;
+           object1_color.b = 1;
+           object2_color.r = 0;
+           object2_color.g = 1;
+           object2_color.b = 0;
+	 }
+       } else {
+         object1_color.r = 0;
+         object1_color.g = 0;
+         object1_color.b = 1;
+         object2_color.r = 1;
+         object2_color.g = 0;
+         object2_color.b = 0;
+     }
+   }
+  "
+}
+
+ROUTE PICKER.pickedGeometry TO S.selectedGeom
+ROUTE S.object1_color TO MAT1.diffuseColor
+ROUTE S.object2_color TO MAT2.diffuseColor
+
+ROUTE TS.fraction_changed TO PI.set_fraction
+ROUTE PI.value_changed TO TG.translation

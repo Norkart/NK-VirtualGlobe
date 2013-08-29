@@ -1,0 +1,15 @@
+Class-Path: FastInfoset.jar aviatrix3d-all_2.0.0.jar dis.jar disxml.jar imageloader_1.1.0.jar geoapi-nogenerics-2.1-M2.jar \
+   gnu-regexp-1.0.8.jar gt2-main-2.3.1.jar gt2-referencing-2.3.1.jar httpclient.jar j3d-org-all_0.9.0.jar j3d-org-java3d_0.9.0.jar\
+   jinput.jar joal.jar jogl.jar gluegen-rt.jar js.jar jutils.jar log4j.jar odejava.jar jsr108-0.01.jar \
+   uri.jar vecmath.jar vlc_uri.jar xj3d-common_2.0.0.jar xj3d-config_2.0.0.jar xj3d-core_2.0.0.jar \
+   xj3d-eai_2.0.0.jar xj3d-ecmascript_2.0.0.jar xj3d-external-sai_2.0.0.jar xj3d-images_2.0.0.jar \
+   xj3d-java-sai_2.0.0.jar xj3d-jaxp_2.0.0.jar xj3d-jsai_2.0.0.jar xj3d-net_2.0.0.jar \
+   xj3d-norender_2.0.0.jar xj3d-ogl_2.0.0.jar xj3d-parser_2.0.0.jar xj3d-render_2.0.0.jar xj3d-runtime_2.0.0.jar \
+   xj3d-sai_2.0.0.jar xj3d-sav_2.0.0.jar xj3d-script-base_2.0.0.jar xj3d-xml-util_2.0.0.jar xj3d-xml_2.0.0.jar \
+   xj3d-device_2.0.0.jar xj3d-sai-concrete_2.0.0.jar xj3d-java-sai-concrete_2.0.0.jar xj3d-external-sai-concrete_2.0.0.jar
+Extension-Name: xj3d
+Specification-Vendor: Web3d Consortium
+Specification-Version: 3.2
+Implementation-Vendor-Id: org.xj3d
+Implementation-Vendor: Yumetech, Inc
+Implementation-Version: 2.0

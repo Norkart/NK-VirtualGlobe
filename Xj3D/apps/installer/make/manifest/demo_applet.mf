@@ -1,0 +1,13 @@
+Extension-List: java3d xj3d
+java3d-Extension-Name: javax.media.j3d
+java3d-Specification-Version: 1.2
+java3d-Implementation-Version: 1.2.1.04
+java3d-Implementation-Vendor-Id: com.sun
+java3d-Implementation-Title: Java3D Core Runtime Environment
+java3d-Implementation-URL: http://java.sun.com/products/autodl/java3d/prefer_ogl/java3d-$(os.name)$.jar
+xj3d-Extension-Name: xj3d
+xj3d-Specification-Version: 3.0
+xj3d-Implementation-Version: 2.0
+xj3d-Implementation-Vendor-Id: com.yumetech
+xj3d-Implementation-Title: Xj3D Web3d Toolkit
+xj3d-Implementation-URL: http://www.xj3d.org/downloads/web3d-installer.jar

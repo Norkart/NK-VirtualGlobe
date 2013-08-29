@@ -1,0 +1,18 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Transform {
+  translation 0 0 0
+  children Shape {
+    appearance Appearance {
+      material Material { emissiveColor 1 0 0 }
+    }
+    geometry TriangleSet  {
+      coord DEF COORDS Coordinate {
+        point [0.5 0 0, 0 1 0, -0.5 0 0, -0.5 0 0, 0 -1 0, 0.5 0 0]
+      }
+    }
+  }
+}
+

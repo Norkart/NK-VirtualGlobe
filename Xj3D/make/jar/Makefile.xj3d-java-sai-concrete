@@ -1,0 +1,52 @@
+#*********************************************************************
+#
+#  (C) 2001 - 2007 Web3d Consortium
+#    http://www.web3d.org/
+#
+# Package makefile producing xj3d-java-sai-concrete.jar
+#
+# Author: Rex Melton
+# Version: $Revision: 1.1 $
+#
+#*********************************************************************
+
+# A version number we tack onto the JAR file name for eclipse versioning
+# purposes.
+JAR_VERSION=2.0.0
+
+# Describe every directory that you want included in the JAR file here.
+# This is not recursive, so if you want parent directory and the
+# sub-directory, say so. These directories should not have '/' appended.
+JAR_CONTENT= \
+  org/xj3d/sai/internal/node/cadgeometry \
+  org/xj3d/sai/internal/node/core \
+  org/xj3d/sai/internal/node/dis \
+  org/xj3d/sai/internal/node/environmentaleffects \
+  org/xj3d/sai/internal/node/environmentalsensor \
+  org/xj3d/sai/internal/node/eventutilities \
+  org/xj3d/sai/internal/node/geometry2d \
+  org/xj3d/sai/internal/node/geometry3d \
+  org/xj3d/sai/internal/node/geospatial \
+  org/xj3d/sai/internal/node/grouping \
+  org/xj3d/sai/internal/node/hanim \
+  org/xj3d/sai/internal/node/interpolation \
+  org/xj3d/sai/internal/node/keydevicesensor \
+  org/xj3d/sai/internal/node/lighting \
+  org/xj3d/sai/internal/node/navigation \
+  org/xj3d/sai/internal/node/networking \
+  org/xj3d/sai/internal/node/particlesystems \
+  org/xj3d/sai/internal/node/pickingsensor \
+  org/xj3d/sai/internal/node/pointingdevicesensor \
+  org/xj3d/sai/internal/node/rendering \
+  org/xj3d/sai/internal/node/rigidbodyphysics \
+  org/xj3d/sai/internal/node/scripting \
+  org/xj3d/sai/internal/node/shape \
+  org/xj3d/sai/internal/node/sound \
+  org/xj3d/sai/internal/node/text \
+  org/xj3d/sai/internal/node/texturing \
+  org/xj3d/sai/internal/node/time \
+
+# Manifest file name. Stored in the make/manifest directory
+MANIFEST=xj3d-java-sai-concrete.mf
+
+include ${PROJECT_ROOT}/make/Makefile.jav

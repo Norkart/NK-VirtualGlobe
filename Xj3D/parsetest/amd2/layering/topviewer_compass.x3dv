@@ -1,0 +1,118 @@
+#X3D V3.2 utf8
+
+PROFILE Immersive
+COMPONENT Navigation:3
+COMPONENT Layering:2
+COMPONENT EnvironmentalEffects:3
+
+NavigationInfo {
+   type ["FLY", "ANY"]
+}
+
+DEF MAIN_VP Viewpoint {
+   description "Main VP"
+}
+
+DEF WORLD Inline {
+   url ["world.x3dv"]
+}
+
+
+DEF PS ProximitySensor {
+   size 100 100 100
+}
+
+
+LayerSet {
+   order [0 1 2]
+   layers [
+      Layer {   
+          viewport CustomViewport {
+            fixedX FALSE
+            fixedY FALSE
+          
+            x 0.5
+            y 0.5
+            width -256
+            height -256
+          }
+
+         children [
+            TextureBackground {
+                transparency 0.5
+            }
+         
+            DEF MAP_VP OrthoViewpoint {
+               description "Ortho Viewpoint"
+               fieldOfView -10 -10 10 10
+               position 0 10 10
+               orientation 1.0 0.0 0.0 -1.5708
+            }
+        
+            USE WORLD    
+            
+            
+            DEF SCRIPT Script {
+               inputOnly SFVec3f userPosition
+               outputOnly MFFloat fieldOfView
+               outputOnly SFVec3f position 
+               url ["ecmascript:
+                  function userPosition(val) {
+                     position.x = val.x;
+                     position.z = val.z;
+                     position.y = 10;
+                  }
+               "]
+               
+               ROUTE PS.position_changed TO SCRIPT.userPosition
+               ROUTE SCRIPT.position TO MAP_VP.position
+            }            
+      ]
+   }
+   
+     Layer {   
+         viewport CustomViewport {
+           fixedX FALSE
+           fixedY FALSE
+
+           x 0.5
+           y 0.5
+           width -256
+           height -256
+         }
+
+        children [
+        TextureBackground {
+            transparency 1
+        }
+        
+            DEF COMPASS_VP OrthoViewpoint {
+               description "Ortho Viewpoint"
+               fieldOfView -10 -10 10 10
+               position 0 10 0
+               orientation 1.0 0.0 0.0 -1.5708
+            }
+        
+           DEF COMPASS Transform {
+              scale 0.3 0.3 0.3
+              children [
+               Shape {
+                  geometry Box {}
+               }
+               Transform {
+                  translation 0 0 -2
+                  rotation 1 0 0 -1.57
+                  children [
+                       Shape {
+                          geometry Cone {}
+                       }
+                  ]
+               }
+           ]
+               ROUTE PS.orientation_changed TO COMPASS.set_rotation
+           }
+        ]
+    }
+]}
+
+

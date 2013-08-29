@@ -1,0 +1,186 @@
+<!--
+		Humanoid Animation (H-Anim) 2.0 Document Type Definition (DTD)
+
+ Description:	Define the H-Anim tag and attribute profile for X3D.
+		These X3D native nodes correspond to VRML Prototype declarations.
+
+ 		Elements in this tagset are enabled by setting the 
+		H-AnimProfile entity to "INCLUDE" at the top of an 
+		X3D scene file, as shown in several examples such as
+		examples/HumanoidAnimation/NancyNativeTags.xml.  This flag then 
+		triggers inclusion of the HumanoidAnimation tags in the 
+		x3d-compact.dtd tagset.  Thus the HumanoidAnimation.dtd
+		demonstrates X3D extensibility for profiles.
+
+		Added bboxCenter and bboxSize to Joint and Site as part of
+		Schema development and SAI API normalization of node types.
+		Work in progress.  See ongoing 2000/2001 e-mail threads for
+		details.
+
+ Status:	Testing results in progress.  Compromise form also needed.
+ 		JointNames need to be verified/split.
+
+ Authors:	Don Brutzman produced XML encoding for X3D
+ 		Bernie Roehl and H-Anim Working Group for H-Anim specifications
+ 		Matt Beitler for syntax/semantics of upgrades from 1.1 to 2.0
+ 		James Smith provided BoxMan model for testing 2.0 nodes and prototypes
+
+ References:	H-Anim 2001 Specification (Draft)
+ 		http://h-anim.org/Specifications/H-Anim2001
+ 		http://www.web3D.org/TaskGroups/x3d/translation/examples/HumanoidAnimation/JointNames.txt
+
+ Address:	http://www.web3D.org/TaskGroups/x3d/translation/HumanoidAnimation2.0-compact.dtd
+
+ Created:	 4 July 2000
+
+ Revised:	30 December 2002
+-->
+
+<!-- These need to get verified.  Matt will split into JointNames, SegmentNames and SiteNames.
+     Note that setting as enumerations does not permit validation of other names. -->
+<!ENTITY % JointNames "(
+c1|c2|c3|c4|c5|c6|c7|jaw|HumanoidRoot|l_acromioclavicular|l_ankle|l_calf|
+l_clavicle|l_elbow|l_eyeball|l_eyeball_joint|l_eyebrow|l_eyebrow_joint|
+l_eyelid|l_eyelid_joint|l_forearm|l_forefoot|l_hand|l_hindfoot|l_hip|
+l_index_distal|l_index_metacarpal|l_index_middle|l_index_proximal|
+l_index0|l_index1|l_index2|l_index3|l_knee|l_metatarsal|l_middistal|
+l_middle_distal|l_middle_metacarpal|l_middle_middle|l_middle_proximal|
+l_middle0|l_middle1|l_middle2|l_middle3|l_midproximal|l_midtarsal|
+l_pinky_distal|l_pinky_metacarpal|l_pinky_middle|l_pinky_proximal|
+l_pinky0|l_pinky1|l_pinky2|l_pinky3|l_ring_distal|l_ring_metacarpal|
+l_ring_middle|l_ring_proximal|l_ring0|l_ring1|l_ring2|l_ring3|l_scapula|
+l_shoulder|l_sternoclavicular|l_subtalar|l_thigh|l_thumb_distal|
+l_thumb_metacarpal|l_thumb_proximal|l_thumb1|l_thumb2|l_thumb3|
+l_upperarm|l_wrist|l1|l2|l3|l4|l5|pelvis|r_acromioclavicular|r_ankle|
+r_calf|r_clavicle|r_elbow|r_eyeball|r_eyeball_joint|r_eyebrow|
+r_eyebrow_joint|r_eyelid|r_eyelid_joint|r_forearm|r_forefoot|r_hand|
+r_hindfoot|r_hip|r_index_distal|r_index_metacarpal|r_index_middle|
+r_index_proximal|r_index0|r_index1|r_index2|r_index3|r_knee|r_metatarsal|
+r_middistal|r_middle_distal|r_middle_metacarpal|r_middle_middle|
+r_middle_proximal|r_middle0|r_middle1|r_middle2|r_middle3|r_midproximal|
+r_midtarsal|r_pinky_distal|r_pinky_metacarpal|r_pinky_middle|
+r_pinky_proximal|r_pinky0|r_pinky1|r_pinky2|r_pinky3|r_ring_distal|
+r_ring_metacarpal|r_ring_middle|r_ring_proximal|r_ring0|r_ring1|r_ring2|
+r_ring3|r_scapula|r_shoulder|r_sternoclavicular|r_subtalar|r_thigh|
+r_thumb_distal|r_thumb_metacarpal|r_thumb_proximal|r_thumb1|r_thumb2|
+r_thumb3|r_upperarm|r_wrist|sacroiliac|sacrum|skull|skullbase|
+t1|t2|t3|t4|t5|t6|t7|t8|t9|t10|t11|t12|temporomandibular|
+vc1|vc2|vc3|vc4|vc5|vc6|vc7|vl1|vl2|vl3|vl4|vl5|
+vt1|vt2|vt3|vt4|vt5|vt6|vt7|vt8|vt9|vt10|vt11|vt12)" >
+
+<!-- Nodes -->
+
+<!ELEMENT Displacer (IS?) >
+<!ATTLIST Displacer
+	name		%SFString;	#IMPLIED
+	coordIndex	%MFInt32;	#IMPLIED
+	displacements	%MFVec3f;	#IMPLIED
+	containerField NMTOKEN #IMPLIED
+	class         	CDATA  		""
+	DEF		ID		#IMPLIED
+	USE		IDREF		#IMPLIED>
+
+<!-- no nodeType for Displacer since it has no similar node in VRML 97 -->
+
+<!-- humanoidBody is H-Anim 1.1, superceded by 2.0 specification -->
+<!ELEMENT humanoidBody ( %ChildrenNodes; | %WildcardNodes; )* >
+
+<!-- skeleton, skin defined by 2.0 specification -->
+<!ELEMENT skeleton ( %ChildrenNodes; | %WildcardNodes; )* >
+<!ELEMENT skin ( Shape | %WildcardNodes; )* >
+<!ELEMENT skinCoord ( Coordinate | %WildcardNodes; )* >
+<!ELEMENT skinNormal ( Normal | %WildcardNodes; )* >
+
+<!-- the following content model can likely be improved but it supports either 1.1 or 2.0 -->
+<!ELEMENT Humanoid (IS?, 
+	(humanoidBody? | (skeleton, (skinCoord, skinNormal?, skin)?)),
+	(Joint | Segment | Site | Viewpoint)* ) >
+<!ATTLIST Humanoid
+	name			%SFString;	#IMPLIED
+	version			(1.1|2.0)	#IMPLIED
+	humanoidVersion		%SFString;	#IMPLIED
+	info			%MFString;	#IMPLIED
+	authorName		%SFString;	#IMPLIED
+	authorEmail		%SFString;	#IMPLIED
+	copyright		%SFString;	#IMPLIED
+	creationDate		%SFString;	#IMPLIED
+	usageRestrictions	%SFString;	#IMPLIED
+	age			%SFString;	#IMPLIED
+	gender			%SFString;	#IMPLIED
+	height			%SFString;	#IMPLIED
+	weight			%SFString;	#IMPLIED
+	translation		%SFVec3f;	"0 0 0"
+	rotation		%SFRotation;	"0 0 1 0"
+	scale			%SFVec3f;	"1 1 1"
+	scaleOrientation	%SFRotation;	"0 0 1 0"
+	center			%SFVec3f;	"0 0 0"
+	bboxCenter		%SFVec3f;	"0 0 0"
+	bboxSize		%SFVec3f;	"-1 -1 -1"
+	containerField NMTOKEN "children"
+	class         		CDATA  		""
+	DEF			ID		#IMPLIED
+	USE			IDREF		#IMPLIED>
+
+<!ELEMENT Joint (IS?, ( %ChildrenNodes; | %WildcardNodes; )* ) >
+<!ATTLIST Joint
+	name			%JointNames;	#IMPLIED
+	ulimit			%MFFloat;	#IMPLIED
+	llimit			%MFFloat;	#IMPLIED
+	limitOrientation	%SFRotation;	"0 0 1 0"
+	skinCoordIndex		%MFInt32;	#IMPLIED
+	skinCoordWeight		%MFFloat;	#IMPLIED
+	stiffness		%MFFloat;	"0 0 0"
+	translation		%SFVec3f;	"0 0 0"
+	rotation		%SFRotation;	"0 0 1 0"
+	scale			%SFVec3f;	"1 1 1"
+	scaleOrientation	%SFRotation;	"0 0 1 0"
+	center			%SFVec3f;	"0 0 0"
+	bboxCenter		%SFVec3f;	"0 0 0"
+	bboxSize		%SFVec3f;	"-1 -1 -1"
+	nodeType		NMTOKEN		#FIXED	"Transform"
+	containerField NMTOKEN "children"
+	class         		CDATA		""
+	DEF			ID		#IMPLIED
+	USE			IDREF		#IMPLIED>
+
+<!-- Multiple Displacer nodes must appear consecutively inside Segment -->
+
+<!--
+	(children, ((coord, Displacer*) | (Displacer+, coord?))? ) |
+	(coord, ((children, Displacer*) | (Displacer+, children?))? ) |
+	(Displacer+, ((coord, children?) | (children, coord?))? )?
+-->
+<!ELEMENT Segment (IS?, (
+	((%ChildrenNodes;|%WildcardNodes;)*, ((Coordinate, Displacer*) | (Displacer+, Coordinate?))? ) |
+	(Coordinate, (((%ChildrenNodes;)*, Displacer*) | (Displacer+, (%ChildrenNodes;|%WildcardNodes;)*))? ) |
+	(Displacer+, ((Coordinate, (%ChildrenNodes;|%WildcardNodes;)*) | ((%ChildrenNodes;|%WildcardNodes;)*, Coordinate?))? )?
+) ) >
+<!ATTLIST Segment
+	name			%JointNames;	#IMPLIED
+	mass			%SFFloat;	"0"
+	centerOfMass		%SFVec3f;	"0 0 0"
+	momentsOfInertia	%MFFloat;	"0 0 0 0 0 0 0 0 0"
+	bboxCenter		%SFVec3f;	"0 0 0"
+	bboxSize		%SFVec3f;	"-1 -1 -1"
+	nodeType		NMTOKEN		#FIXED	"Group"
+	containerField NMTOKEN "children"
+	class         		CDATA   	""
+	DEF			ID		#IMPLIED
+	USE			IDREF		#IMPLIED>
+
+<!ELEMENT Site (IS?, ( %ChildrenNodes; | %WildcardNodes; )* ) >
+<!ATTLIST Site
+	name			%SFString;	#IMPLIED
+	translation		%SFVec3f;	"0 0 0"
+	rotation		%SFRotation;	"0 0 1 0"
+	scale			%SFVec3f;	"1 1 1"
+	scaleOrientation	%SFRotation;	"0 0 1 0"
+	center			%SFVec3f;	"0 0 0"
+	bboxCenter		%SFVec3f;	"0 0 0"
+	bboxSize		%SFVec3f;	"-1 -1 -1"
+	nodeType		NMTOKEN		#FIXED	"Transform"
+	containerField NMTOKEN "children"
+	class         		CDATA  		""
+	DEF			ID		#IMPLIED
+	USE			IDREF		#IMPLIED>
+

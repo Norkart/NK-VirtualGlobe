@@ -1,0 +1,19 @@
+#X3D V3.0 utf8
+
+PROFILE Interactive
+COMPONENT xj3d_ParticleSystem:1
+
+Viewpoint {
+  position 0 0 4
+}
+
+ParticleSystem {
+  geometryType "POINT"
+  maxParticles 100
+  emitter ExplosionEmitter {
+    speed 0.1
+  }
+  appearance Appearance {
+    material Material { diffuseColor 1 0 0 }
+  }
+}

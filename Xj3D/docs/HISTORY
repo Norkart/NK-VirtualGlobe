@@ -1,0 +1,121 @@
+
+               History of the Xj3D Development
+
+Last Updated: $Date: 2001/06/08 15:58:19 $
+
+This document tracks the development history of the Xj3D codebase from its 
+inception to the current day. This story is mostly told by the authors of
+the code at the time.
+
+{Starting with Rick Goldberg talking}
+
+To dole out the proper blame, the project was started by myself, 
+and Doug Gehringer (of Sun Microsystem's Java 3D development team) who 
+was doing among other things performance tuning, had also an interest in 
+making a better mouse trap, joined the effort and was instrumental in 
+replacing my parser with a fast and bullet proof one based on javacc, 
+which we both worked on.
+
+Doug G also provided the Proto implementation, and a fast loader for
+non animated '97, while I was mainly responsible for all Node, Field,
+Event, ROUTE, Interpolators, Sensor, Navigation, Extrusion, EGrid, the
+bad primatives, Script classes, Browser, kit/caboodle design and
+implementation
+
+Initially, I was one of the founding specification crew. In fact, I
+recall starting the very java3d-interest alias, as well as the internal
+developers list. My goals for j3d were to help design an API that I could
+use to implement a vrml browser with, and that is what I believe(d) I was
+hired in '94 to do. As the project picked up steam, there was a lot of
+interest from other departments to form a real live implementation
+team.
+
+Eventually enough people had signed up to do the core development that
+I opted to work on specification of utilities that would make it easier
+for me to finish the browser. It was also important to track the '97
+specification as that was still in the gel. The j3d test team was also
+getting some good use from doing manual tests using the browser for
+some time.
+
+At one point vrml-java3d was a utility to be shipped, but it was
+decided to contribute the code the the consortium in the interest of
+improving coverage of the core standard by leveraging interested
+parties directly, and there was some interest at Sun to let me do the
+code integration since there were a few customers using it.
+
+{ and now onto Justin Couch }
+
+The code continued in this fashion until late 2000. During the preceeding
+period the source got a permanent home and CVS repository when Metrolink
+donated a server to house the repository on. Alan Hudson, as chair of the 
+Consortium's Source Task Group and Rick integrated changes and bug fixes
+as people found them. 
+
+Starting back in 99 and continuing through 2000, development of the next
+generation VRML specification continued. There were two significant things
+to happen here that are of interest to the Xj3D project. Firstly, the
+introduction of an XML encoding. Secondly, the attempt to merge the old
+scripting and external authoring interface specifications into a single
+API. Of course, when you involve XML and an application, that usually means
+allowing DOM access too. 
+
+Around Nov-Dec 2000 work started in the codebase to expand it to parse
+XML files and present DOM content. Work proceeded sporadically with little
+progress being made. While some code was appearing, that which did appear 
+was mostly non-working, in-progress work and a combined effort of Don Brutzman
+and Rick Goldberg.
+
+After a lot of stop start efforts in late January 2001 it was decided that a 
+concerted effort needed to be put into the codebase to get it going for the
+Web3D conference in Paderborn. At this time Alan Hudson landed a fulltime 
+position to develop the codebase. A couple of weeks later, he was joined by
+Justin Couch. At this point, there was a set of SAI classes that was being
+developed by Don Brutzman and he wanted to start to trial them in real code to
+see how well they worked. His goal was to also see how well the DOM and SAI
+classes (actually Java interfaces) played together. 
+
+At about this time the developers faced a difficult decision. Justin and Alan,
+working fulltime on the code were wanting to do a lot of serious work. Rick, 
+who could no longer do fulltime work on the code was partially through a 
+complete XML parsing implementation but was not prepared to share the source
+in its current state. The result was a bit of conflict as the two felt they
+could no longer wait around for Rick to finish his work (we were about a 
+month out from the conference at this point with nothing to demonstrate). So 
+the decision was made to go their own way.
+
+By the time the conference came around (end Feb 2001) there was a complete 
+implementation of the SAI/DOM combination and a class that could read a DOM
+structure and build a Java 3D scenegraph using Sun's classes. This, along with
+a number of demonstration programmers, including a graphical X3D editor were
+demonstrated at the Web3D conference.
+
+Following the conference, work continued apace at completing the DOM handling
+and at patching the Sun core classes to work with the DOM. There were some
+interesting architectural problems here - VRML97 allowed restrictions on field
+access: some could be readable, others write only or not visible at all. Under
+VRML 3.0, all fields are available and can be changed at will. This was causing
+immense problems with the Sun core classes that were architected with VRML97
+support only in mind. 
+
+Around early April it was decided by Alan and Justin that in order to fully
+implement VRML 3 specifications that a new implementation of the Java3D 
+renderer was going to be needed. The limitations of the Sun core was too great
+to work with and that it would be easier to implement a new one from scratch 
+that was specifically aimed at the next generation spec and back ported to 
+handle VRML 97.
+
+With this decision under the belt, it was decided that a whole new modular
+architecture would be worked on. This work would aim to break up the process
+of dealing with VRML files into a number of pieces that could be combined 
+together or used individually, dependent on the user's needs at the time. The
+process resulted in a separate parser, internal representation, event model
+implementation, renderers and user interface code. 
+
+As the work drew on, the various pieces fell into place. After building the
+infrastructure, the goal was to develop a complete Core profile implementation.
+With an implementation all but complete, the first milestone was declared in 
+early May. This code was built into a series of installable code bases.	These
+developments were demonstrated at various meetings such as X3D Day and the
+JavaOne conference. 
+
+-- End of Story to date

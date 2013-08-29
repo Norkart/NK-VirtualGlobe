@@ -1,0 +1,11 @@
+<project default="all">
+<target name="all" depends="vrml,x3d"></target>
+<target name="vrml">
+<javacc javacchome="c:/javacc2.1" target="../../src/javacc/vrml/VRML97Field.jj"   outputdirectory="../../src/java/org/web3d/parser/vrml97"/>
+<javacc javacchome="c:/javacc2.1" target="../../src/javacc/vrml/VRML97Relaxed.jj" outputdirectory="../../src/java/org/web3d/parser/vrml97"/>
+</target>
+<target name="x3d">
+<javacc javacchome="c:/javacc2.1" target="../../src/javacc/x3d/X3DField.jj"   outputdirectory="../../src/java/org/web3d/parser/x3d"/>
+<javacc javacchome="c:/javacc2.1" target="../../src/javacc/x3d/X3DRelaxed.jj" outputdirectory="../../src/java/org/web3d/parser/x3d"/>
+</target>
+</project>

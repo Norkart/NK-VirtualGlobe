@@ -1,0 +1,1658 @@
+#X3D V3.1 utf8
+
+PROFILE Immersive
+COMPONENT CADGeometry:2
+
+#/*
+  TODO:
+     Better textures for partial boards.  Use same tex but different tex coords
+     Board Holders
+        Lighting issue on right side
+        z issues with real boards, size slightly wrong or position?
+     Need a wood texture without stuff in it
+*/#
+
+
+# Material Library
+Shape {
+   appearance DEF REDRAIL_APP Appearance {
+      material Material {
+         diffuseColor 1 0 0
+         ambientIntensity 0.3
+         shininess 0.9
+      }
+   }
+}
+Shape {
+   appearance DEF FLOOR_WOOD_APP Appearance {
+      material Material {
+         diffuseColor 0.907 0.849 0.775
+         emissiveColor 0.907 0.849 0.775
+         transparency 0
+      }
+      texture ImageTexture {
+          url ["flooring.jpg"]
+      }
+   }
+}
+Shape {
+   appearance DEF TWOBYFOUR_APP Appearance {
+      material Material {
+         diffuseColor 0.907 0.849 0.775
+         emissiveColor 0.907 0.849 0.775
+         transparency 0
+      }
+      texture ImageTexture {
+          url ["2x4-2.jpg"]
+      }
+   }
+}
+
+Shape {
+   appearance DEF BRUSHED_METAL_APP Appearance {
+      material Material {
+          diffuseColor 0.698 0.808 0.812
+          shininess 0.9
+          transparency 0         
+      }
+      texture ImageTexture {
+          url ["brushed_metal.jpg"]
+      }
+   }
+}
+
+Shape {
+  appearance DEF HINGE_APP Appearance {
+      textureTransform TextureTransform {
+        scale 15 1   
+      }
+#/*
+      material Material {
+         diffuseColor 1 1 1
+         shininess 0.9
+      }
+*/#      
+      texture ImageTexture {
+         url ["hinge2.png"]            
+      }
+   }
+}
+# Viewpoints
+
+DEF PERSPECTIVE_VP Viewpoint {
+    position 4 2 7
+    orientation 0 1 0 0.5
+    description "Perspective"
+}
+
+DEF TOP_DOWN_VP Viewpoint {
+    position 0 7 0
+    orientation 1 0 0 -1.57075
+    description "Top Down"
+}
+
+DEF RIGHT_SIDE_VP Viewpoint {
+    position 5 1 0
+    orientation 0 1 0 1.57075
+    description "Right Side"
+}
+
+DEF LEFT_SIDE_VP Viewpoint {
+    position -5 1 0
+    orientation 0 1 0 -1.57075
+    description "Left Side"
+}
+
+DEF FRONT_VP Viewpoint {
+    position 0 1 7
+    description "Front"
+}
+
+DEF BACK_VP Viewpoint {
+    position 0 1 -7
+    orientation 0 1 0 3.1415
+    description "Back"
+}
+
+# Ground Plane
+Transform {
+    translation 0 -0.01 0
+    children [
+        Shape {        
+            appearance Appearance { material Material { emissiveColor 0 0 1 } }
+            geometry Box { size 100 0.01 100 }
+        }
+    ]
+}
+
+Switch {
+   whichChoice -1
+   children [
+CADAssembly {
+    name "Trailer"
+    children [
+           DEF BASE CADAssembly {
+               name "Base"
+               children [
+                   Transform {   
+                      translation 0 0.3302 0    # 0,13",0
+                      children [
+                   DEF FRONT_ASSEMBLY CADAssembly {
+                      name "Front"
+                      children [
+                       CADPart {
+                           name "Front Right Side Support"       
+                           translation 0.59055 0 0.612648           # 23.25",0",2.01 ft
+                           children [
+                               DEF SIDE_RAIL_FACE CADFace {
+                                   name "Side Rail"
+                                   shape Shape {
+                                       appearance USE REDRAIL_APP
+                                       geometry Box {                                   
+                                           size 0.0381 0.0762 1.2192    # 1.5",3",4 ft   
+                                       }
+                                   }
+                               }
+                           ]                           
+                       } 
+                       CADPart {
+                           name "Front Right TwoByFour Slot"
+                           translation 0.61 0 0.69215     # ?ft, 0, 27.25"
+                           rotation 0 1 0 1.57075
+                           children [
+                                      DEF TWOBYFOUR_SLOT_FACE CADFace {
+                                          shape Shape {
+                                             appearance USE BRUSHED_METAL_APP
+                                             geometry QuadSet {
+                                                 normalPerVertex FALSE
+                                                 coord Coordinate {                                                          
+                                                    point [-0.085725 0.03302 0,
+                                                           -0.047625 0.03302 0,
+                                                           -0.047625, -0.03302 0,
+                                                           -0.085725 -0.03302, 0
+                                                           
+                                                           -0.047625 0.03302 0,
+                                                           -0.047625 0.03302 0.04064,                                                           
+                                                           -0.047625 -0.03302 0.04064,
+                                                           -0.047625, -0.03302 0,
+
+                                                           -0.047625 0.03302 0.04064,                                                           
+                                                           0.047625 0.03302 0.04064,                                                           
+                                                           0.047625 -0.03302 0.04064,
+                                                           -0.047625 -0.03302 0.04064,
+
+                                                           0.047625 0.03302 0,
+                                                           0.047625 0.03302 0.04064,                                                           
+                                                           0.047625 -0.03302 0.04064,
+                                                           0.047625, -0.03302 0,
+
+                                                           0.085725 0.03302 0,
+                                                           0.047625 0.03302 0,
+                                                           0.047625, -0.03302 0,
+                                                           0.085725 -0.03302, 0
+                                                                                                                     
+                                                          ]                                                          
+                                                 }
+                                                 texCoord TextureCoordinate {
+                                                     point [
+                                                         0,0 1,0 1,1 0,1                                                         
+                                                         0,0 1,0 1,1 0,1
+                                                         0,0 1,0 1,1 0,1
+                                                         0,0 1,0 1,1 0,1                                                         
+                                                         0,0 1,0 1,1 0,1                                                         
+                                                         0,0 1,0 1,1 0,1                                                         
+                                                     ]
+                                                 }
+                                                 
+                                             }
+                                          }
+                                      }                           ]
+                       }
+                       
+                       CADPart {
+                           name "Front Left Side Support"            
+                           translation -0.59055 0 0.612648           # -23.25",0,2.01 ft
+                           children [
+                               USE SIDE_RAIL_FACE
+                           ]                           
+                       }
+                       CADPart {
+                           name "Front Left TwoByFour Slot"
+                           translation -0.61 0 0.69215     # ?ft, 0, 27.25"
+                           rotation 0 1 0 -1.57075
+                           children [
+                               USE TWOBYFOUR_SLOT_FACE
+                           ]
+                       }
+                       
+                       CADPart {
+                           name "Front Support"
+                           translation 0 0 1.20015           # 0,0,3.9375 ft
+                           children [
+                               DEF FRONT_RAIL_FACE CADFace {
+                                   name "Front Rail"
+                                   shape Shape {
+                                       appearance USE REDRAIL_APP
+                                       geometry Box {                                   
+                                           size 1.2192 0.06604 0.0381    # 4ft,2.6",1.5"
+                                       }
+                                   }
+                               }
+                               CADPart {
+                                  name "Front Left TwoByFour Slot"
+                                  translation -0.3048 0 0.0381     # 1ft, 0, 1.5"
+                                  children [
+                                       USE TWOBYFOUR_SLOT_FACE                        
+                                  ]
+                              }
+                               CADPart {
+                                   name "Front Right TwoByFour Slot"
+                                   translation 0.3048 0 0.0381     # 1ft, 0, 1.5"
+                                   children [
+                                       USE TWOBYFOUR_SLOT_FACE
+                                   ]
+                               }
+                           ]                           
+                       } 
+
+
+                       CADPart {
+                           name "Front Crossbar Support"
+                           translation 0 0 0.6096           # 0,0,2 ft
+                           children [
+                               CADFace {
+                                   name "Front CrossBar"
+                                   shape Shape {
+                                       appearance USE REDRAIL_APP
+                                       geometry Box {                                   
+                                           size 1.2192 0.06604 0.0381    # 4ft,2.6",1.5" ft
+                                       }
+                                   }
+                               }
+                           ]                           
+                       } 
+
+                       CADPart {
+                           name "Front Center Crossbar Support"
+                           translation 0 0 0.0197           # 0,0,0.75+" to meters
+                           children [
+                               CADFace {
+                                   name "Center CrossBar"
+                                   shape Shape {
+                                       appearance USE REDRAIL_APP
+                                       geometry Box {                                   
+                                           size 1.2192 0.06604 0.0381    # 4ft,2.6",1.5" ft
+                                       }
+                                   }
+                               }
+                           ]                           
+                       } 
+                      CADPart {
+                          name "Left Tongue Support"
+                          translation -0.0381 -0.0762 0.9144         # -2", -3", 3ft
+                          children [
+                              CADFace {
+                                  shape Shape {
+                                      appearance USE REDRAIL_APP
+                                      geometry Box {
+                                          size   0.0381 0.0762 0.6096                    # 2", 3", 2ft
+                                      }
+                                  }
+                              }
+                          ]
+                      }
+
+                      CADPart {
+                          name "Right Tongue Support"
+                          translation 0.0381 -0.0762 0.9144         # -2", -3", 3ft
+                          children [
+                              CADFace {
+                                  shape Shape {
+                                      appearance USE REDRAIL_APP
+                                      geometry Box {
+                                          size   0.0381 0.0762 0.6096                    # 2", 3", 2ft
+                                      }
+                                  }
+                              }
+                          ]
+                      }
+                      CADPart {
+                          name "Left Angle Tongue Support"
+                          translation -0.1524 -0.0762 1.061712
+                          children [
+                              CADFace {
+                                  shape Shape {
+                                      #appearance USE REDRAIL_APP
+                                      appearance Appearance {
+                                          material Material { 
+                                             diffuseColor 1 1 1 
+                                             transparency 1
+                                          }
+                                      }
+                                      geometry Box {
+                                          size   0.05 0.05 0.05
+                                      }
+                                  }
+                              }
+                          ]
+                      }
+                      
+                  ]}   # End Front
+                  DEF BACK_ASSEMBLY CADAssembly {
+                      name "Back"
+                      children [
+                       CADPart {
+                           name "Back Right Side Support"       
+                           translation 0.59055 0 -0.612648           # 23.25",0",-2.01 ft
+                           children [
+                               USE SIDE_RAIL_FACE
+                           ]                           
+                       } 
+                       CADPart {
+                           name "Back Left Side Support"            
+                           translation -0.59055 0 -0.612648           # -23.25",0,-2.01 ft
+                           children [
+                               USE SIDE_RAIL_FACE
+                           ]                           
+                       }
+                       CADPart {
+                           name "Back Left TwoByFour Slot"
+                           translation -0.61 0 -0.69215     # ?ft, 0, 27.25"
+                           rotation 0 1 0 -1.57075
+                           children [
+                               USE TWOBYFOUR_SLOT_FACE
+                           ]
+                       }
+                       CADPart {
+                           name "Back Right TwoByFour Slot"
+                           translation 0.61 0 -0.69215     # ?ft, 0, 27.25"
+                           rotation 0 1 0 1.57075
+                           children [
+                               USE TWOBYFOUR_SLOT_FACE
+                           ]
+                       }
+                       
+                       CADPart {
+                           name "Back Support"
+                           translation 0 0 -1.20015           # 0,0,-3.9375 ft
+                           children [
+                               DEF BACK_RAIL_FACE CADFace {
+                                   name "Back Rail"
+                                   shape Shape {
+                                       appearance USE REDRAIL_APP
+                                       geometry Box {                                   
+                                           size 1.2192 0.06604 0.0381    # 4ft,2.6",1.5" ft
+                                       }
+                                   }
+                               }
+                               CADPart {
+                                   name "Back Right TwoByFour Slot"
+                                   translation 0.3048 0 -0.0381     # 1ft, 0, 1.5"
+                                   rotation 0 1 0 3.1415
+                                   children [
+                                       USE TWOBYFOUR_SLOT_FACE
+                                   ]
+                               }
+                               CADPart {
+                                   name "Back Left TwoByFour Slot"
+                                   translation -0.3048 0 -0.0381     # 1ft, 0, 1.5"
+                                   rotation 0 1 0 3.1415
+                                   children [
+                                       USE TWOBYFOUR_SLOT_FACE
+                                   ]
+                               }
+                               
+                           ]                           
+                       } 
+                       CADPart {
+                           name "Back Crossbar Support"
+                           translation 0 0 -0.6096           # 0,0,-2 ft
+                           children [
+                               CADFace {
+                                   name "Back CrossBar"
+                                   shape Shape {
+                                       appearance USE REDRAIL_APP
+                                       geometry Box {                                   
+                                           size 1.2192 0.06604 0.0381    # 4ft,2.6",1.5" 
+                                       }
+                                   }
+                               }
+                           ]                           
+                       } 
+                       CADPart {
+                           name "Back Center Crossbar Support"
+                           translation 0 0 -0.0197           # 0,0,0.75+" to meters
+                           children [
+                               CADFace {
+                                   name "Center CrossBar"
+                                   shape Shape {
+                                       appearance USE REDRAIL_APP
+                                       geometry Box {                                   
+                                           size 1.2192 0.06604 0.0381    # 4ft,2.6",1.5" ft
+                                       }
+                                   }
+                               }
+                           ]                           
+                       } 
+                    ]}  # End Back                   
+
+                   DEF TONGUE_PART CADPart {
+                       name "Main Tongue"
+                       translation 0 -0.0762 1.7             # 0,-3", 6.5ft
+                       children [
+                           CADFace {
+                               shape Shape {
+                                   appearance USE REDRAIL_APP
+                                   geometry Box {
+                                       size 0.0508 0.0762 1.524                 # 2", 3", 5ft    TODO: Guess
+                                   }
+                              }
+                          }
+                      ]
+                  }
+                  
+               ]}
+               ]
+           }  # End Bed Assembly
+
+           DEF FLOOR CADAssembly {
+              name "Floor"
+              children [
+                 Transform {
+                      translation 0 0.3302 0    # 0,13",0                 
+                    children [
+                  DEF FRONT_FLOORING_PART CADPart {
+                       translation 0 0.047625 0        # 0, 1.875", 0
+                       children [
+                                   CADPart {
+                                       name "Front Flooring"
+                                       translation 0 0 0.612648       # 0 0 2.05ft
+                                       children [
+                                           CADFace {
+                                               shape Shape {
+                                                   appearance USE FLOOR_WOOD_APP                               
+                                                   geometry Box {
+                                                       size 1.2192 0.01905 1.213104        # 4ft .75" 3.95ft
+                                                   }
+                                               }
+                                           }
+                                      ]
+                                   }
+                       ]
+                   }                      
+           
+                    DEF BACK_FLOORING_PART CADPart {
+                       translation 0 0.047625 0        # 0, 1.875", 0
+                           children [
+                               CADPart {
+                                   name "Back Flooring"
+                                   translation 0 0 -0.612648   # 0 0 -2.05ft
+                                   children [
+                                       CADFace {
+                                           shape Shape {
+                                               appearance USE FLOOR_WOOD_APP                               
+                                               geometry Box {
+                                                   size 1.2192 0.01905 1.213104        # 4ft .75" 3.98ft
+                                               }
+                                           }
+                                       }
+                                   ]
+                               }
+                           ]
+                       }
+               ]}
+          ]}
+                       
+           
+          DEF FRONT_STATION CADAssembly {
+             children [
+                 Transform {
+                      translation 0 0.3302 0    # 0,13",0
+                      children [
+                 CADPart {
+                     name "Front Station"
+                     children [
+                        CADPart {
+                            name "Front Right Support"
+                            translation 0.5874 0.66675 1.171575            # 2ft, 26.25", 44.25"
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE TWOBYFOUR_APP
+                                      geometry Box {
+                                          size 0.04445 1.2192 0.09525      # 1.75", 4ft, 3.75"
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                        CADPart {
+                            name "Front Left Support"
+                            translation -0.5874 0.66675 1.171575            # -2ft, 26.25", 44.25"
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE TWOBYFOUR_APP
+                                      geometry Box {
+                                          size 0.04445 1.2192 0.09525
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                        CADPart {
+                            name "Front Bottom Support"
+                            translation 0 0.07937 1.171575            # 0ft, 3.125", 44.25"
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE TWOBYFOUR_APP
+                                      geometry Box {
+                                          size 1.1303 0.04445 0.09525     # 4ft - 3.5", 1.75", 3.75
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                        CADPart {
+                            name "Front Top Support"
+                            translation 0 1.2986 1.171575            # 0ft, 51.125, 44.25"
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE TWOBYFOUR_APP
+                                      geometry Box {
+                                          size 1.2192 0.04445 0.09525     # 4ft, 1.75", 3.75
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                        CADPart {
+                            name "Front Right Wind Support"
+                            translation 0.3048 0.6363 1.254125     # ?ft, 25.05", 49.375"
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE TWOBYFOUR_APP
+                                      geometry Box {
+                                          size 0.09525 1.34874 0.04445     # 3.75", 53.1", 1.5"
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                        CADPart {
+                            name "Front Left Wind Support"
+                            translation -0.3048 0.6363 1.254125     # ?ft, 25.05", 49.375"
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE TWOBYFOUR_APP
+                                      geometry Box {
+                                          size 0.09525 1.34874 0.04445     # 3.75", 53.1", 1.5"
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                        
+                        
+                        CADPart {
+                            name "Front Wall"
+                            translation 0 0.69 1.225     # TODO: Hand placed
+                            
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE FLOOR_WOOD_APP
+                                      geometry Box {
+                                          size 1.2192 1.26365 0.0127     # 4ft, 4ft, 0.5"
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                        
+                     ]
+                 }
+             ]}    
+             ]
+          }
+          DEF BACK_STATION CADAssembly {
+             children [
+                Transform {
+                   translation 0 0.3302 0    # 0,13",0
+                   children [    
+                 CADPart {
+                     name "Back Station"
+                     children [
+                        CADPart {
+                            name "Back Right Support"
+                            translation 0.5874 0.66675 -1.171575            # 2ft, 26.25", 44.25"
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE TWOBYFOUR_APP
+                                      geometry Box {
+                                          size 0.04445 1.2192 0.09525      # 1.75", 4ft, 3.75"
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                        CADPart {
+                            name "Back Left Support"
+                            translation -0.5874 0.66675 -1.171575            # -2ft, 26.25", 44.25"
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE TWOBYFOUR_APP
+                                      geometry Box {
+                                          size 0.04445 1.2192 0.09525
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                        CADPart {
+                            name "Back Bottom Support"
+                            translation 0 0.07937 -1.171575            # 0ft, 3.125", 44.25"
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE TWOBYFOUR_APP
+                                      geometry Box {
+                                          size 1.1303 0.04445 0.09525     # 4ft - 3.5", 1.75", 3.75
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                        CADPart {
+                            name "Back Top Support"
+                            translation 0 1.2986 -1.171575            # 0ft, 51.125, 44.25"
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE TWOBYFOUR_APP
+                                      geometry Box {
+                                          size 1.2192 0.04445 0.09525     # 4ft, 1.75", 3.75
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                        CADPart {
+                            name "Back Right Wind Support"
+                            translation 0.3048 0.6363 -1.254125     # ?ft, 25.05", 48.875"
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE TWOBYFOUR_APP
+                                      geometry Box {
+                                          size 0.09525 1.34874 0.04445     # 3.75", 53.1", 1.5"
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                        CADPart {
+                            name "Back Left Wind Support"
+                            translation -0.3048 0.6363 -1.254125     # ?ft, 25.05", 48.875"
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE TWOBYFOUR_APP
+                                      geometry Box {
+                                          size 0.09525 1.34874 0.04445     # 3.75", 53.1", 1.5"
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                        
+                        CADPart {
+                            name "Back Wall"
+                            translation 0 0.69 -1.228     # TODO: Hand placed
+                            
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE FLOOR_WOOD_APP
+                                      geometry Box {
+                                          size 1.2192 1.26365 0.0127     # 4ft, 4ft, 0.5"
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                        
+                        
+                     ]
+                 }
+             ]}    
+             ]
+          }
+                  
+          DEF MID_STATION CADAssembly {             
+             children [
+                 Transform {
+                    translation 0 0.3302 0    # 0,13",0
+                    children [                     
+                 CADPart {
+                     name "Front Station"
+                     children [
+                        CADPart {
+                            name "Front Right Support"
+                            translation 0.5874 0.66675 0            # 2ft, 26.25", 44.25"
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE TWOBYFOUR_APP
+                                      geometry Box {
+                                          size 0.04445 1.2192 0.09525      # 1.75", 4ft, 3.75"
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                        CADPart {
+                            name "Front Left Support"
+                            translation -0.5874 0.66675 0            # -2ft, 26.25", 44.25"
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE TWOBYFOUR_APP
+                                      geometry Box {
+                                          size 0.04445 1.2192 0.09525
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                        CADPart {
+                            name "Front Bottom Support"
+                            translation 0 0.07937 0            # 0ft, 3.125", 44.25"
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE TWOBYFOUR_APP
+                                      geometry Box {
+                                          size 1.1303 0.04445 0.09525     # 4ft - 3.5", 1.75", 3.75
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                        CADPart {
+                            name "Front Top Support"
+                            translation 0 1.2986 0           # 0ft, 51.125, 44.25"
+                            children [
+                                CADFace {
+                                   shape Shape {
+                                      appearance USE TWOBYFOUR_APP
+                                      geometry Box {
+                                          size 1.2192 0.04445 0.09525     # 4ft, 1.75", 3.75
+                                      }
+                                   }
+                                }
+                            ]
+                        }
+                     ]
+                 }
+              ]}   
+             ]
+          }
+
+          DEF ROOF CADAssembly {
+             name "Roof"
+             children [
+                  Transform {
+                       translation 0 1.660525 0        # 0, 4ft + 13" + 1.875 + 1.75" + 0.75", 0
+                       children [
+
+                           CADPart {
+                               name "Roof "
+                               children [
+                                   CADFace {
+                                       shape Shape {
+                                           appearance USE FLOOR_WOOD_APP                               
+                                           geometry Box {
+                                               size 1.2192 0.0127 2.4384        # 4ft .5" 8ft
+                                           }
+                                       }
+                                   }
+                              ]
+                           }
+                      ]
+                 }
+        ]}
+        
+        DEF FRONT_RIGHT_WALL CADAssembly {
+           children [
+              DEF FRONT_RIGHT_WALL_TX Transform {
+                 center 0 0 0.6096
+                 translation  0.6096, 1.019175 0.6096               # 2ft, 40.125, 2ft
+                 children [
+                   CADFace {
+                       shape Shape {
+                           appearance USE FLOOR_WOOD_APP                               
+                           geometry Box {
+                               size  0.0127 1.26365 1.2192        #.5" 49.75" 4ft
+                           }
+                       }
+                   }
+                   DEF FRONT_RIGHT_WALL_TOUCHSENSOR TouchSensor {}
+                   
+                   Transform {
+                      rotation 0 0 1 1.57075
+                      translation -0.0127 0 0   # Need an actual measurement for this
+                      children [
+                         DEF FRONT_RIGHT_WORKSURFACE_TX Transform {
+                            center -0.325 0 0
+                            rotation 0 0 1 0
+                            children [
+                               CADFace {
+                                  shape Shape {
+                                     appearance USE FLOOR_WOOD_APP                               
+                                     geometry Box {
+                                         size  0.65 0.0127 1.0668         # Need an actual measurement for this
+                                     }
+                                  }
+                               }
+                            ]
+                         }
+                      ]
+                   }
+                   
+                    Transform {
+                       scale .53 .03 .1
+                       rotation 0 1 0 1.57075
+                       translation -0.0127 -0.315 0
+                       children [
+                    Shape {
+                       appearance USE HINGE_APP
+                       geometry IndexedFaceSet {
+                          solid FALSE
+                          coord DEF HINGE_COORD Coordinate {
+                             point [
+                             
+                                -1 1 0
+                                -1 0 0
+                                1 0 0
+                                1 1 0
+                                -1 1 0
+                                1 1 0     
+                             ]
+                          }
+                          texCoord TextureCoordinate {
+                             point [
+                                0 0
+                                0 0.5
+                                1 0.5
+                                1 0
+                                0 1
+                                1 1
+                             ]
+                          }
+                          coordIndex [0 1 2 3 -1, 1 4 5 2]            
+                       }
+                    }
+                    ]}
+                   
+                 ]
+              }
+              
+           ]
+        }        
+        DEF FRONT_LEFT_WALL CADAssembly {
+           children [
+              DEF FRONT_LEFT_WALL_TX Transform {
+                 center 0 0 0.6096
+                 translation  -0.6096, 1.019175 0.6096               # 2ft, 40.125, 2ft
+                 children [
+                   Transform {
+                      rotation 0 1 0 3.1415
+                      children [
+                   CADFace {
+                       shape Shape {
+                           appearance USE FLOOR_WOOD_APP                               
+                           geometry Box {
+                               size  0.0127 1.26365 1.2192        #.5" 49.75" 8ft
+                           }
+                       }
+                   }
+                   DEF FRONT_LEFT_WALL_TOUCHSENSOR TouchSensor {}
+                   
+                   Transform {
+                      rotation 0 0 1 1.57075
+                      translation -0.0127 0 0   # Need an actual measurement for this
+                      children [
+                         DEF FRONT_LEFT_WORKSURFACE_TX Transform {
+                            center -0.325 0 0
+                            rotation 0 0 1 0
+                            children [
+                               CADFace {
+                                  shape Shape {
+                                     appearance USE FLOOR_WOOD_APP                               
+                                     geometry Box {
+                                         size  0.65 0.0127 1.0668         # Need an actual measurement for this
+                                     }
+                                  }
+                               }
+                            ]
+                         }
+                      ]
+                   }
+                   
+                   ]}
+                   
+                 
+                    Transform {
+                       scale .53 .03 .1
+                       rotation 0 1 0 1.57075
+                       translation 0.0127 -0.315 0
+                       children [
+                    Shape {
+                       appearance USE HINGE_APP
+                       geometry IndexedFaceSet {
+                          solid FALSE
+                          coord DEF FRONT_LEFT_HINGE_COORD Coordinate {
+                             point [
+                            
+                                -1 1 0
+                                -1 0 0
+                                1 0 0
+                                1 1 0
+                                -1 1 0
+                                1 1 0     
+                             ]
+                          }
+                          texCoord TextureCoordinate {
+                             point [
+                                0 0
+                                0 0.5
+                                1 0.5
+                                1 0
+                                0 1
+                                1 1
+                             ]
+                          }
+                          coordIndex [0 1 2 3 -1, 1 4 5 2]            
+                       }
+                    }
+                    ]}
+                    
+                    
+                 ]
+              }
+              
+           ]
+        }
+        
+        DEF BACK_RIGHT_WALL CADAssembly {
+           children [
+              Transform {
+                 translation  0.6096, 0.638175 -0.6096               # Need real measurements
+                 children [
+                   CADFace {
+                       shape Shape {
+                           appearance USE FLOOR_WOOD_APP                               
+                           geometry Box {
+                               size  0.0127 0.508 1.2192       # Need real measurements
+                           }
+                       }
+                   }
+                 ]
+              }
+              DEF BACK_RIGHT_WORKSURFACE_TX Transform {
+                 center 0 -0.38 0
+                 translation  0.6096, 1.272 -0.6096               # Need real measurements
+                 children [
+                   CADFace {
+                       shape Shape {
+                           appearance USE FLOOR_WOOD_APP                               
+                           geometry Box {
+                               size  0.0127 0.759 1.2192        # Need real measurements
+                           }
+                       }
+                   }
+                   
+                   DEF BACK_RIGHT_WORKSURFACE_TOUCHSENSOR TouchSensor {
+                   }
+                 ]
+              }
+
+            DEF BACK_RIGHT_HINGE Transform {
+               scale .61 .03 .1
+               rotation 0 1 0 1.57075
+               translation 0.617, 0.89 -0.6096   
+               children [
+                  CADFace {
+                    name "Back Right Hinge"
+                    shape Shape {
+                       appearance USE HINGE_APP 
+                       geometry IndexedFaceSet {
+                          solid FALSE
+                          coord DEF BACK_RIGHT_HINGE_COORD Coordinate {
+                             point [
+
+                                -1 1 0
+                                -1 0 0
+                                1 0 0
+                                1 1 0
+                                -1 -1 0
+                                1 -1 0     
+                             ]
+                          }
+                          texCoord TextureCoordinate {
+                             point [
+                                0 0
+                                0 0.5
+                                1 0.5
+                                1 0
+                                0 1
+                                1 1
+                             ]
+                          }
+                          coordIndex [0 1 2 3 -1, 1 4 5 2]            
+                       }
+                    }
+                 }
+            ]}
+              
+              
+           ]
+        }
+        
+        DEF BACK_LEFT_WALL CADAssembly {
+           children [
+              DEF BACK_LEFT_WALL_TX Transform {
+                 center 0 0 0.6096
+                 translation  -0.6096, 1.019175 -0.6096               # 2ft, 40.125, 2ft
+                 children [
+                   CADFace {
+                       shape Shape {
+                           appearance USE FLOOR_WOOD_APP                               
+                           geometry Box {
+                               size  0.0127 1.26365 1.2192        #.5" 49.75" 4ft
+                           }
+                       }
+                   }
+                   DEF BACK_LEFT_WALL_TOUCHSENSOR TouchSensor {}                   
+                 ]
+              }
+              
+           ]
+        }        
+        
+   ]}
+]}
+
+# Scene Lighting
+Transform {
+   children [
+Transform {
+    children [
+        DirectionalLight {
+            direction 0 -1 0
+        }
+
+DEF LAYER CADLayer {
+   name "All"
+   visible [TRUE,TRUE, TRUE, TRUE, TRUE]
+   children [
+      CADLayer {
+         name "Original Trailer"
+         visible [TRUE]
+         children [
+            USE BASE
+         ]
+      }
+      CADLayer {
+         name "Flooring"
+         visible [TRUE]
+         children [
+             USE FLOOR
+         ]
+      }      
+      CADLayer {
+         name "Shell"
+         visible [TRUE,TRUE,TRUE]
+         children [
+             USE FRONT_STATION
+             USE MID_STATION
+             USE BACK_STATION
+         ]
+      }      
+      CADLayer {
+         name "Roof"
+         visible [TRUE]
+         children [
+             USE ROOF
+         ]
+      }
+      
+      CADLayer {
+         name "Walls"
+         visible [TRUE, TRUE, TRUE, TRUE]
+         children [
+            USE FRONT_RIGHT_WALL
+            USE FRONT_LEFT_WALL
+            USE BACK_RIGHT_WALL            
+            USE BACK_LEFT_WALL            
+         ]
+      }
+   ]
+}
+
+]}
+
+        ]}
+
+DEF KEYS KeySensor {
+}
+
+DEF SC Script {
+  inputOnly SFInt32 actionKeyPress
+  outputOnly MFBool mask
+
+  url ["ecmascript:
+    var mask;
+
+    function initialize() {
+        mask[0] = true;
+        mask[1] = true;
+        mask[2] = true;
+        mask[3] = true;
+        mask[4] = true;
+    }
+
+    function actionKeyPress(val) {
+       idx = val -1;
+       if (mask[idx])
+           mask[idx] = false;
+       else
+          mask[idx] = true;
+    }
+
+  "]
+}
+
+ROUTE KEYS.actionKeyPress TO SC.actionKeyPress
+ROUTE SC.mask TO LAYER.set_visible
+
+# FRONT_RIGHT_WALL Animations
+DEF FRONT_RIGHT_WALL_OPEN_TIMESENSOR TimeSensor {
+   cycleInterval 2.5
+}
+DEF FRONT_RIGHT_WALL_CLOSE_TIMESENSOR TimeSensor {
+   cycleInterval 2.5
+}
+
+DEF FRONT_RIGHT_WALL_OPEN_ANIMATION OrientationInterpolator {
+   key [0,0.3,0.7]
+   keyValue [0 1 0 0, 0 1 0 -1.725, 0 1 0 -3.66]
+}
+DEF FRONT_RIGHT_WALL_CLOSE_ANIMATION OrientationInterpolator {
+   key [0,0.3,0.5,1]
+   keyValue [0 1 0 -3.66,0 1 0 -3.66, 0 1 0 -1.83, 0 1 0 0]
+}
+DEF FRONT_RIGHT_WORKSURFACE_OPEN_ANIMATION OrientationInterpolator {
+   key [0,0.7,1]
+   keyValue [0 0 1 0, 0 0 1 0, 0 0 1 1.5]
+}
+DEF FRONT_RIGHT_WORKSURFACE_CLOSE_ANIMATION OrientationInterpolator {
+   key [0,0.3]
+   keyValue [0 0 1 1.5, 0 0 1 0]
+}
+
+DEF FRONT_RIGHT_WALL_LOGIC Script {
+   inputOnly SFTime touchTime 
+   outputOnly SFTime openStartTime
+   outputOnly SFTime closeStartTime
+   url["ecmascript:
+      var state = 0;    // 0 = closed
+      function touchTime(val) {
+         if (state == 0) {            
+            state = 1;
+            openStartTime = val;
+         } else {
+            state = 0;
+            closeStartTime = val;
+         }
+      }
+   "]
+}
+
+ROUTE FRONT_RIGHT_WALL_TOUCHSENSOR.touchTime TO FRONT_RIGHT_WALL_LOGIC.touchTime
+ROUTE FRONT_RIGHT_WALL_LOGIC.openStartTime TO FRONT_RIGHT_WALL_OPEN_TIMESENSOR.startTime
+ROUTE FRONT_RIGHT_WALL_LOGIC.closeStartTime TO FRONT_RIGHT_WALL_CLOSE_TIMESENSOR.startTime
+ROUTE FRONT_RIGHT_WALL_OPEN_TIMESENSOR.fraction_changed TO FRONT_RIGHT_WALL_OPEN_ANIMATION.set_fraction
+ROUTE FRONT_RIGHT_WALL_OPEN_ANIMATION.value_changed TO FRONT_RIGHT_WALL_TX.set_rotation
+ROUTE FRONT_RIGHT_WALL_CLOSE_TIMESENSOR.fraction_changed TO FRONT_RIGHT_WALL_CLOSE_ANIMATION.set_fraction
+ROUTE FRONT_RIGHT_WALL_CLOSE_ANIMATION.value_changed TO FRONT_RIGHT_WALL_TX.set_rotation
+ROUTE FRONT_RIGHT_WALL_OPEN_TIMESENSOR.fraction_changed TO FRONT_RIGHT_WORKSURFACE_OPEN_ANIMATION.set_fraction
+ROUTE FRONT_RIGHT_WORKSURFACE_OPEN_ANIMATION.value_changed TO FRONT_RIGHT_WORKSURFACE_TX.set_rotation
+ROUTE FRONT_RIGHT_WALL_CLOSE_TIMESENSOR.fraction_changed TO FRONT_RIGHT_WORKSURFACE_CLOSE_ANIMATION.set_fraction
+ROUTE FRONT_RIGHT_WORKSURFACE_CLOSE_ANIMATION.value_changed TO FRONT_RIGHT_WORKSURFACE_TX.set_rotation
+
+DEF HINGE_OPEN_CI CoordinateInterpolator {
+   key [0,0.8,1]
+   keyValue [
+            -1 1 0
+            -1 0 0
+            1 0 0
+            1 1 0
+            -1 1 0
+            1 1 0     
+
+            -1 1 0
+            -1 0 0
+            1 0 0
+            1 1 0
+            -1 1 0
+            1 1 0     
+
+            -1 1 0
+            -1 0 0
+            1 0 0
+            1 1 0
+            -1 0 -1
+            1 0 -1     
+  ]
+}
+
+DEF HINGE_CLOSE_CI CoordinateInterpolator {
+   key [0,0.2,1]
+   keyValue [
+            -1 1 0
+            -1 0 0
+            1 0 0
+            1 1 0
+            -1 0 -1
+            1 0 -1     
+            
+            -1 1 0
+            -1 0 0
+            1 0 0
+            1 1 0
+            -1 1 0
+            1 1 0     
+            
+            -1 1 0
+            -1 0 0
+            1 0 0
+            1 1 0
+            -1 1 0
+            1 1 0                 
+  ]
+}
+
+DEF HINGE_CLOSE_TIMESENSOR TimeSensor {  
+   cycleInterval 2.5
+}
+DEF HINGE_OPEN_TIMESENSOR TimeSensor {  
+   cycleInterval 2.5
+}
+
+DEF HINGE_LOGIC Script {
+   inputOnly SFTime touchTime 
+   outputOnly SFTime openStartTime
+   outputOnly SFTime closeStartTime
+   url["ecmascript:
+      var state = 0;    // 0 = closed
+      function touchTime(val) {
+         if (state == 0) {            
+            state = 1;
+            openStartTime = val;
+         } else {
+            state = 0;
+            closeStartTime = val;
+         }
+      }
+   "]
+}
+
+ROUTE FRONT_RIGHT_WALL_TOUCHSENSOR.touchTime TO HINGE_LOGIC.touchTime
+ROUTE FRONT_RIGHT_WALL_OPEN_TIMESENSOR.fraction_changed TO HINGE_OPEN_CI.set_fraction
+ROUTE HINGE_OPEN_CI.value_changed TO HINGE_COORD.set_point
+ROUTE FRONT_RIGHT_WALL_CLOSE_TIMESENSOR.fraction_changed TO HINGE_CLOSE_CI.set_fraction
+ROUTE HINGE_CLOSE_CI.value_changed TO HINGE_COORD.set_point
+
+
+
+# FRONT_LEFT_WALL Animations
+DEF FRONT_LEFT_WALL_OPEN_TIMESENSOR TimeSensor {
+   cycleInterval 2.5
+}
+DEF FRONT_LEFT_WALL_CLOSE_TIMESENSOR TimeSensor {
+   cycleInterval 2.5
+}
+
+DEF FRONT_LEFT_WALL_OPEN_ANIMATION OrientationInterpolator {
+   key [0,0.3,0.7]
+   keyValue [0 1 0 0, 0 1 0 1.83, 0 1 0 3.66]
+}
+DEF FRONT_LEFT_WALL_CLOSE_ANIMATION OrientationInterpolator {
+   key [0,0.3,0.5,1]
+   keyValue [0 1 0 3.66,0 1 0 3.66, 0 1 0 1.83, 0 1 0 0]
+}
+DEF FRONT_LEFT_WORKSURFACE_OPEN_ANIMATION OrientationInterpolator {
+   key [0,0.7,1]
+   keyValue [0 0 1 0, 0 0 1 0, 0 0 1 1.5]
+}
+DEF FRONT_LEFT_WORKSURFACE_CLOSE_ANIMATION OrientationInterpolator {
+   key [0,0.3]
+   keyValue [0 0 1 1.5, 0 0 1 0]
+}
+
+DEF FRONT_LEFT_WALL_LOGIC Script {
+   inputOnly SFTime touchTime 
+   outputOnly SFTime openStartTime
+   outputOnly SFTime closeStartTime
+   url["ecmascript:
+      var state = 0;    // 0 = closed
+      function touchTime(val) {
+         if (state == 0) {            
+            state = 1;
+            openStartTime = val;
+         } else {
+            state = 0;
+            closeStartTime = val;
+         }
+      }
+   "]
+}
+
+ROUTE FRONT_LEFT_WALL_TOUCHSENSOR.touchTime TO FRONT_LEFT_WALL_LOGIC.touchTime
+ROUTE FRONT_LEFT_WALL_LOGIC.openStartTime TO FRONT_LEFT_WALL_OPEN_TIMESENSOR.startTime
+ROUTE FRONT_LEFT_WALL_LOGIC.closeStartTime TO FRONT_LEFT_WALL_CLOSE_TIMESENSOR.startTime
+ROUTE FRONT_LEFT_WALL_OPEN_TIMESENSOR.fraction_changed TO FRONT_LEFT_WALL_OPEN_ANIMATION.set_fraction
+ROUTE FRONT_LEFT_WALL_OPEN_ANIMATION.value_changed TO FRONT_LEFT_WALL_TX.set_rotation
+ROUTE FRONT_LEFT_WALL_CLOSE_TIMESENSOR.fraction_changed TO FRONT_LEFT_WALL_CLOSE_ANIMATION.set_fraction
+ROUTE FRONT_LEFT_WALL_CLOSE_ANIMATION.value_changed TO FRONT_LEFT_WALL_TX.set_rotation
+ROUTE FRONT_LEFT_WALL_OPEN_TIMESENSOR.fraction_changed TO FRONT_LEFT_WORKSURFACE_OPEN_ANIMATION.set_fraction
+ROUTE FRONT_LEFT_WORKSURFACE_OPEN_ANIMATION.value_changed TO FRONT_LEFT_WORKSURFACE_TX.set_rotation
+ROUTE FRONT_LEFT_WALL_CLOSE_TIMESENSOR.fraction_changed TO FRONT_LEFT_WORKSURFACE_CLOSE_ANIMATION.set_fraction
+ROUTE FRONT_LEFT_WORKSURFACE_CLOSE_ANIMATION.value_changed TO FRONT_LEFT_WORKSURFACE_TX.set_rotation
+
+# FRONT_LEFT_HINGE Animation
+
+DEF FRONT_LEFT_HINGE_OPEN_CI CoordinateInterpolator {
+   key [0,0.8,1]
+   keyValue [
+            -1 1 0
+            -1 0 0
+            1 0 0
+            1 1 0
+            -1 1 0
+            1 1 0
+
+            -1 1 0
+            -1 0 0
+            1 0 0
+            1 1 0
+            -1 1 0
+            1 1 0
+
+            -1 1 0
+            -1 0 0
+            1 0 0
+            1 1 0
+            -1 0 1
+            1 0 1
+
+  ]
+}
+
+DEF FRONT_LEFT_HINGE_CLOSE_CI CoordinateInterpolator {
+   key [0,0.2,1]
+   keyValue [
+            -1 1 0
+            -1 0 0
+            1 0 0
+            1 1 0
+            -1 0 1
+            1 0 1
+
+            -1 1 0
+            -1 0 0
+            1 0 0
+            1 1 0
+            -1 1 0
+            1 1 0
+            
+            -1 1 0
+            -1 0 0
+            1 0 0
+            1 1 0
+            -1 1 0
+            1 1 0            
+  ]
+}
+
+DEF FRONT_LEFT_HINGE_CLOSE_TIMESENSOR TimeSensor {  
+   cycleInterval 2.5
+}
+DEF FRONT_LEFT_HINGE_OPEN_TIMESENSOR TimeSensor {  
+   cycleInterval 2.5
+}
+
+DEF FRONT_LEFT_HINGE_LOGIC Script {
+   inputOnly SFTime touchTime 
+   outputOnly SFTime openStartTime
+   outputOnly SFTime closeStartTime
+   url["ecmascript:
+      var state = 0;    // 0 = closed
+      function touchTime(val) {
+         if (state == 0) {            
+            state = 1;
+            openStartTime = val;
+         } else {
+            state = 0;
+            closeStartTime = val;
+         }
+      }
+   "]
+}
+
+ROUTE FRONT_LEFT_WALL_TOUCHSENSOR.touchTime TO FRONT_LEFT_HINGE_LOGIC.touchTime
+ROUTE FRONT_LEFT_HINGE_LOGIC.openStartTime TO FRONT_LEFT_HINGE_OPEN_TIMESENSOR.startTime
+ROUTE FRONT_LEFT_HINGE_LOGIC.closeStartTime TO FRONT_LEFT_HINGE_CLOSE_TIMESENSOR.startTime
+ROUTE FRONT_LEFT_HINGE_OPEN_TIMESENSOR.fraction_changed TO FRONT_LEFT_HINGE_OPEN_CI.set_fraction
+ROUTE FRONT_LEFT_HINGE_OPEN_CI.value_changed TO FRONT_LEFT_HINGE_COORD.set_point
+ROUTE FRONT_LEFT_HINGE_CLOSE_TIMESENSOR.fraction_changed TO FRONT_LEFT_HINGE_CLOSE_CI.set_fraction
+ROUTE FRONT_LEFT_HINGE_CLOSE_CI.value_changed TO FRONT_LEFT_HINGE_COORD.set_point
+
+
+# BACK_RIGHT_WORKSURFACE Animations
+DEF BACK_RIGHT_WORKSURFACE_OPEN_TIMESENSOR TimeSensor {
+   cycleInterval 1.5
+}
+DEF BACK_RIGHT_WORKSURFACE_CLOSE_TIMESENSOR TimeSensor {
+   cycleInterval 1.5
+}
+
+DEF BACK_RIGHT_WORKSURFACE_OPEN_ANIMATION OrientationInterpolator {
+   key [0,1]
+   keyValue [0 0 1 0, 0 0 1 -1.55]
+}
+DEF BACK_RIGHT_WORKSURFACE_CLOSE_ANIMATION OrientationInterpolator {
+   key [0,1]
+   keyValue [0 0 1 -1.55, 0 0 1 0]
+}
+
+DEF BACK_RIGHT_WORKSURFACE_LOGIC Script {
+   inputOnly SFTime touchTime 
+   outputOnly SFTime openStartTime
+   outputOnly SFTime closeStartTime
+   url["ecmascript:
+      var state = 0;    // 0 = closed
+      function touchTime(val) {
+         if (state == 0) {            
+            state = 1;
+            openStartTime = val;
+         } else {
+            state = 0;
+            closeStartTime = val;
+         }
+      }
+   "]
+}
+
+ROUTE BACK_RIGHT_WORKSURFACE_TOUCHSENSOR.touchTime TO BACK_RIGHT_WORKSURFACE_LOGIC.touchTime
+ROUTE BACK_RIGHT_WORKSURFACE_LOGIC.openStartTime TO BACK_RIGHT_WORKSURFACE_OPEN_TIMESENSOR.startTime
+ROUTE BACK_RIGHT_WORKSURFACE_LOGIC.closeStartTime TO BACK_RIGHT_WORKSURFACE_CLOSE_TIMESENSOR.startTime
+ROUTE BACK_RIGHT_WORKSURFACE_OPEN_TIMESENSOR.fraction_changed TO BACK_RIGHT_WORKSURFACE_OPEN_ANIMATION.set_fraction
+ROUTE BACK_RIGHT_WORKSURFACE_OPEN_ANIMATION.value_changed TO BACK_RIGHT_WORKSURFACE_TX.set_rotation
+ROUTE BACK_RIGHT_WORKSURFACE_CLOSE_TIMESENSOR.fraction_changed TO BACK_RIGHT_WORKSURFACE_CLOSE_ANIMATION.set_fraction
+ROUTE BACK_RIGHT_WORKSURFACE_CLOSE_ANIMATION.value_changed TO BACK_RIGHT_WORKSURFACE_TX.set_rotation
+
+# BACK_RIGHT_HINGE Animation
+
+DEF BACK_RIGHT_HINGE_OPEN_CI CoordinateInterpolator {
+   key [0,1]
+   keyValue [
+            -1 1 0
+            -1 0 0
+            1 0 0
+            1 1 0
+            -1 -1 0
+            1 -1 0
+
+            -1 0 1
+            -1 0 0
+            1 0 0
+            1 0 1
+            -1 -1 0
+            1 -1 0
+  ]
+}
+
+DEF BACK_RIGHT_HINGE_CLOSE_CI CoordinateInterpolator {
+   key [0,1]
+   keyValue [
+            -1 0 1
+            -1 0 0
+            1 0 0
+            1 0 1
+            -1 -1 0
+            1 -1 0
+            
+            -1 1 0
+            -1 0 0
+            1 0 0
+            1 1 0
+            -1 -1 0
+            1 -1 0            
+  ]
+}
+
+DEF BACK_RIGHT_HINGE_CLOSE_TIMESENSOR TimeSensor {  
+   cycleInterval 1.5
+}
+DEF BACK_RIGHT_HINGE_OPEN_TIMESENSOR TimeSensor {  
+   cycleInterval 1.5
+}
+
+DEF BACK_RIGHT_HINGE_LOGIC Script {
+   inputOnly SFTime touchTime 
+   outputOnly SFTime openStartTime
+   outputOnly SFTime closeStartTime
+   url["ecmascript:
+      var state = 0;    // 0 = closed
+      function touchTime(val) {
+         if (state == 0) {            
+            state = 1;
+            openStartTime = val;
+         } else {
+            state = 0;
+            closeStartTime = val;
+         }
+      }
+   "]
+}
+
+ROUTE BACK_RIGHT_WORKSURFACE_TOUCHSENSOR.touchTime TO BACK_RIGHT_HINGE_LOGIC.touchTime
+ROUTE BACK_RIGHT_HINGE_LOGIC.openStartTime TO BACK_RIGHT_HINGE_OPEN_TIMESENSOR.startTime
+ROUTE BACK_RIGHT_HINGE_LOGIC.closeStartTime TO BACK_RIGHT_HINGE_CLOSE_TIMESENSOR.startTime
+ROUTE BACK_RIGHT_HINGE_OPEN_TIMESENSOR.fraction_changed TO BACK_RIGHT_HINGE_OPEN_CI.set_fraction
+ROUTE BACK_RIGHT_HINGE_OPEN_CI.value_changed TO BACK_RIGHT_HINGE_COORD.set_point
+ROUTE BACK_RIGHT_HINGE_CLOSE_TIMESENSOR.fraction_changed TO BACK_RIGHT_HINGE_CLOSE_CI.set_fraction
+ROUTE BACK_RIGHT_HINGE_CLOSE_CI.value_changed TO BACK_RIGHT_HINGE_COORD.set_point
+
+# BACK_LEFT_WALL Animation
+
+DEF BACK_LEFT_WALL_OPEN_POS_INTERP PositionInterpolator {
+   key [0,0.7,1]
+   keyValue [
+      -0.6096, 1.019175 -0.6096
+      -6, 1.019175 -0.6096      
+      -6, 1.019175 -0.6096      
+  ]
+}
+DEF BACK_LEFT_WALL_OPEN_ORI_INTERP OrientationInterpolator {
+   key [0,0.7,1]
+   keyValue [
+      0 0 1 0
+      0 0 1 0
+      0 0 1 1.57075
+  ]
+}
+
+DEF BACK_LEFT_WALL_CLOSE_POS_INTERP PositionInterpolator {
+   key [0,0.3,1]
+   keyValue [
+      -6, 1.019175 -0.6096      
+      -6, 1.019175 -0.6096      
+      -0.6096, 1.019175 -0.6096
+  ]
+}
+
+DEF BACK_LEFT_WALL_CLOSE_ORI_INTERP OrientationInterpolator {
+   key [0,0.3,1]
+   keyValue [
+      0 0 1 1.57075
+      0 0 1 1.57075
+      0 0 1 0
+  ]
+}
+
+DEF BACK_LEFT_WALL_CLOSE_TIMESENSOR TimeSensor {  
+   cycleInterval 1.5
+}
+DEF BACK_LEFT_WALL_OPEN_TIMESENSOR TimeSensor {  
+   cycleInterval 1.5
+}
+
+DEF BACK_LEFT_WALL_LOGIC Script {
+   inputOnly SFTime touchTime 
+   outputOnly SFTime openStartTime
+   outputOnly SFTime closeStartTime
+   url["ecmascript:
+      var state = 0;    // 0 = closed
+      function touchTime(val) {
+         if (state == 0) {            
+            state = 1;
+            openStartTime = val;
+         } else {
+            state = 0;
+            closeStartTime = val;
+         }
+      }
+   "]
+}
+
+ROUTE BACK_LEFT_WALL_TOUCHSENSOR.touchTime TO BACK_LEFT_WALL_LOGIC.touchTime
+ROUTE BACK_LEFT_WALL_LOGIC.openStartTime TO BACK_LEFT_WALL_OPEN_TIMESENSOR.startTime
+ROUTE BACK_LEFT_WALL_LOGIC.closeStartTime TO BACK_LEFT_WALL_CLOSE_TIMESENSOR.startTime
+ROUTE BACK_LEFT_WALL_OPEN_TIMESENSOR.fraction_changed TO BACK_LEFT_WALL_OPEN_POS_INTERP.set_fraction
+ROUTE BACK_LEFT_WALL_OPEN_TIMESENSOR.fraction_changed TO BACK_LEFT_WALL_OPEN_ORI_INTERP.set_fraction
+ROUTE BACK_LEFT_WALL_OPEN_POS_INTERP.value_changed TO BACK_LEFT_WALL_TX.set_translation
+ROUTE BACK_LEFT_WALL_OPEN_ORI_INTERP.value_changed TO BACK_LEFT_WALL_TX.set_rotation
+ROUTE BACK_LEFT_WALL_CLOSE_TIMESENSOR.fraction_changed TO BACK_LEFT_WALL_CLOSE_POS_INTERP.set_fraction
+ROUTE BACK_LEFT_WALL_CLOSE_TIMESENSOR.fraction_changed TO BACK_LEFT_WALL_CLOSE_ORI_INTERP.set_fraction
+ROUTE BACK_LEFT_WALL_CLOSE_POS_INTERP.value_changed TO BACK_LEFT_WALL_TX.set_translation
+ROUTE BACK_LEFT_WALL_CLOSE_ORI_INTERP.value_changed TO BACK_LEFT_WALL_TX.set_rotation

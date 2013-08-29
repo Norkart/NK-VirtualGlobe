@@ -1,0 +1,32 @@
+#X3D V3.2 utf8
+
+PROFILE Immersive
+COMPONENT Navigation:3
+
+OrthoViewpoint {
+   description "Ortho Top Down 1"
+   fieldOfView -1.1 -1.1 1.1 1.1
+   position 0 10 0
+   orientation 1 0 0 -1.57075
+}
+
+OrthoViewpoint {
+   description "Ortho Top Down 1"
+   fieldOfView -4 -4 4 4
+   position 0 10 0
+   orientation 1 0 0 -1.57075
+}
+
+Transform {
+   children [
+      Shape {
+         appearance Appearance {
+            material Material {
+               diffuseColor 1 0 0
+            }
+         }
+         geometry Box {}
+      }
+   ]
+}
+

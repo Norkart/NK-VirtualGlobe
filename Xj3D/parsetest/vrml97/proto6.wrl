@@ -1,0 +1,22 @@
+#VRML    V2.0 utf8
+
+PROTO simple1 [
+  eventIn SFColor setter
+  eventOut SFInt32 getter
+]
+{
+  Material {
+    diffuseColor IS setter
+  }
+}
+
+PROTO simple2 [
+  eventIn SFColor setter
+  eventOut SFColor getter
+]
+{
+  Material {
+    diffuseColor IS setter
+    diffuseColor IS getter
+  }
+}

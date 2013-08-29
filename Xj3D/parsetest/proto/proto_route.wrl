@@ -1,0 +1,33 @@
+#VRML V2.0 utf8
+
+PROTO MoveyBox [
+]
+{
+	DEF Trans Transform {
+		children [
+    		Shape {
+    			appearance Appearance {
+        			material Material { 
+        				diffuseColor 1 0 0
+        			}
+				}
+    			geometry Box {}
+			}
+		]
+    }
+
+	DEF	Mover PositionInterpolator {
+		key	[0.0, 0.5, 1.0]
+		keyValue [0 0 0, 0 2 0, 0 0 0]
+	}
+
+	DEF Time TimeSensor	{
+		cycleInterval 5
+		loop TRUE
+	}
+		
+   ROUTE Time.fraction_changed TO Mover.set_fraction
+   ROUTE Mover.value_changed TO Trans.set_translation
+}
+
+MoveyBox {}

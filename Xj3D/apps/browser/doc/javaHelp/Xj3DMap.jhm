@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE map
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN"
+         "http://java.sun.com/products/javahelp/map_2_0.dtd">
+
+<map version="2.0">
+
+  <mapID target="Introduction"		url="pages/intro.html"/>
+  <mapID target="Contributors"		url="pages/contrib.html"/>
+  <mapID target="Resources"		url="pages/empty.html"/>
+  <mapID target="Terms"			url="pages/terms.html"/>
+
+  <mapID target="NOT"			url="pages/empty.html"/>
+
+
+<!-- Icon items -->
+
+  <mapID target="IconOpen"		url="pages/Icons/open.html"/>
+  <mapID target="IconReload"		url="pages/Icons/reload.html"/>
+  <mapID target="IconFly"		url="pages/Icons/fly.html"/>
+  <mapID target="IconPan"		url="pages/Icons/pan.html"/>
+  <mapID target="IconTilt"		url="pages/Icons/tilt.html"/>
+  <mapID target="IconWalk"		url="pages/Icons/walk.html"/>
+  <mapID target="IconExamine"		url="pages/Icons/examine.html"/>
+  <mapID target="IconPrevious"		url="pages/Icons/previousVP.html"/>
+  <mapID target="IconList"		url="pages/Icons/listVP.html"/>
+  <mapID target="IconNext"		url="pages/Icons/nextVP.html"/>
+  <mapID target="IconReturn"		url="pages/Icons/returnVP.html"/>
+  <mapID target="IconLook"		url="pages/Icons/look.html"/>
+  <mapID target="IconFit"		url="pages/Icons/fit.html"/>
+  <mapID target="IconConsole"		url="pages/Icons/console.html"/>
+  <mapID target="Keyboard"		url="pages/keyboard.html"/>
+  <mapID target="CommandLine"		url="pages/commandline.html"/>
+
+
+  <mapID target="topic"			url="images/redcircle.png" />
+  <mapID target="chapter"		url="images/chapTopic.gif" />
+  <mapID target="empty"			url="images/empty.gif" />
+</map>

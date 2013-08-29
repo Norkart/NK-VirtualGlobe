@@ -1,0 +1,10 @@
+#X3D V3.0 utf8
+
+# Def names are required to be unique in X3D (not in VRML). This
+# tests to make sure we can catch it. 
+
+PROFILE Immersive 
+
+DEF GRP Group {}
+
+DEF GRP Transform {}

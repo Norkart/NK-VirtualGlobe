@@ -1,0 +1,44 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+# Test to check that touch sensors work with extrusions.
+
+Transform {
+  children [
+     DEF TS TouchSensor {}
+     Shape {
+       appearance Appearance {
+         material DEF MAT Material {
+           emissiveColor 0 0 1
+         }
+       }
+
+       geometry Extrusion{
+         crossSection [ -1 -1, -1 1, 1 1, 1 -1, -1 -1]
+         spine [0 -1 0 , 0 1 0 ]
+       } 
+    } 
+  ]
+}
+
+DEF S Script {
+  inputOnly SFBool set_isOver 
+  outputOnly SFColor color_changed
+  url "ecmascript:
+     function set_isOver(value) {
+         if(value) {
+           color_changed.r = 0;
+           color_changed.g = 1;
+           color_changed.b = 0;
+         } else {
+           color_changed.r = 1;
+           color_changed.g = 0;
+           color_changed.b = 0;
+         }
+     }
+  "
+}
+
+ROUTE TS.isOver TO S.set_isOver
+ROUTE S.color_changed TO MAT.emissiveColor

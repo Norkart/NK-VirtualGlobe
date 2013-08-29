@@ -1,0 +1,60 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_RigidBodyPhysics:2
+
+Viewpoint {
+  position 0 0 4
+}
+
+Group {
+  children [
+    DEF BALL-GEOM CollidableShape {
+      shape Shape {
+        appearance Appearance {
+          material Material {
+	    emissiveColor 1 0 0 
+	  }
+	}
+	geometry Sphere { radius 0.1 }
+      }
+    }
+    DEF GROUND-GEOM CollidableShape {
+      translation 0 -0.5 0
+      shape Shape {
+        appearance Appearance {
+          material Material {
+	    emissiveColor 0 1 0
+	  }
+	}
+	geometry Box {
+	  size 20 0.1 20
+	}
+      }
+    }
+  ]
+}
+
+DEF BODY-COLLECTION RigidBodyCollection {
+  bodies [
+    DEF BODY-1 RigidBody {
+      position 0 2 0
+      geometry USE BALL-GEOM
+    }
+  ]
+  collider DEF COLLISION-GROUP CollisionCollection {
+    bounce 1
+    collidables [
+      USE BALL-GEOM
+      USE GROUND-GEOM
+    ]
+  }
+}
+
+DEF COLLISION-OUTPUT CollisionSensor {
+  collidables USE COLLISION-GROUP
+}
+
+
+ROUTE COLLISION-OUTPUT.contacts TO BODY-COLLECTION.set_contacts
+

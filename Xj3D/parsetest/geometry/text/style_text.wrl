@@ -1,0 +1,17 @@
+#VRML V2.0 utf8
+
+Shape {
+  appearance Appearance {
+    material Material {
+      diffuseColor 1 0 0
+    }
+  }
+  geometry Text {
+    string [ "Line 1" "Longer Line 2"]
+    fontStyle FontStyle {
+      leftToRight FALSE
+      topToBottom FALSE
+      justify "MIDDLE" 
+    }
+  }
+}

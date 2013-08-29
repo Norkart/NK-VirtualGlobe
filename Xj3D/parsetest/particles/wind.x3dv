@@ -1,0 +1,119 @@
+#X3D V3.2 utf8
+
+PROFILE Interactive
+COMPONENT ParticleSystems:1
+
+Viewpoint {
+  position 0 1.5 20
+}
+
+Background {
+	skyColor .6 .6 1
+}
+
+DirectionalLight {
+	direction 0 -1 -1 
+}
+
+Transform {
+  children	Shape {
+    appearance Appearance {
+        texture MultiTexture {
+            mode ["MODULATE","MODULATE"]
+            texture [
+               ImageTexture { url ["textures/grass.jpg"] }
+               ImageTexture { url ["textures/burn.jpg"] }
+            ]
+        }
+        textureTransform MultiTextureTransform {
+          textureTransform [
+                TextureTransform { scale 20 20 }
+                TextureTransform { }
+           ]
+        }
+	}
+
+
+    geometry IndexedFaceSet {
+      coord	Coordinate {
+	point	[ -20 0 -20,
+		  -20 0 20,
+		  20 0 20,
+		  20 0 -20 ]
+      }
+
+      coordIndex	[ 0, 1, 2, 3, -1 ]
+      texCoord	MultiTextureCoordinate {
+		  texCoord [
+			  TextureCoordinate { point	[ 0 1, 0 0, 1 0, 1 1 ] }
+			  TextureCoordinate { point	[ 0 1, 0 0, 1 0, 1 1 ] }
+		  ]
+	  }
+      solid	TRUE
+      texCoordIndex	[ 3, 2, 1, 0, -1 ]
+    }
+
+  }
+
+}
+DEF Particles ParticleSystem {
+  geometryType "POINT"
+  maxParticles 18000
+  particleLifetime 4
+  emitter DEF EMITTER PointEmitter {
+    speed .15
+	surfaceArea .05
+	mass .005
+  }
+  colorRamp ColorRGBA {
+    color [
+      .1 .1 .1 1
+      .3 .3 .3 1
+      .5 .5 .5 1
+      1 1 1 1
+    ]
+  }
+  colorKey [ 0 .5 .85 1.2 ]
+
+  physics [ 
+		 WindPhysicsModel {
+		  direction -1 0 0
+		  gustiness .005
+		  speed .01
+		  turbulence .5
+	  }
+		 GravityPhysicsModel {
+		  gravity 0 -.005 0
+	  }
+	]  
+}
+
+Transform {
+	translation .01 0 0
+	children USE Particles
+}
+
+Transform {
+	translation -.01 0 0
+	children USE Particles
+}
+
+DEF TS TimeSensor {
+  cycleInterval 10
+  loop TRUE
+}
+
+DEF PI PositionInterpolator {
+  key [ 0 0.25 0.5 0.75 1 ]
+  keyValue [
+     .1 0 0
+     0 .1 0
+    -.1  0 0
+     0 .1 0
+     .1 0 0
+  ]
+}
+
+ROUTE TS.fraction_changed TO PI.set_fraction
+ROUTE PI.value_changed TO EMITTER.position
+

@@ -1,0 +1,60 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+DEF ProspectiveView2 Viewpoint {
+  position	0 2 11.1697
+  orientation	0 0 1  0
+  fieldOfView   1.571
+  description	"Prospective view 1.571"
+}
+
+DEF ProspectiveView3 Viewpoint {
+  position	0 2 11.1697
+  orientation	0 0 1  0
+  fieldOfView   0.5
+  description	"Prospective view 0.5"
+}
+
+DEF ProspectiveView1 Viewpoint {
+  position	0 2 11.1697
+  orientation	0 0 1  0
+  description	"Prospective view"
+}
+
+Transform {
+  children	Shape {
+    appearance	Appearance {
+      material	Material {
+	ambientIntensity	0.454545
+	diffuseColor	0.44 0.13 0.16
+	specularColor	0.65 0.17 0.13
+	emissiveColor	0 0 0
+	shininess	0.04
+	transparency	0
+      }
+
+    }
+
+    geometry	Box {
+    }
+
+  }
+
+  translation	0 1 0
+}
+
+DEF Timer TimeSensor {
+  startTime	1
+  cycleInterval	10
+  loop	TRUE
+}
+
+DEF DepthofFieldAnimate ScalarInterpolator {
+	key [ 0, .25, .5, .75, 1]
+	keyValue [ .785, 1.571, .785, .1, .785 ]
+}
+
+
+ROUTE Timer.fraction_changed TO DepthofFieldAnimate.set_fraction
+ROUTE DepthofFieldAnimate.value_changed TO ProspectiveView1.fieldOfView

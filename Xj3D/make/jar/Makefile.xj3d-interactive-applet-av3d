@@ -1,0 +1,118 @@
+#*********************************************************************
+#
+#  (C) 2001 - 2006 Web3d Consortium
+#    http://www.web3d.org/
+# 
+# Package makefile producing xj3d-all.jar
+#
+# Author: Justin Couch
+# Version: $Revision: 1.2 $
+#
+#*********************************************************************
+
+# A version number we tack onto the JAR file name for eclipse versioning
+# purposes.
+JAR_VERSION=2.0.0
+
+# Describe every directory that you want included in the JAR file here.
+# This is not recursive, so if you want parent directory and the 
+# sub-directory, say so. These directories should not have '/' appended.
+
+# This needs some files to not crash
+JAR_CONTENT= \
+	org/web3d/vrml/renderer \
+	org/web3d/vrml/renderer/common/browser \
+	org/web3d/vrml/renderer/common/input \
+	org/web3d/vrml/renderer/common/nodes \
+	org/web3d/vrml/renderer/common/nodes/core \
+	org/web3d/vrml/renderer/common/nodes/enveffects \
+	org/web3d/vrml/renderer/common/nodes/geom3d \
+	org/web3d/vrml/renderer/common/nodes/group \
+	org/web3d/vrml/renderer/common/nodes/interpolator \
+	org/web3d/vrml/renderer/common/nodes/lighting \
+	org/web3d/vrml/renderer/common/nodes/navigation \
+	org/web3d/vrml/renderer/common/nodes/render \
+	org/web3d/vrml/renderer/common/nodes/shape \
+	org/web3d/vrml/renderer/common/nodes/texture \
+	org/web3d/vrml/renderer/common/nodes/time \
+	org/web3d/vrml/renderer/ogl \
+	org/web3d/vrml/renderer/ogl/browser \
+	org/web3d/vrml/renderer/ogl/input \
+	org/web3d/vrml/renderer/ogl/nodes \
+	org/web3d/vrml/renderer/ogl/nodes/core \
+	org/web3d/vrml/renderer/ogl/nodes/enveffects \
+	org/web3d/vrml/renderer/ogl/nodes/geom3d \
+	org/web3d/vrml/renderer/ogl/nodes/group \
+	org/web3d/vrml/renderer/ogl/nodes/interpolator \
+	org/web3d/vrml/renderer/ogl/nodes/lighting \
+	org/web3d/vrml/renderer/ogl/nodes/navigation \
+	org/web3d/vrml/renderer/ogl/nodes/render \
+	org/web3d/vrml/renderer/ogl/nodes/shape \
+	org/web3d/vrml/renderer/ogl/nodes/texture \
+	org/web3d/vrml/renderer/ogl/nodes/time \
+	org/web3d/vrml/renderer/norender/nodes \
+	org/web3d/vrml/renderer/norender/nodes/core \
+	org/web3d/vrml/renderer/norender/nodes/enveffects \
+	org/web3d/vrml/renderer/norender/nodes/geom3d \
+	org/web3d/vrml/renderer/norender/nodes/group \
+	org/web3d/vrml/renderer/norender/nodes/interpolator \
+	org/web3d/vrml/renderer/norender/nodes/lighting \
+	org/web3d/vrml/renderer/norender/nodes/navigation \
+	org/web3d/vrml/renderer/norender/nodes/render \
+	org/web3d/vrml/renderer/norender/nodes/shape \
+	org/web3d/vrml/renderer/norender/nodes/texture \
+	org/web3d/vrml/renderer/norender/nodes/time \
+	org/web3d/util \
+	org/web3d/image \
+	org/web3d/browser \
+	org/web3d/vrml/lang \
+	org/web3d/vrml/nodes \
+	org/web3d/vrml/nodes/proto \
+	org/web3d/vrml/util \
+	org/web3d/vrml/scripting \
+	org/web3d/vrml/scripting/sai \
+	org/web3d/vrml/scripting/ecmascript \
+	org/web3d/vrml/scripting/ecmascript/builtin \
+	org/web3d/vrml/scripting/ecmascript/x3d \
+	org/web3d/net/protocol \
+	org/web3d/net/content \
+	org/web3d/net/resolve \
+	org/web3d/x3d/jaxp \
+	org/web3d/x3d/sai \
+	org/xj3d/core/eventmodel \
+	org/xj3d/core/loading \
+	org/xj3d/loaders/ogl \
+	org/xj3d/impl/core/eventmodel \
+	org/xj3d/impl/core/loading \
+	org/xj3d/io \
+	org/xj3d/device \
+	org/xj3d/ui/awt/device \
+	org/xj3d/ui/awt/device/keyboard \
+	org/xj3d/ui/awt/device/ogl/mouse \
+	org/xj3d/ui/awt/net/content \
+	org/xj3d/ui/awt/widgets \
+	org/web3d/vrml/parser \
+	org/web3d/parser \
+	org/web3d/parser/x3d \
+	org/web3d/parser/vrml97 \
+	org/web3d/vrml/sav \
+	config/common \
+	config/3.0 \
+	config/3.0/spec \
+	config/3.0/profile \
+	config/3.0/component \
+	config/3.1 \
+	config/3.1/spec \
+	config/3.1/component \
+	config/3.2 \
+	config/3.2/spec \
+	config/3.2/component \
+	xml/DTD \
+	images/branding \
+	images/locationbar \
+	images/navigation
+
+# Manifest file name. Stored in the make/manifest directory
+MANIFEST=xj3d-interactive-applet-av3d.mf
+
+include ${PROJECT_ROOT}/make/Makefile.jav

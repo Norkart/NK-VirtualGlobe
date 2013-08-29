@@ -1,0 +1,281 @@
+<HTML>
+<HEAD>
+<TITLE>Xj3D VRML JSAI Implementation</TITLE>
+</HEAD>
+<BODY>
+
+<H1 ALIGN="center">Xj3D VRML JSAI Implementation</H1>
+
+Author: <I>Justin Couch</I><BR>
+Last updated: <I>$Date: 2001/07/12 10:11:56 $</I><BR>
+Revision: <I>$Revision: 1.2 $</I>
+
+<A NAME="intro">
+<H2>Intro</H2>
+</A>
+
+This document describes the implementation of the VRML97 JSAI specification.
+
+<H3>Background</H3>
+
+The JSAI interface, being Java should theoretically be one of the easiest
+interfaces for scripting to implement in an all Java browser. As always
+happens, this is not the case. Due to the design of the public API the ability
+to cleanly implement this code has been a major struggle. In the end we found
+it was all but impossible to do without at least adding a few methods to the
+basic interface or changing the class heirarchy from that defined in the
+specification in some way.
+
+<H3>Motivation</H3>
+
+One of the goals of the Xj3D project is to allow as many different scripting
+implementations as possible. We still have to start somewhere to test our
+theories and the JSAI implementation is it. Thus, there is a lot of work here
+that may get revised at some time in the future as we gain more experience
+dealing with other APIs and scripting engine implementations.
+<P>
+
+In this code we look to try to unravel the dependency problems as much as
+possible while providing a good level of performance that fits within the
+over-arching architecture. It has lead to a little bit of extra code that
+could be eliminated on performance grounds, but would heavily impact on
+design cleanliness.
+
+<P>
+<HR>
+
+<A NAME="structure">
+<H2>Structural Overview</H2>
+</A>
+
+The code is split all over the place. Apart from the basic classes in the
+<CODE>vrml</CODE>, <CODE>vrml.node</CODE> and <CODE>vrml.field</CODE> packages,
+there is also a further basic package that contains the generic scripting
+engine implementation and a few support classes that are renderer specific and
+extend the classes provided by the specification.
+<P>
+
+Unfortunately, the design of the specification API is not as clean as it should
+be (I have only myself to blame as I was heavily involved in that process!).
+There are many circular dependencies between classes both in the same
+package and across packages. To avoid any more problems, we have eliminated any
+further circular dependencies between the specification classes and our
+implementation of them. Thus, there is a one way dependency graph that can be
+traced from the core interfaces to specification classes to wrapper classes.
+This does lead to some rather odd looking structures, but it really was the
+only way that we could keep the compilation process sane.
+
+<H3>Code Layout</H3>
+
+In implementing the design, we have a collection of classes that are spread
+all over the place, as you can see in Figure 1. However, we separate the code
+into three functional blobs:
+
+<UL>
+<LI>VRML97 JSAI specification classes <CODE>vrml.*</CODE></LI>
+<LI>Classes that load a script instance and prepare it for action</LI>
+<LI>Classes that provide interaction with a running script</LI>
+</UL>
+
+<P>
+<CENTER>
+<A HREF="script_jsai_structure.png">
+<IMG SRC="script_jsai_structure_small.png" WIDTH="259" HEIGHT="173"></A><BR>
+<B>Figure 1:</B> UML Structure diagram of the VRML scripting classes
+</CENTER>
+<P>
+
+<H4>Design Process</H4>
+
+Due to the nature of the specification classes, coming up with what is a
+reasonable design is a rather interesting task. There are a number of possible
+alternatives, which we will outline here. The reason for this is that the
+design we've come up with here might not seem to be the most logical. In
+particular, future maintainers and developers of the codebase may be wondering
+why we have done things in the way we have. It was hard enough designing the
+system in the first place, let alone understanding why we did things like this
+a couple of years down the track!
+<P>
+
+The basic problem we have to solve is that there is a user class
+<CODE>Script</CODE> that is extended by the user to provide working code.
+In this class they can access fields and events of the script. Once you have
+access to a field, you can potentially have access to other nodes. You can
+then create new node children for a field, including passing in your local
+script reference as well (multiple parenting of the script programmatically!).
+On top of this, users are free to create their own instances of the field
+classes such as <CODE>vrml.field.SFInt32</CODE>. These classes we have no
+control over until they get passed to our runtime code, so we have to be able
+to deal with arbitrary data too.
+<P>
+
+In our design, the process started by looking at what would happen and the
+script end, designing for that, and then moving back out along chain of action
+that a user might use in a script. Therefore the design is based around the
+script class being the central action item and all activities are based around
+how a user moves from script interaction to using other nodes.
+<P>
+
+Usually the first thing a user does in a script is to ask for the various
+fields in a script and possibly read their value(s). Typically this is done in
+the <code>initialize()</code> method so everything must be available by that
+time. These services mean that we must have provided the script instance with
+a way of describing the fields that it contains beforehand, as well as a valid
+<code>Browser</code> reference.
+<P>
+
+The field classes that represent the script's fields, must be live values.
+Any changes here should be available to the outside world. As we have this
+problem were users could create their own instances of the
+<code>vrml.field</code> classes, that means we either place in extra methods
+to the specification classes, or we provide a wrapper. The former is quicker
+to implement but means playing with the public interface (remember that the
+scripting engine will be accessing the field classes from outside their own
+package). The latter requires a lot of extra code, but provides other
+advantages, such as being able to know exactly when changes happen in user code
+(eg writing to an eventOut of the script).
+<P>
+
+Once we have the script having fields accessible, we have to then look at the
+specific case of the script having an SFNode or MFNode field. These give user
+code access to further node instances. These nodes can then be trawled for
+fields, which may in turn contain further nodes and so on. This leads us to
+needing to handle this process of creating new field representations for nodes
+that are not the script and in particular dealing with dynamic scene graphs
+that change over time.
+<P>
+
+Finally, the design must take into account the ability to use the
+<code>browser</code> class to create new nodes as well as add and remove nodes.
+This must connect the scripting engine back to the core of the runtime system
+and must be renderer specific.
+
+<H4>Mapping VRML97 to VRML200x</H4>
+
+As the VRML200x specification is not complete and there is a lot of existing
+code that uses the JSAI classes, we should be capable of running VRML97 scripts
+in a file that has been converted to VRML200x. This ability involves a lot more
+than you probably realised. At the simplest level, there is no more distinction
+between field access. Gone are eventIn, eventOut etc, everything is just an
+exposedField equivalent. There are also other behavioural changes such as the
+event model execution and many new field types.
+<P>
+
+Under the current implementation we provide absolutely minimal protection
+against the script doing the wrong thing. That is, where a VRML97 browser might
+throw an exception we just ignore it and provide the direct field reference and
+allow all updates through. A more sophisticate model needs to be implemented,
+but we have not yet done this work.
+
+<H3>VRML Specification classes</H3>
+
+The classes that provide the requirements specified in the VRML97 specification
+are in the usual location. There are not extra classes added, only a few extra
+methods and fields that make life easier for us.
+<P>
+
+<H4>Fields</H4>
+
+Starting with the fields, that are based on the <code>vrml.Field</code> class,
+these will be used to build access to basic field information. The base classes
+only add one variable - the timestamp of when the field was last changed.
+Each of the individaual field type classes handle their own data types.
+Interally fields that take arrays of values store them as a flat 1D array of
+values. Any time the user sets values as a 2D array this is flattened to be a
+single 1D array. This keeps us in line with the convention of the rest of the
+VRML core that passes only flat arrays internally. It results in the minimal
+amount of data shuffling.
+<P>
+
+As the user can create their own instances of these classes, they have no
+connection to the core browser implementation. Even the SFNode fields do not
+have connections with the underlying core field as these simple classes do not
+have any relationship with them.
+
+<H4>Node representations</H4>
+
+The basic node representation adds a couple of protected fields and also an
+extra public method that allows access to the underlying core node type. The
+reason for this extra method is that we need access to the basic core node
+representation whenever the user tries to manipulate the nodes.
+<p>
+
+The reason for adding an extra public method here is that both the script and
+derived node representation need this information. It was simpler to add a
+single method in the common <code>BaseNode</code> method than having them
+distributed across a number of classes. We assume that if you have a valid node
+instance it has to have come from something that is already creating a valid
+<code>BaseNode</code> instance such as one of the browser createX methods. It
+is not possible to get an instance any other way. From the internals
+perspective, whenever we need to access the core node representation, it is
+much easier to just call the method directly rather than perform a collection
+of <code>instanceof</code> calls with casts - it also means that
+<code>Script</code> would need the method added at a public level any way.
+<p>
+
+One design question that is raised at a time like this - why not build a common
+base class that hides the public methods into something local. We could do
+that, but to do it effectively means the methods should be in a package private
+access for the scripting engine. With the way the build environment is made, and
+also just for pure good design reasons, it is a bad idea to have to compile one
+class in one package, then compile another package and then come back to the
+original package. Another alternative is to put the new base class in a
+separate package, but why have a package for one class?
+
+<H4>Browser Representation</H4>
+
+Capabilities to create new nodes and control the browser is performed through
+the <code>Browser</code> class. The implementation here does nothing other than
+provide default implementations of all the required methods. As the browser
+handling is very dependent on the renderer used, we assume that each renderer
+will create their own derived instance of the browser class that overrides all
+of the methods.
+
+<H3>Script Loading Infrastructure</H3>
+
+
+<H3>Script Runtime Structure</H3>
+
+<P>
+<HR>
+
+<A NAME="runtime">
+<H2>Runtime Semantics</H2>
+</A>
+
+<H3>Loading a Script</H3>
+
+<P>
+<CENTER>
+<A HREF="script_load_sequence.png">
+<IMG SRC="script_load_sequence_small.png" WIDTH="214" HEIGHT="194"></A><BR>
+<B>Figure 2:</B> UML sequence diagram of the load process
+</CENTER>
+<P>
+
+<H3>Processing incoming events</H3>
+
+<H3>Processing outgoing events</H3>
+
+Not implemented yet.
+
+<P>
+<HR>
+
+<A NAME="extending">
+<H2>Extending the Code</H2>
+</A>
+
+<P>
+<HR>
+
+<H2>References</H2>
+
+<UL>
+<LI><A HREF="http://www.web3d.org/Specifications/VRML97/">VRML97 Specification</A></LI>
+<LI><A HREF="http://www.web3d.org/TaskGroups/x3d/specification-2000july/part1/Part1Index.html">
+    VRML 2000x Draft Specification</A></LI>
+</UL>
+
+</BODY>
+</HTML>

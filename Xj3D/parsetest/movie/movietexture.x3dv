@@ -1,0 +1,14 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Shape {
+   geometry Box {}
+   appearance Appearance {
+      texture MovieTexture {
+         loop TRUE
+         url ["MovieTextureTest.mpg"]
+#         url ["ATI-X800-Crowd-Demo-v1.0.mpg"]
+      }
+   }
+}

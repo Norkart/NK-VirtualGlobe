@@ -1,0 +1,22 @@
+<HTML>
+<BODY>
+The classes in this package provide the implementations for the EAI 2.0 
+classes.
+<P>
+While these classes may show up in traceback messages, they are not intended
+for use other than indirectly as produced by the browser factories and
+similar clases.
+<P>
+<H1>General notes</H1>
+At the suggestion of Justin Couch and Alan Hudson, the EventIn wrapper classes
+serve double duty as both buffers in the incoming event processing system
+and as the user visible field representations.  This should eliminate the
+need for a full buffer pool system for everything except users sending
+events on a field every single frame.
+<P>
+Further, the EventOut instances sent as part of the VrmlEventListener
+callbacks are part of the event out buffering system, and client 
+implementations are advised not to retain references to those event outs
+because they are aggressively reused.
+</BODY>
+</HTML>

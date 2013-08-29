@@ -1,0 +1,9 @@
+export JSDIR=/cygdrive/c/javaapis/rhino1_5R4_1
+
+cp $JSDIR/js.jar Xj3D/lib
+cp Xj3D/bin/browser.sh Xj3D
+
+tar cvzf Xj3D-M8-unix.tar.gz Xj3D/browser.sh Xj3D/DTD Xj3D/docs/setup/HowToInstall.html Xj3D/RE* Xj3D/examples/browser Xj3D/examples/loader Xj3D/images Xj3D/jars Xj3D/lib Xj3D/apps/browser
+
+rm Xj3D/lib/js.jar
+rm Xj3D/browser.sh

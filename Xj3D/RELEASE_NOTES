@@ -1,0 +1,67 @@
+Release: M10(February 16, 2005)
+-------------------------
+Major changes since M9:
+
+  Installers added for Windows, Linux and Mac platforms.
+
+  Aviatrix3D now the default renderer. 2X speed increase.
+
+  X3D spec conformance now much more strict. Enforces the profile and
+  component statements, spec version mixing, DEF/USE semantics, scripting
+  language changes and more. If your old files don't run anymore, this is
+  most likely the cause. Check the console for the error message of what
+  you've done wrong.
+
+  Immersive profile node support complete. Some fields and behaviour
+  are still incomplete.
+
+  Switched to JInput for input device handling. Allows the use of
+  various alternate input devices like gamepads, joysicks etc. Mac version
+  disabled for this release due to bugs in JInput.
+
+  Spatialised audio added for Aviatrix3D renderer
+
+  CADInterchange profile and related components added
+
+  Initial GeoSpatial component added
+
+  Initial DIS component added
+
+  H-Anim component implementation.  Software and hardware shader versions.
+  Hardware shaders disabled by default due to high hardware requirements
+  (Only runs on nVidia 6800 GTO cards).
+
+  New Text implementation using geometry instead of textures for Aviatrix3D
+
+  Multiwall and stereo support added. Elumens Dome support now standard
+
+  Viewpoint lists now populated from inlines
+
+  creaseAngle handing much faster (10x) for dynamic IndexedFaceSets
+
+  Rigid Body Physics extension component added
+
+  Particle Systems extension component updated
+
+  Clipping Planes extension component added
+
+  Picking Utilities extension component added
+
+  Abstract Device I/O extension component added (replaces the old Midi
+  component with a much more generic representation for all input device
+  types)
+
+  Mostly untested version of vrml.eai.BrowserFactory.createComponent(host,port)
+  added.
+  
+  Added some support for configuration of the EAI and SAI browser components
+  using property files and parameters to create*Component.
+
+See the following page for which nodes are implmented:
+
+http://www.xj3d.org/status.html
+
+And this page contains documentation of all the extension components added
+to Xj3D.
+
+http://www.xj3d.org/extensions/

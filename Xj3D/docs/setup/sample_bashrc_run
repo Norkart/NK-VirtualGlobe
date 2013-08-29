@@ -1,0 +1,26 @@
+#
+# Sample Bashrc for running Xj3D
+#
+# Made from a Cygwin Windows shell script.  You may have to change a bit for a real UNIX box.
+
+# Change to reflect where you have Xj3D installed
+X3D_HOME=${HOME}/Xj3D/x3d
+
+# Remove this for non-windows flavor unixs
+X3D_DOS_HOME="c:/cygwin${X3D_HOME}"
+
+X3D_LIBS="${X3D_DOS_HOME}/lib"
+X3D_JARS="${X3D_DOS_HOME}/jars"
+
+# Non Xj3D project Jars
+X3D_CLASSPATH="${X3D_LIBS}/j3d-org-all_0.9.0.jar;${X3D_LIBS}/uri.jar;${X3D_LIBS}/js.jar;${X3D_LIBS}/gnu_regexp-1.0.8.jar;${X3D_LIBS}/httpclient.jar;${X3D_LIBS}/j3d-org-images.jar;${X3D_LIBS}/vlc_uri.jar"
+
+# Add all Xj3D-* jars
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_JARS}/xj3d-common.jar;${X3D_JARS}/xj3d-core.jar;${X3D_JARS}/xj3d-eai.jar;${X3D_JARS}/xj3d-ecmascript.jar;${X3D_JARS}/xj3d-j3d.jar;${X3D_JARS}/xj3d-jaxp.jar;${X3D_JARS}/xj3d-jsai.jar;${X3D_JARS}/xj3d-mobile-sg.jar;${X3D_JARS}/xj3d-mobile.jar;${X3D_JARS}/xj3d-net.jar;${X3D_JARS}/xj3d-norender.jar;${X3D_JARS}/xj3d-ogl-sg.jar;${X3D_JARS}/xj3d-ogl.jar;${X3D_JARS}/xj3d-parser.jar;${X3D_JARS}/xj3d-render.jar;${X3D_JARS}/xj3d-runtime.jar;${X3D_JARS}/xj3d-sai.jar;${X3D_JARS}/xj3d-sav.jar;${X3D_JARS}/xj3d-script-base.jar;${X3D_JARS}/xj3d-vecmath.jar;${X3D_JARS}/xj3d-xml-util.jar"
+
+# Add . to make running examples easier
+X3D_CLASSPATH="${X3D_CLASSPATH};."
+
+export CLASSPATH=${X3D_CLASSPATH}
+cd $X3D_HOME
+

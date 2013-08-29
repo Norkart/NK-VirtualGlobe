@@ -1,0 +1,50 @@
+#*********************************************************************
+#
+#  (C) 2001 - 2006 Web3d Consortium
+#    http://www.web3d.org/
+#
+# Package makefile producing xj3d-core.jar
+#
+# Author: Justin Couch
+# Version: $Revision: 1.16 $
+#
+#*********************************************************************
+
+# A version number we tack onto the JAR file name for eclipse versioning
+# purposes.
+JAR_VERSION=2.0.0
+
+# Describe every directory that you want included in the JAR file here.
+# This is not recursive, so if you want parent directory and the
+# sub-directory, say so. These directories should not have '/' appended.
+JAR_CONTENT= org/web3d/util \
+         org/web3d/image \
+         org/web3d/vrml/lang \
+	     org/web3d/vrml/nodes \
+	     org/web3d/vrml/nodes/proto \
+	     org/web3d/vrml/util \
+	     org/xj3d/device \
+	     org/xj3d/device/jinput \
+	     org/xj3d/core/eventmodel \
+	     org/xj3d/core/loading \
+	     org/xj3d/impl/core/eventmodel \
+	     org/xj3d/impl/core/loading \
+	     org/xj3d/io \
+	     config/common \
+	     config/2.0 \
+	     config/2.0/spec \
+	     config/3.0 \
+	     config/3.0/spec \
+	     config/3.0/profile \
+	     config/3.0/component \
+	     config/3.1 \
+	     config/3.1/spec \
+	     config/3.1/component \
+	     config/3.2 \
+	     config/3.2/spec \
+	     config/3.2/component
+
+# Manifest file name. Stored in the make/manifest directory
+MANIFEST=xj3d-core.mf
+
+include ${PROJECT_ROOT}/make/Makefile.jav

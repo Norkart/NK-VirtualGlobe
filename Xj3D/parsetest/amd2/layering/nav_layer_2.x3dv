@@ -1,0 +1,46 @@
+#X3D V3.2 utf8
+
+PROFILE Immersive
+COMPONENT Layering:1
+COMPONENT EnvironmentalEffects:3
+
+# Tests having the activeNavigation layer set to the 2nd layer rather
+# than the default base layer.
+
+# The content defined for the base layer
+DEF TG Transform {
+  children Shape {
+    geometry Box {}
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+  }
+}
+
+# A second layer to show that we do have stuff on screen
+LayerSet {  
+  activeLayer 1
+  order [ 0 1 ]
+  layers [
+    Layer {
+      children [
+        TextureBackground {
+            transparency 1
+        }
+        DEF TG_LAYER Transform {
+          translation 0.3 0.4 0
+          children Shape {
+            geometry Box {}
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 1 0
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

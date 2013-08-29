@@ -1,0 +1,86 @@
+<HTML>
+<BODY>
+Implementation of a load manager and cache for externally referenced file
+within a scene.
+<P>
+
+The load manager runs as a standalone handler for dealing with nodes in a
+VRML scene that define their contents outside of the current file. Standard
+implementation examples of this are Scripts, ImageTextures and Inlines.
+<P>
+
+The loader will produce a full cache and asynchronous loading mechanism for
+content. The loader may be interrupted to remove all the currently loading
+content of the scene. Caching is performed on the local machine if allowed.
+Most of the behaviour can be controlled to optimise it for a given machine
+and network connection.
+<P>
+
+To load all files, the handler makes use of Justin Couch's
+<A HREF="http://www.vlc.com.au/urilib">URIlib</A> Java library for loading
+URNs and URLs. The standard <CODE>java.net</CODE> library is not used as it
+does not provide support for URNs that the universal media library needs. This
+package contains a number of system properties so make sure that you check
+and set these as well in order for this to function correctly.
+<P>
+
+This package uses the following system properties to modify its behaviour.
+<UL>
+<LI><CODE>org.web3d.vrml.nodes.loader.threads</CODE> The number of concurrent
+    threads to be started to do loading.
+</LI>
+
+<LI><CODE>org.web3d.vrml.nodes.loader.sort_order</CODE> A space separated list
+    containing one or more of the words <CODE>scripts</CODE>,
+    <CODE>inlines</CODE>, <CODE>textures</CODE>, <CODE>externprotos</CODE>,
+    <CODE>audio</CODE> and <CODE>others</CODE>. The declaration order is the
+    sort order for values to be fetched within a given scene. Any values not
+    declared are placed at the end of the list in any arbitrary order.
+</LI>
+</UL>
+
+<H3>Configuring the Loader</H3>
+
+The loader's behaviour can also be adjusted for different styles of work
+depending on the needs of the application. All code is designed to allow
+changing of the implementation so that experimentation may be performed.
+
+<H4>Setting the loader type</H4>
+
+<H4>URI resolution setup</H4>
+
+The URI resolver library requires a few properties to work as required. We
+do not set these internally as you may wish to override the defaults or
+use factories rather than the properties.
+<P>
+
+Properties are used to configure the URI library about where to find handlers
+for different networking protocols and interpretation of content into Java
+objects. These allow you to turn raw bytes into something that the application
+understands. Sun includes a number of default implementations of these, but
+they are not particularly efficient or easy to use. We therefore allow you
+to provide your own, or use the ones that come with the URI library.
+<P>
+
+There are two properties to set:
+<CODE>uri.content.handler.pkgs</CODE> and
+<CODE>uri.protocol.handler.pkgs</CODE>. The first property defines the list
+of packages that are used to locate content handlers for things like images
+and HTML files. The second property locates the packages to look for when
+dealing with network protocol handlers. The value of these are a list of
+package names separated by the pipe character '|' and point to the root
+package name rather than the acutual packages. See the java.net package
+documentation or URIlib documentation for more details.
+<P>
+
+If you are lazy, then this is all you need to set.
+
+<PRE>
+  System.setProperty("uri.content.handler.pkgs", "vlc.net.content");
+  System.setProperty("uri.protocol.handler.pkgs", "vlc.net.protocol");
+</PRE>
+
+Note that if you need to handle Inline nodes, you will probably also want to
+use the various factories in the {@link org.web3d.net.content} package too.
+</BODY>
+</HTML>

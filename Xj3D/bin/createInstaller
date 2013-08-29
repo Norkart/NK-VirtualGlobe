@@ -1,0 +1,174 @@
+export VERSION="2-M1-DEV-20080118"
+export JAR_VERSION="2.0.0"
+export INSTDATA=/cygdrive/c/tmp/install
+export NATIVEDIR=/cygdrive/c/tmp/native
+export JSDIR=/cygdrive/c/javaapis/rhino1_5R4_1
+export JOALDIR=/cygdrive/c/javaapis/joal/1.1b01
+export JINPUTDIR=/cygdrive/c/javaapis/jinput/dist
+export ODEDIR=/cygdrive/c/javaapis/odejava
+export INSTALL_COMPILE="c:/Progra~1/IzPack/bin/compile"
+export XZIPDIR="/cygdrive/c/Progra~1/7-Zip"
+export JOGLDIR="/cygdrive/c/javaapis/jogl/jsr231/1.1.0-rc1"
+export JOGL_VERSION="1.1.0-rc1"
+export VECMATHDIR=/cygdrive/c/javaapis/java3d/1.4/lib
+export LOG4JDIR=/cygdrive/c/javaapis/log4j/jakarta-log4j-1.2.8/dist/lib
+export FINALDIR=/cygdrive/c/tmp/installers
+export JRELOCATION=/cygdrive/c/trans
+export JREINSTALL=jre-6u2-windows-i586-p.exe
+
+export JARDIR=$INSTDATA/jars
+
+#make jar
+
+echo Compiling
+cd apps/browser
+make jar
+cd ../../apps/converter
+make jar
+
+cd ../..
+
+
+echo Creating install directories
+
+mkdir -p $INSTDATA
+mkdir -p $INSTDATA/jars
+mkdir -p $INSTDATA/bin
+
+cp jars/* $JARDIR
+cp lib/* $JARDIR
+
+# Remove SWT jars for standalone browser
+rm -rf $JARDIR/org.xj3d.*
+rm $JARDIR/org.eclipse.*
+
+cp $JSDIR/js.jar $INSTDATA/jars
+
+cp $JOALDIR/joal.jar $INSTDATA/jars
+
+cp $JINPUTDIR/jinput.jar $INSTDATA/jars
+cp $JINPUTDIR/jutils.jar $INSTDATA/jars
+
+cp $JOGLDIR/jogl.jar $INSTDATA/jars
+cp $JOGLDIR/gluegen-rt.jar $INSTDATA/jars
+
+cp $VECMATHDIR/vecmath.jar $INSTDATA/jars
+
+cp $LOG4JDIR/log4j-1.2.8.jar $INSTDATA/jars/log4j.jar
+
+mkdir -p $INSTDATA/DTD
+cp DTD/* $INSTDATA/DTD
+cp RELEASE_NOTES $INSTDATA/
+cp README $INSTDATA/
+mkdir -p $INSTDATA/doc
+mkdir -p $INSTDATA/apps
+mkdir -p $INSTDATA/apps/browser
+mkdir -p $INSTDATA/apps/converter
+mkdir -p $INSTDATA/apps/browser/images
+mkdir -p $INSTDATA/examples
+mkdir -p $INSTDATA/apps/cadfilter
+cp apps/browser/jars/xj3d_browser_${JAR_VERSION}.jar $INSTDATA/apps/browser
+cp -r apps/browser/doc $INSTDATA
+cp apps/browser/images/* $INSTDATA/apps/browser/images
+cp apps/converter/jars/xj3d_converter_${JAR_VERSION}.jar $INSTDATA/apps/converter
+cp apps/cadfilter/jars/xj3d_cadfilter_${JAR_VERSION}.jar $INSTDATA/apps/cadfilter
+
+mkdir -p $INSTDATA/examples/loader
+cp examples/loader/* $INSTDATA/examples/loader
+cp apps/browser/moving_box.x3dv $INSTDATA
+cp apps/browser/Xj3D-256x256.jpg $INSTDATA
+
+cp src/install/izpack/xj3d-full-install.xml $INSTDATA
+cp src/install/izpack/shortcutSpec.xml $INSTDATA
+cp src/install/izpack/xj3d.ico $INSTDATA/xj3d.ico
+cp src/install/izpack/Xj3D-Convert.ico $INSTDATA
+cp src/install/izpack/license.txt $INSTDATA
+cp src/install/izpack/Unix_shortcutSpec.xml $INSTDATA
+
+rm $INSTDATA/bin/*
+
+cp bin/browser.bat $INSTDATA
+cp bin/converter.bat $INSTDATA
+cp bin/browser.sh $INSTDATA
+cp bin/converter.sh $INSTDATA
+
+#cp apps/browser/lib/elumens.dll $INSTDATA/bin
+#cp apps/browser/lib/spiclops.dll $INSTDATA/bin
+
+
+bin/createInstaller_mac
+bin/createInstaller_mac_universal
+bin/createInstaller_eclipse
+
+#Create native launcher for Windows
+cp src/install/izpack/config.txt $FINALDIR
+echo $JREINSTALL > $FINALDIR/install.bat
+echo "java -jar Xj3D-${VERSION}-windows.jar" >> $FINALDIR/install.bat
+cp $XZIPDIR/7z.sfx $FINALDIR
+cp $JRELOCATION/$JREINSTALL $FINALDIR
+
+cd $INSTDATA
+
+
+#Windows Installer
+cp $JOALDIR/natives/windows/*.dll $INSTDATA/bin
+cp $JINPUTDIR/jinput-dx8.dll $INSTDATA/bin
+cp $JINPUTDIR/jinput-raw.dll $INSTDATA/bin
+cp $JINPUTDIR/jinput-wintab.dll $INSTDATA/bin
+cp $ODEDIR/windows/release/odejava.dll $INSTDATA/bin
+cp $JOGLDIR/natives/jogl-${JOGL_VERSION}-windows-i586/lib/*.dll $INSTDATA/bin
+
+
+echo $INSTALL_COMPILE
+rm $INSTDATA/Xj3D*.jar
+$INSTALL_COMPILE xj3d-full-install.xml -b . -o c:/tmp/installers/Xj3D-${VERSION}-windows.jar -k standard
+
+#Linux Installer
+rm $INSTDATA/bin/*
+cp $JOALDIR/natives/linuxx86/*.so $INSTDATA/bin
+cp $JINPUTDIR/dist/libjinput-linux.so $INSTDATA/bin
+# Reports say odejava is giving problems on Linux boxes, so remove for now
+#cp $ODEDIR/linux/release/*.so $INSTDATA/bin
+cp $JOGLDIR/natives/jogl-${JOGL_VERSION}-linux-i586/lib/*.so $INSTDATA/bin
+
+echo $INSTALL_COMPILE
+rm $INSTDATA/Xj3D*.jar
+$INSTALL_COMPILE xj3d-full-install.xml -b . -o c:/tmp/installers/Xj3D-${VERSION}-linuxx86.jar -k standard
+
+#Linux 64 bit Installer
+rm $INSTDATA/bin/*
+#cp $JOALDIR/natives/linuxx86/*.so $INSTDATA/bin
+cp $JINPUTDIR/dist/libjinput-linux.so $INSTDATA/bin
+cp $ODEDIR/linux/release/*.so $INSTDATA/bin
+cp $JOGLDIR/natives/jogl-${JOGL_VERSION}-linux-amd64/lib/*.so $INSTDATA/bin
+
+echo $INSTALL_COMPILE
+rm $INSTDATA/Xj3D*.jar
+$INSTALL_COMPILE xj3d-full-install.xml -b . -o c:/tmp/installers/Xj3D-${VERSION}-linux_amd64.jar -k standard
+
+
+#Solaris Sparc Installer
+rm $INSTDATA/bin/*
+#cp $JOALDIR/natives/solaris_sparc/*.so $INSTDATA/bin
+cp $JOGLDIR/natives/jogl-${JOGL_VERSION}-solaris-sparc/lib/*.so $INSTDATA/bin
+
+echo $INSTALL_COMPILE
+rm $INSTDATA/Xj3D*.jar
+$INSTALL_COMPILE xj3d-full-install.xml -b . -o c:/tmp/installers/Xj3D-${VERSION}-solaris_sparc.jar -k standard
+
+#Solaris x86 Installer
+rm $INSTDATA/bin/*
+#cp $JOALDIR/natives/solaris_x86/*.so $INSTDATA/bin
+#cp $ODEDIR/linux/release/*.so $INSTDATA/bin
+cp $JOGLDIR/natives/jogl-${JOGL_VERSION}-solaris-i586/lib/*.so $INSTDATA/bin
+
+echo $INSTALL_COMPILE
+rm $INSTDATA/Xj3D*.jar
+$INSTALL_COMPILE xj3d-full-install.xml -b . -o c:/tmp/installers/Xj3D-${VERSION}-solaris_x86.jar -k standard
+
+#Create native launcher for Windows
+cd $FINALDIR
+rm combo.7z
+$XZIPDIR/7z.exe -mx=9 a combo.7z install.bat $JREINSTALL Xj3D-${VERSION}-windows.jar
+cat 7zS.sfx config.txt combo.7z > Xj3D-${VERSION}-windows-full.exe
+

@@ -1,0 +1,59 @@
+#X3D V3.0 utf8
+
+PROFILE Interactive
+
+DEF Seq BooleanSequencer {
+    key [ 0, 0.33, 0.67 ]
+    keyValue [0 1 2]
+}
+
+
+DEF SW Switch {
+   whichChoice 0
+   choice [
+      Shape {
+         geometry Box { size 0.5 0.5 0.5 }
+         appearance Appearance {material Material { diffuseColor 1 0 0}}
+      }
+      Shape {
+         geometry Sphere { radius 0.25 }
+         appearance Appearance {material Material { diffuseColor 0 1 0}}
+      }
+      Shape {
+         geometry Cone { height 0.5 bottomRadius 0.25 }
+         appearance Appearance {material Material { diffuseColor 0 0 1}}
+      }
+
+   ]
+}
+
+Transform {
+  translation 1.5 0 0 
+  children [
+    DEF NEXT-TOUCH TouchSensor {}
+    Shape {
+      geometry Box { size 0.5 0.5 0.5 }
+      appearance Appearance {
+        material Material { emissiveColor 0 1 0 }
+      }
+    }
+  ]
+}
+
+Transform {
+  translation -1.5 0 0 
+  children [
+    DEF PREV-TOUCH TouchSensor {}
+    Shape {
+      geometry Box { size 0.5 0.5 0.5 }
+      appearance Appearance {
+        material Material { emissiveColor 1 0 0 }
+      }
+    }
+  ]
+}
+
+ROUTE NEXT-TOUCH.isActive TO Seq.next
+ROUTE PREV-TOUCH.isActive TO Seq.previous
+
+ROUTE Seq.value_changed TO SW.set_whichChoice

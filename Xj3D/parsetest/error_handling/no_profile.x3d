@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D>
+  <Scene>
+    <NavigationInfo type="EXAMINE"/>
+    <Group>
+      <Shape>
+        <Appearance>
+          <Material emissiveColor="1 0 0" />
+        </Appearance>
+        <Cone/>
+      </Shape>
+    </Group>
+  </Scene>
+</X3D>

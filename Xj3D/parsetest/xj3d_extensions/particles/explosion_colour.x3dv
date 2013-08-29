@@ -1,0 +1,27 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_ParticleSystem:1
+COMPONENT Rendering:4
+
+Viewpoint {
+  position 0 0 4
+}
+
+ParticleSystem {
+  geometryType "POINT"
+  maxParticles 10000
+  colorRamp ColorRGBA {
+    color [
+      1 1 1 1
+      1 0 0 1
+      1 1 0 1
+      1 1 0 0
+    ]
+  }
+  colorKey [ 0 2 4 9]
+  emitter ExplosionEmitter {
+    variation 0.75
+    speed 0.1
+  }
+}

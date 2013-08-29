@@ -1,0 +1,32 @@
+#VRML V2.0 utf8
+
+DEF TG Transform {
+  children Shape {
+    geometry Box {}
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+  }
+}
+
+DEF ViewOrientation OrientationInterpolator {
+  key [ 0 0.25 0.5 0.75 1 ]
+  keyValue [
+    0 -1 0 0
+    0 -1 0 1.5708
+    0 -1 0 3.1416
+    0 -1 0 4.7124
+    0 -1 0 0
+  ]
+}
+
+DEF ViewTimer TimeSensor {
+  enabled TRUE
+  loop TRUE
+  cycleInterval 18
+}
+
+ROUTE ViewTimer.fraction_changed TO ViewOrientation.set_fraction
+ROUTE ViewOrientation.value_changed TO TG.set_rotation

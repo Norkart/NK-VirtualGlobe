@@ -1,0 +1,219 @@
+<HTML>
+<HEAD>
+<TITLE>Xj3D SAI Implementation</TITLE>
+</HEAD>
+<BODY>
+
+<H1 ALIGN="center">Xj3D SAI Implementation</H1>
+
+Author: <I>Justin Couch</I><BR>
+Last updated: <I>$Date: 2001/03/14 11:34:44 $</I><BR>
+Revision: <I>$Revision: 1.1 $</I>
+
+<A NAME="intro">
+<H2>Intro</H2>
+</A>
+
+As an alternative to DOM access, the <I>Scene Authoring Interface</I> is a
+VRML native interface to the scenegraph.
+
+<H3>Background</H3>
+
+The SAI came from a wish to combine the old External Authoring Interface and
+Scripting interface from the VRML97 specification and provide a single
+programming interface for either internal or external programming. On top of
+these capabilities there was a wish to provide strong typing for individual
+node types. This has lead to an API set that is extensible for future profiles
+as well as the current known profiles.
+<P>
+
+Since two different access methods are provided to a VRML scenegraph, there
+needed to be some testing of the interfaces to make sure that there will be
+no clashes of method signatures or different required implementations.
+
+<H3>Motivation</H3>
+
+The structure of this code is designed to allowed developers to include new
+profiled nodes that are not included in the current implementation set. We
+want to fit within the standard DOM implementation and still also provide
+independent code.
+<P>
+
+Following the lead set by the specification we want to provide a combined
+implementation of the DOM and SAI interfaces without any extra ties to the
+rendering system. Although the intent of the SAI is to provide a highspeed,
+efficient implementation, our intent is to test the SAI and DOM combination.
+The result is that we can use the DOM interfaces and cast the code to either
+interface as required. We can then pass this DOM information to any other
+piece of code that requires a DOM tree and use either DOM or SAI to change
+those values.
+<P>
+<HR>
+
+<A NAME="structure">
+<H2>Structural Overview</H2>
+</A>
+
+The implementation classes follow the same rules as the sai interfaces as well
+as using the factories provided by our <A HREF="dom.html">DOM</A>. The code
+relies on the foundations provided by the DOM classes and then layers the
+SAI code over the top.
+<P>
+
+<H3>Code Layout</H3>
+
+Implmentation classes are based on 5 basic classes - the implementation of the
+two factories and the SAI extensions of element and attributes. These basic
+relationships are illustrated in Figure 1. The factories are responsible for
+creating instances of the SAI classes that also provide the DOM classes.
+
+<P>
+<CENTER>
+<A HREF="sai_structure.png">
+<IMG SRC="sai_structure_small.png" WIDTH="260" HEIGHT="132"></A><BR>
+<B>Figure 1:</B> UML Structure diagram of the SAI implementation
+</CENTER>
+<P>
+
+The classes are arranged in packages that match the same packages as the SAI
+interfaces. The top level package is in the <CODE>sai</CODE> package that
+resides under the <CODE>org.web3d.x3d.jaxp.dom</CODE> package. Under the SAI
+area we separate out into attribute and element packages. These packages
+contain the implementation of the respective interfaces from the SAI. Under the
+element package we have sub-packages that correspond to the profile names and
+the interfaces defined therein.
+<P>
+
+The structure is relatively simple for this code. There is no complex
+relationships. As you can see from Figure 1, the DOM Element implementation has
+a reference to the <CODE>AttributeFactory</CODE> to create new attributes. This
+is the most complex of all the implementation. The implication of this is that
+we should always use the two factory implementations together. If we are
+creating SAI elements, then we should also use SAI attributes.
+
+<H3>Core Implementation</H3>
+
+To provide the maximum benefits of extensibility both of the factories use a
+dynamic class instantiation pattern. As you will see in Figure 1, there is no
+direct relationship between the factories and the implementation classes. This
+is due to this dynamic creation routine.
+
+<H4>Attribute Creation</H4>
+
+Creation of attributes is through <CODE>SAIAttributeFactory</CODE>. Within
+X3D we have to deal with the same attribute name for different elements
+resulting in different SAI classes needed. To cope with this and also the need
+to be able to dynamically add new attributes we use a property system to
+define the relationships without needing to recompile the code.
+<P>
+
+A property file is used to define the relationships between elements,
+attributes and the SAI field types. On startup, we load the property file and
+use that as the reference within the factory when creating new attributes.
+When a request for an attribute is made, we ask for the tag name of the
+element and combine this with the field name wanted. This is used to look up
+the properties for the matching type name. Assuming a positive response we
+create the name of the class as a string and then use reflection to create an
+instance. The class created is then returned to the caller of the factory.
+
+<H4>Element Creation</H4>
+
+Creation of elements is through the <CODE>SAIElementFactory</CODE> class.
+As we have a lot of different elements in many different profiles, most of
+them we don't know at coding time. Like the attribute factory, we create
+classes dynamically. We know the base package already. To this we query
+the <CODE>ProfileInfo</CODE> for the loaded profiles and then loop through
+the subpackages of these profiles looking for a class that matches the
+tag name. Class names also append the word "Element" to the class. This is
+added to allow dis-ambiguity in the class names and the interfaces they
+implement.
+<P>
+
+Each class is layered over the top of the <CODE>X3DNode</CODE> implementation.
+All information is handled by the node rather than any local handling in the
+SAI code. Where attributes are used, these extend <CODE>X3DAttr</CODE> and
+are set and fetched through the base class. For example, to ask for a
+location attribute, the implementation asks the Node for the attribute named
+by the "location" string. This is then cast to the SAI interface and returned
+to the caller.
+<P>
+
+The impact of this is that it doesn't present the highest performance
+implementation. However it allows us a simple check of how the SAI and DOM
+work together. We also gain all the other benefits such as automatic DOM event
+handling when we change attribute values etc.
+
+<P>
+<HR>
+
+<A NAME="extending">
+<H2>Extending the Code</H2>
+</A>
+
+One of the most important goals of the Xj3D codebase is to provide easy
+extensibility for the codebase to support trials of new node types and
+profiles. We want to aid this as much as possible without the need to recompile
+the core implementation classes.
+
+<H3>New Fields</H3>
+
+To add a new attribute type firstly determine if you want a new single or array
+type. For single types, extend the class <CODE>BaseFieldAttr</CODE>, while
+array types should extend <CODE>BaseFieldArrayAttr</CODE>. Provide appropriate
+set and get methods.
+<P>
+
+Next edit the file <CODE>sai_attributes.props</CODE>. In here, add a definition
+for the attribute type - defined by an element and field name. If you are using
+this field type as the same attribute name in multiple elements then you can
+use a pseudo-wildcard arrangement by replacing the <I>entire</I> element name
+with a '*'.
+<P>
+
+Now re-start your code. Any element that uses this new field type will
+automatically pick up the new implementation class and provide all of the
+event handling and correct functionality.
+
+<H3>New Nodes</H3>
+
+A new node type is as simple as knowing what sort of VRML node type you want
+to provide. There are a number of defined typing interfaces provided in the
+<CODE>org.web3d.x3d.sai</CODE> package and for the vast majority of cases you
+will be wanting to use these as they correspond to the Parameter Entity types
+defined in the X3D DTD. Find the abstract class that implements this interface,
+they can be found in the <CODE>org.web3d.x3d.jaxp.dom.sai.element</CODE>
+package. If the class belongs to an existing profile, create your new class in
+the directory/package that corresponds to that profile name. If you are making
+a new profile then create a new sub directory to the element directory that
+matches the profile name <I>that exactly matches the case</I>.
+<P>
+
+Write an implementation for your new node type. The name of the class should
+match the node name type and also end in the word "Element". You are free to
+implement the field handling however you like, however we strongly recommend
+following the procedures used in the standard node types, which delegate the
+handling to the base classes.
+<P>
+
+Compile your new node type. Now, start the application, and you should be
+able to create new node instances immediately.
+<P>
+
+<B>Note:</B> We know of one security problem - if your Xj3D core classes are
+installed in the jre/lib/ext directory then it will not find any classes that
+are located in the classpath outside of this area. This is a standard
+security measure by Java in order to stop hostile code being dynamically
+loaded with the permissions of core classes. You may need to wrap your code
+as a JAR file and put it in with the core classes.
+<P>
+<HR>
+
+<H2>References</H2>
+
+<UL>
+<LI><A HREF="http://www.web3d.org/x3d/sai.html">SAI Specification</A>
+<LI><A HREF="dom.html">Xj3D DOM implementation</A>
+</UL>
+
+</BODY>
+</HTML>

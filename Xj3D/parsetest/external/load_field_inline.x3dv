@@ -1,0 +1,49 @@
+#X3D V3.0 utf8
+
+# Test for the load field of the Inline node. This field only appears in X3D.
+# It controls when the box should be loaded and not loaded. On the right is a
+# box that has a touch sensor that is used to control the load state of the 
+# inline on the right. Successive clicks on the right box should make the left
+# box appear and disappear.
+
+PROFILE Immersive 
+
+Transform {
+  translation 2 0 0
+  children [
+    DEF LOAD_TS TouchSensor {}
+    Inline {
+      url [ "inlined_box.x3dv" ]
+    }
+  ]
+}
+
+Transform {
+  translation -2 0 0
+  children DEF LOAD_INLINE Inline {
+    load FALSE
+    url [ "inlined_box.x3dv" ]
+  }
+}
+
+DEF LOAD_SCRIPT Script {
+  inputOnly SFBool touched
+  outputOnly SFBool loadRequested
+  initializeOnly SFBool loaded FALSE
+
+  url "ecmascript:
+    function touched(val) {
+      if(!val) {
+        if(loaded)
+          loadRequested = false;
+        else
+          loadRequested = true;
+
+        loaded = !loaded;
+      }
+    }
+  "
+}
+
+ROUTE LOAD_TS.isActive TO LOAD_SCRIPT.touched
+ROUTE LOAD_SCRIPT.loadRequested TO LOAD_INLINE.set_load

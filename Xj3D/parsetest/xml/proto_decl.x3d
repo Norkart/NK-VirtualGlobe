@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0 Interactive//EN" 
+  "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile="Immersive">
+  <head>
+    <component name="Scripting" level="1"/>
+  </head>
+  <Scene>
+    <ProtoDeclare name="test">
+      <ProtoInterface>
+        <field accessType="initializeOnly" name="color" type="SFColor" value="1 0 1"/>
+        <field accessType="initializeOnly" name="kids" type="MFNode"> 
+          <Group containerField="group"/>
+          <Group containerField="kids">
+            <Script>
+              <field accessType="initializeOnly" name="col" type="SFColor" value="1 0 1"/>
+                <field accessType="initializeOnly" name="kids" type="MFNode"> 
+                  <Group containerField="kids"/>
+                </field>
+              <![CDATA[ecmascript: 
+                 function initialize() { 
+                 Browser.println('hello world');
+              }
+              ]]>
+            </Script>
+          </Group>
+        </field>
+      </ProtoInterface>
+      <ProtoBody>
+        <Group>
+          <Script>
+            <![CDATA[ecmascript: 
+               function initialize() { 
+              Browser.println('hello world');
+            }
+            ]]>
+          </Script>
+          <Shape>
+            <Appearance>
+              <Material>
+                <IS>
+                  <connect nodeField="diffuseColor" protoField="color"/>
+                </IS>
+              </Material>
+            </Appearance>
+            <Box />
+          </Shape>
+        </Group>          
+      </ProtoBody>
+    </ProtoDeclare> 
+</Scene>
+</X3D>

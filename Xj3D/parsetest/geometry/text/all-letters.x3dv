@@ -1,0 +1,77 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Viewpoint {
+   position 0 0 12
+}
+
+Transform {
+  translation -4.5 2 0
+  children Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+    geometry Text {
+      string ["abcdefghijklmnopqrstuvwxyz"]
+    }
+  }
+}
+
+Transform {
+  translation -6 0 0
+  children Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+    geometry Text {
+      string [ "ABCDEFGHIJKLMNOPQRSTUVXYZ"]
+    }
+  }
+}
+
+Transform {
+  translation -6 3 0
+  children Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+    geometry Text {
+      string [ "1234567890"]
+    }
+  }
+}
+
+Transform {
+  translation 0 3 0
+  children Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+    geometry Text {
+      string [ "!@#$%^&*()-="]
+    }
+  }
+}
+
+Transform {
+  translation -2 4 0
+  children Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+    geometry Text {
+      string [ "{}[]|\\:;',./<>?"]
+    }
+  }
+}

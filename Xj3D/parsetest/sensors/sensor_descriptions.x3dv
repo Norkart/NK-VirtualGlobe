@@ -1,0 +1,14 @@
+#X3D V3.0 utf8
+
+# All the pointing device sensors should have a description field in the 
+# X3D spec. This makes sure they can all be used.
+PROFILE Immersive
+
+Group {
+  children [
+    CylinderSensor { description "Cylinder Sensor" }
+    PlaneSensor { description "Plane Sensor" }
+    SphereSensor { description "Sphere Sensor" }
+    TouchSensor { description "Touch Sensor" }
+  ]
+}

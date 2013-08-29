@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension point="org.eclipse.ui.views">
+      <view
+            name="Xj3D Browser View"
+            class="org.xj3d.ui.swt.view.BrowserView"
+            id="org.xj3d.ui.swt.view.BrowserView">
+      </view>
+   </extension>
+
+</plugin>

@@ -1,0 +1,25 @@
+#*********************************************************************
+#
+#  (C) 2001 - 2006 Web3d Consortium
+#    http://www.web3d.org/
+#
+# Package makefile producing xj3d-device.jar
+#
+# Author: Alan Hudson
+# Version: $Revision: 1.1 $
+#
+#*********************************************************************
+
+# A version number we tack onto the JAR file name for eclipse versioning
+# purposes.
+JAR_VERSION=2.0.0
+
+# Describe every directory that you want included in the JAR file here.
+# This is not recursive, so if you want parent directory and the
+# sub-directory, say so. These directories should not have '/' appended.
+JAR_CONTENT= org/xj3d/device/jinput
+
+# Manifest file name. Stored in the make/manifest directory
+MANIFEST=xj3d-device.mf
+
+include ${PROJECT_ROOT}/make/Makefile.jav

@@ -1,0 +1,20 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+PROTO ColoredSphere [
+    initializeOnly SFColor color 0 1 0
+] {
+    Shape {
+        appearance Appearance {
+            material Material {
+                diffuseColor IS color
+            }
+        }
+        geometry Sphere {}
+    }
+}
+
+DEF SC Script {
+    url ["SAIExample5.class"]
+}

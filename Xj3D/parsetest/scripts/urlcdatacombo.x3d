@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile='Immersive' version='3.0'>
+<head>
+</head>
+<Scene>
+      <Shape>
+         <Text DEF='TEXT' string='"Doesn&apos;t work"'></Text>
+      </Shape>
+      <Script DEF='SC' url="fails.js">
+         <field accessType='outputOnly' type='MFString' name='outputString'/>
+         <![CDATA[
+ecmascript:
+
+function initialize() {
+   outputString = new MFString('Works');
+   Browser.print ('internal-js.x3d initialize() outputString=' + outputString);
+}
+]]>
+         </Script>
+      <ROUTE fromNode='SC' fromField='outputString' toNode='TEXT' toField='string'></ROUTE>
+</Scene>
+</X3D>

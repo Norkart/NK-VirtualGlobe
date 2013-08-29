@@ -1,0 +1,94 @@
+export VERSION="2-M1-DEV-20080118"
+export JAR_VERSION="2.0.0"
+
+echo "Creating Mac Install"
+
+export INSTDATA=/cygdrive/c/tmp/install_mac
+export APPNAME="Xj3DBrowser.app"
+export JSDIR=/cygdrive/c/javaapis/rhino1_5R4_1
+export JOALDIR=/cygdrive/c/javaapis/joal/1.1b01
+export JINPUTDIR=/cygdrive/c/javaapis/jinput/dist
+export ODEDIR=/cygdrive/c/javaapis/odejava
+export INSTALL_COMPILE="c:/Progra~1/IzPack/bin/compile"
+export LAUNCHER_DIR="c:/Progra~1/IzPack/izpack-launcher-1.2/izpack-launcher-1.2/dist"
+export JOGLDIR="/cygdrive/c/javaapis/jogl/jsr231/1.0.0"
+export JOGL_VERSION="1_0_0"
+export VECMATHDIR=/cygdrive/c/javaapis/java3d/1.4/lib
+export LOG4JDIR=/cygdrive/c/javaapis/log4j/jakarta-log4j-1.2.8/dist/lib
+
+export JARDIR=$INSTDATA/$APPNAME/Contents/Resources/Java
+
+
+rm -rf $INSTDATA
+#make jar
+
+echo Compiling
+cd apps/browser
+make jar
+
+cd ../..
+
+echo Creating install directories
+
+mkdir -p $INSTDATA
+mkdir -p $INSTDATA/doc
+mkdir -p $INSTDATA/lib
+mkdir -p $INSTDATA/$APPNAME
+mkdir -p $INSTDATA/$APPNAME/Contents
+mkdir -p $INSTDATA/$APPNAME/Contents/MacOS
+mkdir -p $INSTDATA/$APPNAME/Contents/Resources
+mkdir -p $INSTDATA/$APPNAME/Contents/Resources/Java
+mkdir -p $INSTDATA/$APPNAME/Contents/Resources/bin
+
+
+cp jars/* $JARDIR
+cp lib/* $JARDIR
+
+# Remove SWT jars for standalone browser
+rm -rf $JARDIR/org.xj3d.*
+rm $JARDIR/org.eclipse.*
+
+cp $JSDIR/js.jar $JARDIR
+
+cp $JOALDIR/joal.jar $JARDIR
+cp $JOGLDIR/jogl.jar $JARDIR
+cp $VECMATHDIR/vecmath.jar $JARDIR
+cp $LOG4JDIR/log4j-1.2.8.jar $JARDIR/log4j.jar
+cp apps/browser/jars/xj3d_browser_${JAR_VERSION}.jar $JARDIR
+cp -r apps/browser/doc $INSTDATA
+cp apps/converter/jars/xj3d_converter_${JAR_VERSION}.jar $JARDIR
+cp apps/cadfilter/jars/xj3d_cadfilter_${JAR_VERSION}.jar $JARDIR
+
+cp RELEASE_NOTES $INSTDATA/
+cp README $INSTDATA/
+
+cp apps/browser/moving_box.x3dv $INSTDATA
+cp apps/browser/Xj3D-256x256.jpg $INSTDATA
+
+echo Copying converter.sh
+cp bin/converter_mac.sh $INSTDATA/converter.sh
+
+cp src/install/izpack/xj3d-mac-install.xml $INSTDATA
+cp src/install/izpack/license.txt $INSTDATA
+
+
+cp $JOALDIR/natives/macosx/*.jnilib $INSTDATA/$APPNAME/Contents/Resources/bin
+cp $JINPUTDIR/*.jnilib $INSTDATA/$APPNAME/Contents/Resources/bin
+cp $JINPUTDIR/jutils.jar $INSTDATA/$APPNAME/Contents/Resources/Java
+cp $JINPUTDIR/jinput.jar $INSTDATA/$APPNAME/Contents/Resources/Java
+
+cp $ODEDIR/osx/release/*.dylib $INSTDATA/lib
+cp $ODEDIR/osx/release/*.jnilib $INSTDATA/$APPNAME/Contents/Resources/bin
+cp $JOGLDIR/natives/jogl-${JOGL_VERSION}-macosx-ppc/lib/*.jnilib $INSTDATA/$APPNAME/Contents/Resources/bin
+
+#Mac .app specific files
+cp src/install/izpack/macosx/GenericJavaApp.icns $INSTDATA/$APPNAME/Contents/Resources
+cp src/install/izpack/macosx/Info.plist $INSTDATA/$APPNAME/Contents
+cp src/install/izpack/macosx/PkgInfo $INSTDATA/$APPNAME/Contents
+cp src/install/izpack/macosx/JavaApplicationStub $INSTDATA/$APPNAME/Contents/MacOS
+
+echo $INSTALL_COMPILE
+rm c:/tmp/installers/Xj3D-${VERSION}-macosx.jar
+
+cd $INSTDATA
+$INSTALL_COMPILE xj3d-mac-install.xml -b . -o c:/tmp/installers/Xj3D-${VERSION}-macosx.jar -k standard

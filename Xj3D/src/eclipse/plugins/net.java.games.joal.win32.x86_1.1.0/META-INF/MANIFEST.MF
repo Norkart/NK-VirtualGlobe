@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-Version: 1.1.0
+Bundle-Name: %fragmentName
+Bundle-ClassPath: joal.jar
+Bundle-Vendor: %providerName
+Bundle-ManifestVersion: 2
+Fragment-Host: net.java.games.joal; bundle-version="[1.0.0,2.0.0)"
+Bundle-Localization: fragment
+Bundle-SymbolicName: net.java.games.joal.win32.x86; singleton:=true
+Eclipse-PlatformFilter: (& (osgi.ws=win32) (osgi.os=win32) (osgi.arch=x86))
+

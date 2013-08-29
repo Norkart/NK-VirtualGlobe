@@ -1,0 +1,1817 @@
+/*****************************************************************************
+ *                        Web3d Consortium Copyright (c) 2001
+ *                               JavaCC Grammar Source
+ *
+ * This source is licensed under the GNU LGPL v2.1
+ * Please read http://www.gnu.org/copyleft/lgpl.html for more information
+ *
+ * This software comes with the standard NO WARRANTY disclaimer for any
+ * purpose. Use it at your own risk. If there's a problem you get to fix it.
+ *
+ *****************************************************************************/
+
+options {
+    STATIC=false;
+    OTHER_AMBIGUITY_CHECK=2;
+    JAVA_UNICODE_ESCAPE = true;
+    OPTIMIZE_TOKEN_MANAGER=true;
+    DEBUG_PARSER=false;
+    DEBUG_TOKEN_MANAGER=false;
+    DEBUG_LOOKAHEAD=false;
+
+//    OPTIMIZE_TOKEN_MANAGER=false;
+//    DEBUG_PARSER=true;
+//    DEBUG_TOKEN_MANAGER=true;
+}
+
+
+PARSER_BEGIN(X3DFieldParser)
+
+/*****************************************************************************
+ *                        Web3d Consortium Copyright (c) 2001
+ *                               Java Source
+ *
+ * This source is licensed under the GNU LGPL v2.1
+ * Please read http://www.gnu.org/copyleft/lgpl.html for more information
+ *
+ * This software comes with the standard NO WARRANTY disclaimer for any
+ * purpose. Use it at your own risk. If there's a problem you get to fix it.
+ *
+ *****************************************************************************/
+
+package org.web3d.parser.x3d;
+
+// Standard imports
+import java.io.*;
+import java.util.Hashtable;
+
+// Application specific imports
+import org.web3d.util.*;
+
+/**
+ * A parser class for raw field values to turn them into Java primitive types
+ * suitable for dealing with X3D field types.
+ * <p>
+ * The parser assumes that we have a raw field value that does not contain any
+ * surrounding values. For example, it expects MFField values to be stripped of
+ * surrounding brackets before being passed to these methods.
+ * <p>
+ * There are two ways of using this class: parsing a know field type, and
+ * parsing an unknown field type and getting the parser to return the
+ * appropriate (closest guess) value to you.
+ * <p>
+ * This parser has been continually evolving since first written for the
+ * VRML97 open source effort. The original contributor was Rick Goldberg of
+ * Sun Microsystems. Since then it has been through numerous tweaks and
+ * re-writes
+ * <p>
+ *
+ * The assumption of this parser is that each time you call the method it will
+ * have a non-zero length, non-empty string. There should be at least one
+ * non-whitespace character in the string. If not, a parse exception will be
+ * raised.
+ * You can see what JavaCC thinks the grammar is
+ * <a href="doc-files/VRML97Field.html">here</a>
+ *
+ * @author Justin Couch, Alan Hudson
+ * @version Grammar $Revision: 1.11 $
+ */
+public class X3DFieldParser {
+
+    private IntArray intBuf = new IntArray();
+    private LongArray longBuf = new LongArray();
+    private FloatArray floatBuf = new FloatArray();
+    private DoubleArray doubleBuf = new DoubleArray();
+    private BooleanArray booleanBuf = new BooleanArray();
+    private StringArray stringBuf = new StringArray();
+
+    /**
+     * Private convenience method to strip the string from the tokeniser of
+     * surrounding quotes.
+     *
+     * @return The current token string minus leading and trailing quotes
+     */
+    private String stripString() {
+        String ret_val = token.image;
+        if(token.image.charAt(0) == '\"')
+            ret_val = token.image.substring(1, token.image.length() - 1);
+
+        if(ret_val.length() > 0 && Character.isWhitespace(ret_val.charAt(0)))
+            ret_val = ret_val.trim();
+
+	int esc_pos = ret_val.indexOf("\\\"");
+	if(esc_pos != -1) {
+            char[] ch = ret_val.toCharArray();
+	    int size = ch.length;
+
+	    for(int i = 0; i < size - 1; i++) {
+		if(ch[i] == '\\' && ch[i + 1] == '\"') {
+		    System.arraycopy(ch, i + 1, ch, i, size - i - 1);
+		    i++;
+		    size--;
+		}
+	    }
+
+	    ret_val = new String(ch, 0, size);
+	}
+
+        return ret_val;
+    }
+
+    /**
+     * Private convenience method to handle hex and decimal integer parsing.
+     *
+     * @return The current token as an integer
+     */
+    private int parseInt() {
+        if (token.image.length()>2 && token.image.startsWith("0x"))
+            return (int) Long.parseLong(token.image.substring(2),16);
+        else
+            return Integer.parseInt(token.image);
+    }
+
+    /**
+     * Private convenience method to handle hex and decimal integer parsing.
+     *
+     * @return The current token as an integer
+     */
+    private long parseLong() {
+        if (token.image.length()>2 && token.image.startsWith("0x"))
+            return Long.parseLong(token.image.substring(2),16);
+        else
+            return Long.parseLong(token.image);
+    }
+
+
+}
+
+PARSER_END(X3DFieldParser)
+
+/**
+ * This does not use the other methods to do the field parsing. Instead, it
+ * goes on the raw values that are presented and returns objects to represent
+ * that. We look for either single values or multiple values. For any of these
+ * we return a representative object. The return value could be one of these:
+ * <ul>
+ * <li>Boolean
+ * <li>Integer
+ * <li>Long
+ * <li>Float
+ * <li>String
+ * <li>boolean[]
+ * <li>int[]
+ * <li>long[]
+ * <li>float[]
+ * <li>String[]
+ * </ul>
+ *
+ * @param useInt A hint to use if this is a number field we are parsing to
+ *    decide whether to parse number strings as an int or float for type
+ *    checking. If expecting any other sort of field, has no effect.
+ */
+Object parseUnknownField(boolean useInt): {
+    booleanBuf.clear();
+    intBuf.clear();
+    floatBuf.clear();
+    doubleBuf.clear();
+    stringBuf.clear();
+
+    Object ret_val = null;
+} {
+    try {
+        (
+            LOOKAHEAD(2)
+            <TRUE> {
+                ret_val = Boolean.TRUE;
+            }
+|
+            LOOKAHEAD(2)
+            <TRUE_L> {
+                ret_val = Boolean.TRUE;
+            }
+|
+            LOOKAHEAD(2)
+            <FALSE> {
+                ret_val = Boolean.FALSE;
+            }
+|
+            LOOKAHEAD(2)
+            <FALSE_L> {
+                ret_val = Boolean.FALSE;
+            }
+|
+            LOOKAHEAD(2)
+            <NUMBER_LITERAL> {
+                if(useInt)
+                    ret_val = new Integer(token.image);
+                else
+                    ret_val = new Float(token.image);
+            }
+|
+            LOOKAHEAD(2)
+            <STRING_LITERAL> {
+                ret_val = stripString();
+            }
+|
+            (<LBRACKET>)?
+            (
+                (
+                    <TRUE> {
+                        booleanBuf.add(true);
+                    }
+                    | <FALSE> {
+                        booleanBuf.add(false);
+                    }
+                )+ {
+                    ret_val = booleanBuf.toArray();
+                }
+|
+                (
+                    <NUMBER_LITERAL> {
+                        if(useInt)
+                            intBuf.add(parseInt());
+                        else
+                            floatBuf.add(Float.parseFloat(token.image));
+                    }
+                )+ {
+                    if(useInt)
+                        ret_val = intBuf.toArray();
+                    else
+                        ret_val = floatBuf.toArray();
+                }
+|
+                (
+                    <STRING_LITERAL> {
+                        stringBuf.add(stripString());
+                    }
+                )+ {
+                    ret_val = stringBuf.toArray();
+                }
+            )
+            (<RBRACKET>)?
+            (<EOF>)?
+        ) {
+            return ret_val;
+        }
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Unknown badly formatted value somewhere: " +
+                                 token.image);
+    }
+}
+
+/**
+ * Parse an SFInt value. If there is more than one int value in the string it
+ * will be ignored.
+ */
+int SFInt32(): {
+} {
+    <NUMBER_LITERAL> {
+        try {
+            return parseInt();
+        } catch(NumberFormatException nfe) {
+            throw new ParseException("Int parse error: \"" + token.image + "\"");
+        }
+    }
+    (<EOF>)?
+}
+
+/**
+ * Parse an MFInt32 value.
+ * <pre>
+ * MFInt32 ::=
+ *   "[" NUMBER_LITERAL* "]" |
+ *   NUMBER_LITERAL*
+ * </pre>
+ */
+int[] MFInt32(): {
+    intBuf.clear();
+} {
+    try {
+        (<LBRACKET>)?
+        (
+            <NUMBER_LITERAL> {
+                intBuf.add(parseInt());
+            }
+        )*
+        (<RBRACKET>)? {
+            return intBuf.toArray();
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Int parse error on int # " +
+                                 intBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an SFLong value. If there is more than one long value in the string it
+ * will be ignored.
+ */
+long SFLong(): {
+} {
+    <NUMBER_LITERAL> {
+        try {
+            return parseLong();
+        } catch(NumberFormatException nfe) {
+            throw new ParseException("Long parse error: \"" + token.image + "\"");
+        }
+    }
+    (<EOF>)?
+}
+
+/**
+ * Parse an MFLong value.
+ * <pre>
+ * MFLong ::=
+ *   "[" NUMBER_LITERAL* "]" |
+ *   NUMBER_LITERAL*
+ * </pre>
+ */
+long[] MFLong(): {
+    longBuf.clear();
+} {
+    try {
+        (<LBRACKET>)?
+        (
+            <NUMBER_LITERAL> {
+                longBuf.add(parseLong());
+            }
+        )*
+        (<RBRACKET>)? {
+            return longBuf.toArray();
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Long parse error on long # " +
+                                 longBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an SFFloat value. If there is more than one float value in the string
+ * it will be ignored.
+ */
+float SFFloat(): {
+} {
+    <NUMBER_LITERAL> {
+        try {
+            return Float.parseFloat(token.image);
+        } catch(NumberFormatException nfe) {
+            throw new ParseException("Float parse error\"" + token.image + "\"");
+        }
+    }
+    (<EOF>)?
+}
+
+/**
+ * Parse an MFFloat value.
+ * <pre>
+ * MFFloat ::=
+ *   "[" NUMBER_LITERAL* "]" |
+ *   NUMBER_LITERAL*
+ * </pre>
+ */
+float[] MFFloat(): {
+    floatBuf.clear();
+} {
+    try {
+        (<LBRACKET>) ?
+        (
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+        )*
+        (<RBRACKET>)?
+        (<EOF>)?  {
+            return floatBuf.toArray();
+        }
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Float parse error # " +
+                                 floatBuf.size()  + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an SFDouble value. If there is more than one double value in the string
+ * it will be ignored.
+ */
+double SFDouble(): {
+} {
+    <NUMBER_LITERAL> {
+        try {
+            return Double.parseDouble(token.image);
+        } catch(NumberFormatException nfe) {
+            throw new ParseException("Double parse error\"" + token.image + "\"");
+        }
+    }
+    (<EOF>)?
+}
+
+/**
+ * Parse an MFDouble value.
+ * <pre>
+ * MFDouble ::=
+ *   "[" NUMBER_LITERAL* "]" |
+ *   NUMBER_LITERAL*
+ * </pre>
+ */
+double[] MFDouble(): {
+    doubleBuf.clear();
+} {
+    try {
+        (<LBRACKET>) ?
+        (
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+        )*
+        (<RBRACKET>)?
+        (<EOF>)?  {
+            return doubleBuf.toArray();
+        }
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Double parse error # " +
+                                 doubleBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an SFBool value. If there is more than one boolean value in the string
+ * it will be ignored.
+ */
+boolean SFBool(): {
+} {
+    (
+        <TRUE> { return true; }
+|       <FALSE> { return false; }
+    )
+    (<EOF>)?
+}
+
+/**
+ * Parse an SFBool value using lower case lettering, for XML field values. If
+ * there is more than one boolean value in the string
+ * it will be ignored.
+ */
+boolean SFBoolLower(): {
+} {
+    (
+        <TRUE_L> { return true; }
+|       <FALSE_L> { return false; }
+|       <TRUE> { return true; }
+|       <FALSE> { return false; }
+    )
+    (<EOF>)?
+}
+
+/**
+ * Parse an MFBool value.
+ * <pre>
+ * MFBool ::=
+ *   "[" ("TRUE" | "FALSE")* "]" |
+ *   ("TRUE" | "FALSE")*
+ * </pre>
+ */
+boolean[] MFBool(): {
+    booleanBuf.clear();
+} {
+    (<LBRACKET>)?
+    (
+        <TRUE>  { booleanBuf.add(true); }
+|       <FALSE> { booleanBuf.add(false); }
+    )*
+    (<RBRACKET>)? {
+        return booleanBuf.toArray();
+    }
+    (<EOF>)?
+}
+
+/**
+ * Parse an MFBool that is in lower case for XML parsing.
+ * <pre>
+ * MFBool ::=
+ *   "[" ("true" | "false")* "]" |
+ *   ("true" | "false")*
+ * </pre>
+ */
+boolean[] MFBoolLower(): {
+    booleanBuf.clear();
+} {
+    (<LBRACKET>)?
+    (
+        <TRUE_L> { booleanBuf.add(true); }
+|       <FALSE_L> { booleanBuf.add(false); }
+|       <TRUE>  { booleanBuf.add(true); }
+|       <FALSE> { booleanBuf.add(false); }
+    )*
+    (<RBRACKET>)? {
+        return booleanBuf.toArray();
+    }
+    (<EOF>)?
+}
+
+
+
+/**
+ * Parse an SFString value. We really shouldn't need this, but it is here for
+ * completeness.
+ */
+String SFString(): {
+} {
+    <STRING_LITERAL> { return stripString(); } (<EOF>)?
+}
+
+/**
+ * Parse an MFString value.
+ * <pre>
+ * MFString ::=
+ *   "[" ( STRING_LITERAL)* "]" |
+ *   (STRING_LITERAL)*
+ * </pre>
+ */
+String[] MFString(): {
+    stringBuf.clear();
+} {
+    (<LBRACKET>)?
+    (
+        <STRING_LITERAL> { stringBuf.add(stripString()); }
+    )*
+    (<RBRACKET>)? {
+        return stringBuf.toArray();
+    }
+    (<EOF>)?
+}
+
+/**
+ * Parse an SFVec2f value. If there is more than one float value in the string
+ * it will be ignored.
+ */
+float[] SFVec2f(): {
+    float[] ret_val = new float[2];
+} {
+    try {
+        <NUMBER_LITERAL> {
+            ret_val[0] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[1] = Float.parseFloat(token.image);
+            return ret_val;
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("SFVec3f parse error # " +
+                                 floatBuf.size()  + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an MFVec2f value.
+ * <pre>
+ * MFVec2f ::=
+ *   "[" (NUMBER_LITERAL NUMBER_LITERAL)* "]" |
+ *   (NUMBER_LITERAL NUMBER_LITERAL)*
+ * </pre>
+ */
+float[] MFVec2f(): {
+    floatBuf.clear();
+} {
+    try {
+        (<LBRACKET>)?
+        (
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+        )+
+        (<RBRACKET>)? {
+            return floatBuf.toArray();
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Float parse error # " +
+                                 floatBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an SFVec3f value. If there is more than one float value in the string
+ * it will be ignored.
+ */
+float[] SFVec3f(): {
+    float[] ret_val = new float[3];
+} {
+    try {
+        <NUMBER_LITERAL> {
+            ret_val[0] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[1] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[2] = Float.parseFloat(token.image);
+            return ret_val;
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("SFVec3f parse error # " +
+                                 floatBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an MFVec3f value.
+ * <pre>
+ * MFVec3f ::=
+ *   "[" (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)* "]" |
+ *   (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)*
+ * </pre>
+ */
+float[] MFVec3f(): {
+    floatBuf.clear();
+} {
+    try {
+        (<LBRACKET>)?
+        (
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+        )+
+        (<RBRACKET>)? {
+            return floatBuf.toArray();
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Float parse error # " +
+                                 floatBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an SFVec2d value. If there is more than one double value in the string
+ * it will be ignored.
+ */
+double[] SFVec2d(): {
+    double[] ret_val = new double[2];
+} {
+    try {
+        <NUMBER_LITERAL> {
+            ret_val[0] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[1] = Double.parseDouble(token.image);
+            return ret_val;
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("SFVec3d parse error # " +
+                                 doubleBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an MFVec2d value.
+ * <pre>
+ * MFVec2d ::=
+ *   "[" (NUMBER_LITERAL NUMBER_LITERAL)* "]" |
+ *   (NUMBER_LITERAL NUMBER_LITERAL)*
+ * </pre>
+ */
+double[] MFVec2d(): {
+    doubleBuf.clear();
+} {
+    try {
+        (<LBRACKET>)?
+        (
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+        )+
+        (<RBRACKET>)? {
+            return doubleBuf.toArray();
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Double parse error # " +
+                                 doubleBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an SFVec3d value. If there is more than one double value in the string
+ * it will be ignored.
+ */
+double[] SFVec3d(): {
+    double[] ret_val = new double[3];
+} {
+    try {
+        <NUMBER_LITERAL> {
+            ret_val[0] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[1] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[2] = Double.parseDouble(token.image);
+            return ret_val;
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("SFVec3d parse error # " +
+                                 doubleBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an MFVec3d value.
+ * <pre>
+ * MFVec3d ::=
+ *   "[" (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)* "]" |
+ *   (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)*
+ * </pre>
+ */
+double[] MFVec3d(): {
+    doubleBuf.clear();
+} {
+    try {
+        (<LBRACKET>)?
+        (
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+        )+
+        (<RBRACKET>)? {
+            return doubleBuf.toArray();
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Double parse error # " +
+                                 doubleBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an SFVec4f value. If there is more than one float value in the string
+ * it will be ignored.
+ */
+float[] SFVec4f(): {
+    float[] ret_val = new float[4];
+} {
+    try {
+        <NUMBER_LITERAL> {
+            ret_val[0] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[1] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[2] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[3] = Float.parseFloat(token.image);
+            return ret_val;
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("SFVec4f parse error # " +
+                                 floatBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an MFVec4f value.
+ * <pre>
+ * MFVec4f ::=
+ *   "[" (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)* "]" |
+ *   (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)*
+ * </pre>
+ */
+float[] MFVec4f(): {
+    floatBuf.clear();
+} {
+    try {
+        (<LBRACKET>)?
+        (
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+        )+
+        (<RBRACKET>)? {
+            return floatBuf.toArray();
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Float parse error # " +
+                                 floatBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an SFVec4d value. If there is more than one double value in the string
+ * it will be ignored.
+ */
+double[] SFVec4d(): {
+    double[] ret_val = new double[4];
+} {
+    try {
+        <NUMBER_LITERAL> {
+            ret_val[0] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[1] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[2] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[3] = Double.parseDouble(token.image);
+            return ret_val;
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("SFVec4d parse error # " +
+                                 doubleBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an MFVec4d value.
+ * <pre>
+ * MFVec4d ::=
+ *   "[" (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)* "]" |
+ *   (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)*
+ * </pre>
+ */
+double[] MFVec4d(): {
+    doubleBuf.clear();
+} {
+    try {
+        (<LBRACKET>)?
+        (
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+        )+
+        (<RBRACKET>)? {
+            return doubleBuf.toArray();
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Float parse error # " +
+                                 doubleBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an SFRotation value. If there is more than one float value in the string
+ * it will be ignored.
+ */
+float[] SFRotation(): {
+    float[] ret_val = new float[4];
+} {
+    try {
+        <NUMBER_LITERAL> {
+            ret_val[0] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[1] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[2] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[3] = Float.parseFloat(token.image);
+            return ret_val;
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("SFVec3f parse error # " +
+                                 floatBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an MFRotation value.
+ * <pre>
+ * MFRotation ::=
+ *   "[" (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)* "]" |
+ *   (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)*
+ * </pre>
+ */
+float[] MFRotation(): {
+    floatBuf.clear();
+} {
+    try {
+        (<LBRACKET>)?
+        (
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+        )+
+        (<RBRACKET>)? {
+            return floatBuf.toArray();
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Float parse error # " +
+                                 floatBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an SFTime value. If there is more than one float value in the string
+ * it will be ignored.
+ */
+double SFTime(): {
+} {
+    <NUMBER_LITERAL> {
+        try {
+            return Double.parseDouble(token.image);
+        } catch(NumberFormatException nfe) {
+            throw new ParseException("Double parse error\"" + token.image + "\"");
+        }
+    }
+    (<EOF>)?
+}
+
+/**
+ * Parse an MFTime value. In VRML97 MFTime are not legal field types. However,
+ * we provide it here for completeness and that it might be used by VRML 3.0.
+ * <pre>
+ * MFTime ::=
+ *   "[" NUMBER_LITERAL* "]" |
+ *   NUMBER_LITERAL*
+ * </pre>
+ */
+double[] MFTime(): {
+    doubleBuf.clear();
+} {
+    try {
+        (<LBRACKET>)?
+        (<NUMBER_LITERAL>)* {
+                doubleBuf.add(Double.parseDouble(token.image));
+        }
+        (<RBRACKET>)? {
+            return doubleBuf.toArray();
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Double parse error # " +
+                                 floatBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an SFColor value. The color differs from the float value by being
+ * clamped between 0 and 1. Any more than a single colour value is ignored.
+ * <pre>
+ * SFColor ::=
+ *   NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL
+ * </pre>
+ */
+float[] SFColor(): {
+    float[] ret_val = new float[3];
+    float col;
+} {
+    try {
+        <NUMBER_LITERAL> {
+            col = Float.parseFloat(token.image);
+            if((col > 1) || (col < 0))
+                throw new ParseException("Color value out of range");
+
+            ret_val[0] = col;
+        }
+        <NUMBER_LITERAL> {
+            col = Float.parseFloat(token.image);
+            if((col > 1) || (col < 0))
+                throw new ParseException("Color value out of range");
+
+            ret_val[1] = col;
+        }
+        <NUMBER_LITERAL> {
+            col = Float.parseFloat(token.image);
+            if((col > 1) || (col < 0))
+                throw new ParseException("Color value out of range");
+
+            ret_val[2] = col;
+        }
+        (<EOF>)? {
+            return ret_val;
+        }
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("SFColor parse error # " +
+                                 floatBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an MFColor value. The color differs from the float value by being
+ * clamped between 0 and 1.
+ * <pre>
+ * MFColor ::=
+ *   "[" (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)* "]" |
+ *   (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)*
+ * </pre>
+ */
+float[] MFColor(): {
+    floatBuf.clear();
+    float col;
+} {
+    try {
+        (<LBRACKET>)?
+        (
+            <NUMBER_LITERAL> {
+                col = Float.parseFloat(token.image);
+                if((col > 1) || (col < 0))
+                    throw new ParseException("Color value out of range");
+                floatBuf.add(col);
+            }
+            <NUMBER_LITERAL> {
+                col = Float.parseFloat(token.image);
+                if((col > 1) || (col < 0))
+                    throw new ParseException("Color value out of range");
+                floatBuf.add(col);
+            }
+            <NUMBER_LITERAL> {
+                col = Float.parseFloat(token.image);
+                if((col > 1) || (col < 0))
+                    throw new ParseException("Color value out of range");
+                floatBuf.add(col);
+            }
+        )+
+        (<RBRACKET>)? {
+            return floatBuf.toArray();
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Float parse error # " +
+                                 floatBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an SFImage value.
+ * <pre>
+ * SFImage ::=
+ *   NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL (NUMBER_LITERAL)*
+ * </pre>
+ */
+int[] SFImage(): {
+    intBuf.clear();
+} {
+    try {
+        <NUMBER_LITERAL> {
+            intBuf.add(parseInt());
+        }
+        <NUMBER_LITERAL> {
+            intBuf.add(parseInt());
+        }
+        <NUMBER_LITERAL> {
+            intBuf.add(parseInt());
+        }
+        (<NUMBER_LITERAL> {
+            intBuf.add(parseInt());
+        }
+        )*
+        (<EOF>)? {
+            return intBuf.toArray();
+        }
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Int parse error on int # " +
+                                 intBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an MFImage value.
+ * <pre>
+ * MFImage ::=
+ *   NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL (NUMBER_LITERAL)*
+ * </pre>
+ * Since we really don't have any control over the number of integers
+ * here we just assume a single image and then parse the rest of the
+ * integers as quickly as possible.
+ */
+int[] MFImage(): {
+    intBuf.clear();
+} {
+    try {
+        <NUMBER_LITERAL> {
+            intBuf.add(parseInt());
+        }
+        <NUMBER_LITERAL> {
+            intBuf.add(parseInt());
+        }
+        <NUMBER_LITERAL> {
+            intBuf.add(parseInt());
+        }
+        (
+            <NUMBER_LITERAL> {
+                intBuf.add(parseInt());
+            }
+        )*
+        (<EOF>)? {
+            return intBuf.toArray();
+        }
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Int parse error on int # " +
+                                 intBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+
+/**
+ * Parse an SFColorRGBA value. If there is more than one float value in the string
+ * it will be ignored.
+ * <pre>
+ * SFColorRGBA ::=
+ *   NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL
+ * </pre>
+ */
+float[] SFColorRGBA(): {
+    float[] ret_val = new float[4];
+    float col;
+} {
+    try {
+        <NUMBER_LITERAL> {
+            col = Float.parseFloat(token.image);
+            if((col > 1) || (col < 0))
+                throw new ParseException("Color value out of range");
+
+            ret_val[0] = col;
+        }
+        <NUMBER_LITERAL> {
+            col = Float.parseFloat(token.image);
+            if((col > 1) || (col < 0))
+                throw new ParseException("Color value out of range");
+
+            ret_val[1] = col;
+        }
+        <NUMBER_LITERAL> {
+            col = Float.parseFloat(token.image);
+            if((col > 1) || (col < 0))
+                throw new ParseException("Color value out of range");
+
+            ret_val[2] = col;
+        }
+        <NUMBER_LITERAL> {
+            col = Float.parseFloat(token.image);
+            if((col > 1) || (col < 0))
+                throw new ParseException("Color value out of range");
+
+            ret_val[3] = col;
+        }
+        (<EOF>)? {
+            return ret_val;
+        }
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("SFColor parse error # " +
+                                 floatBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an MFColorRGBA value. The color differs from the float value by being
+ * clamped between 0 and 1.
+ * <pre>
+ * MFColor ::=
+ *   "[" (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)* "]" |
+ *   (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)*
+ * </pre>
+ */
+float[] MFColorRGBA(): {
+    floatBuf.clear();
+    float col;
+} {
+    try {
+        (<LBRACKET>)?
+        (
+            <NUMBER_LITERAL> {
+                col = Float.parseFloat(token.image);
+                if((col > 1) || (col < 0))
+                    throw new ParseException("Color value out of range");
+                floatBuf.add(col);
+            }
+            <NUMBER_LITERAL> {
+                col = Float.parseFloat(token.image);
+                if((col > 1) || (col < 0))
+                    throw new ParseException("Color value out of range");
+                floatBuf.add(col);
+            }
+            <NUMBER_LITERAL> {
+                col = Float.parseFloat(token.image);
+                if((col > 1) || (col < 0))
+                    throw new ParseException("Color value out of range");
+                floatBuf.add(col);
+            }
+            <NUMBER_LITERAL> {
+                col = Float.parseFloat(token.image);
+                if((col > 1) || (col < 0))
+                    throw new ParseException("Color value out of range");
+                floatBuf.add(col);
+            }
+        )+
+        (<RBRACKET>)? {
+            return floatBuf.toArray();
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Float parse error # " +
+                                 floatBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an SFMatrix3f value. If there is more than one float value in the string
+ * it will be ignored.
+ */
+float[] SFMatrix3f(): {
+    float[] ret_val = new float[9];
+} {
+    try {
+        <NUMBER_LITERAL> {
+            ret_val[0] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[1] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[2] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[3] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[4] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[5] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[6] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[7] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[8] = Float.parseFloat(token.image);
+            return ret_val;
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("SFMatrix3f parse error # " +
+                                 floatBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an MFMatrix3f value.
+ * <pre>
+ * MFMatrix3f ::=
+ *   "[" (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)* "]" |
+ *   (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)*
+ * </pre>
+ */
+float[] MFMatrix3f(): {
+    floatBuf.clear();
+} {
+    try {
+        (<LBRACKET>)?
+        (
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+        )+
+        (<RBRACKET>)? {
+            return floatBuf.toArray();
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Float parse error # " +
+                                 floatBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an SFMatrix3d value. If there is more than one double value in the string
+ * it will be ignored.
+ */
+double[] SFMatrix3d(): {
+    double[] ret_val = new double[9];
+} {
+    try {
+        <NUMBER_LITERAL> {
+            ret_val[0] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[1] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[2] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[3] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[4] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[5] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[6] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[7] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[8] = Double.parseDouble(token.image);
+            return ret_val;
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("SFMatrix4d parse error # " +
+                                 doubleBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an MFMatrix3d value.
+ * <pre>
+ * MFMatrix4d ::=
+ *   "[" (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)* "]" |
+ *   (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)*
+ * </pre>
+ */
+double[] MFMatrix3d(): {
+    doubleBuf.clear();
+} {
+    try {
+        (<LBRACKET>)?
+        (
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+        )+
+        (<RBRACKET>)? {
+            return doubleBuf.toArray();
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Float parse error # " +
+                                 doubleBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+
+/**
+ * Parse an SFMatrix4f value. If there is more than one float value in the string
+ * it will be ignored.
+ */
+float[] SFMatrix4f(): {
+    float[] ret_val = new float[16];
+} {
+    try {
+        <NUMBER_LITERAL> {
+            ret_val[0] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[1] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[2] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[3] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[4] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[5] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[6] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[7] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[8] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[9] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[10] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[11] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[12] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[13] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[14] = Float.parseFloat(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[15] = Float.parseFloat(token.image);
+            return ret_val;
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("SFMatrix4f parse error # " +
+                                 floatBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an MFMatrix4f value.
+ * <pre>
+ * MFMatrix4f ::=
+ *   "[" (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)* "]" |
+ *   (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)*
+ * </pre>
+ */
+float[] MFMatrix4f(): {
+    floatBuf.clear();
+} {
+    try {
+        (<LBRACKET>)?
+        (
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+            <NUMBER_LITERAL> {
+                floatBuf.add(Float.parseFloat(token.image));
+            }
+        )+
+        (<RBRACKET>)? {
+            return floatBuf.toArray();
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Float parse error # " +
+                                 floatBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an SFMatrix4d value. If there is more than one double value in the string
+ * it will be ignored.
+ */
+double[] SFMatrix4d(): {
+    double[] ret_val = new double[16];
+} {
+    try {
+        <NUMBER_LITERAL> {
+            ret_val[0] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[1] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[2] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[3] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[4] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[5] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[6] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[7] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[8] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[9] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[10] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[11] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[12] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[13] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[14] = Double.parseDouble(token.image);
+        }
+        <NUMBER_LITERAL> {
+            ret_val[15] = Double.parseDouble(token.image);
+            return ret_val;
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("SFMatrix4d parse error # " +
+                                 doubleBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+/**
+ * Parse an MFMatrix4d value.
+ * <pre>
+ * MFMatrix4d ::=
+ *   "[" (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)* "]" |
+ *   (NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL NUMBER_LITERAL)*
+ * </pre>
+ */
+double[] MFMatrix4d(): {
+    doubleBuf.clear();
+} {
+    try {
+        (<LBRACKET>)?
+        (
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+            <NUMBER_LITERAL> {
+                doubleBuf.add(Double.parseDouble(token.image));
+            }
+        )+
+        (<RBRACKET>)? {
+            return doubleBuf.toArray();
+        }
+        (<EOF>)?
+    } catch(NumberFormatException nfe) {
+        throw new ParseException("Float parse error # " +
+                                 doubleBuf.size() + " val: " + nfe.getMessage());
+    }
+}
+
+
+//---------------------------------------------------------------------------
+//  TOKENS declaration
+//---------------------------------------------------------------------------
+
+TOKEN :
+{
+      // This is will match things which are not legal numbers, but it is faster
+      // to let the string->number conversion detect the bad cases
+      < NUMBER_LITERAL:
+        ("-")? (".")? ["0"-"9"] (["0"-"9","a"-"f","A"-"F", "x", ".","+","-"])* >
+
+/*
+    // Simplified int literal
+    < INT_LITERAL:
+        (["-", "+"])?
+        (
+          (["0"-"9"])+
+        | "0" ["x","X"] (["0"-"9", "a"-"f","A"-"F"])+
+        )
+    >
+|
+    // Simplified float literal. Let the java conversion process deal with it
+    < FLOAT_LITERAL:
+        (["-", "+"])?
+        (
+          ((["0"-"9"])+ (["."])?)
+        | ((["0"-"9"])* "." (["0"-"9", "e", "E", "+", "-"])+)
+        )
+    >
+|
+    // Simplified float literal for color values. Let the java conversion
+    // process deal with the rest of it. If the first value is a one then the
+    // last value must be a zero. Anything over that and it is out of range
+    < COLOR_LITERAL:
+        (
+          ((["0", "1"])+ (["."] (["0"])*))
+        | ((["0"])* "." (["0"-"9", "e", "E", "+", "-"])+)
+        )
+    >
+*/
+
+|
+    /* String literal kept for possible use in Protos */
+    < STRING_LITERAL: // This is the Java def, may be more than X3D needs
+      "\""
+      (   (~["\"","\\"])
+        | ("\\"
+            ( ["n","t","b","r","f","\\","'","\""]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )*
+      "\""
+   >
+}
+
+TOKEN :
+{
+   < LBRACKET : "[" >
+|  < RBRACKET : "]" >
+}
+
+TOKEN : // BOOLS
+{
+  < TRUE: "TRUE" >
+| < FALSE: "FALSE" >
+| < TRUE_L: "true" >
+| < FALSE_L: "false" >
+}
+
+<*> SKIP : // White space
+{
+    " "
+|   "\t"
+|   "\n"
+|   "\r"
+|   "\f"
+|   ","   // comma is treated as whitespace for fields
+}
+
+<*> SPECIAL_TOKEN : // Comments. Always single line
+{
+    < COMMENT: "#" (~["\n","\r"])* ("\n"|"\r"|"\r\n") >
+}

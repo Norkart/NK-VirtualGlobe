@@ -1,0 +1,19 @@
+<HTML>
+<BODY>
+Utility classes to load and represent PROTO and EXTERNPROTO nodes.
+<p>
+
+The core of this package is used to construct proto instances from the
+file as it is being built. That instance remains in memory as a template
+and can be used to create a runtime instance whenever required and with
+whatever renderer is required.
+<p>
+
+This package will handle both protos and externprotos, but requires an
+external loader to find, resolve and build those extern proto instances. As
+far as the structures are concerned in this class, placeholder instances
+are used to represent externprotos that are declared and used inside a
+PROTO body. These will not be resolved until a runtime instance of the
+PROTO is created.
+</BODY>
+</HTML>

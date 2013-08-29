@@ -1,0 +1,61 @@
+#VRML V2.0 utf8
+
+DEF sc Script {
+  directOutput TRUE
+  eventIn SFBool activated
+  field MFNode kids [
+    DEF mat Material { diffuseColor 1 0 0 }
+    DEF app Appearance {
+      material Material { diffuseColor 1 0 0 }
+    }
+  ]
+  field SFInt32 counter 0
+
+  url [ "javascript:
+        function activated(value) {
+          if(value) {
+            switch(counter) {
+              case 0:
+                kids[0].diffuseColor.g = 1;
+                counter++;
+                break;
+              case 1:
+                kids[1].material.diffuseColor.b = 1;
+                counter++;
+                break;
+              case 2:
+                kids[1].material.diffuseColor = new SFColor(1, 0, 0);
+                counter++;
+                break;
+              case 3:
+                kids[0].diffuseColor = new SFColor(1, 0, 0);
+                counter = 0;
+                break;
+            }
+          }
+        }
+      "
+    ]
+}
+
+Group {
+  children [
+    Shape {
+      geometry Box { size 1 1 1 }
+      appearance Appearance {
+        material USE mat
+      }
+    }
+    DEF ts TouchSensor {}
+  ]
+}
+
+Transform {
+  translation 2 0 0
+  children Shape {
+    appearance USE app
+    geometry Sphere { radius 0.25 }
+  }
+}
+
+ROUTE ts.isActive TO sc.activated

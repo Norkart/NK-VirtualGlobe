@@ -1,0 +1,20 @@
+#VRML V2.0 utf8 CosmoWorlds V1.0
+
+Shape {
+  appearance Appearance {
+    material Material {
+      diffuseColor 1 0 0 
+    }
+  }
+  geometry Box {
+  }
+}
+
+Background {
+#  skyColor [ 0 0 1 ]
+  skyColor [ 0 0 1 0 0 0]
+  skyAngle [ 0.7142] 
+
+  groundColor [ 1 0 0  1 1 1 ]
+  groundAngle [ 1.572 ]
+}

@@ -1,0 +1,392 @@
+<HTML>
+<HEAD>
+<TITLE>Xj3D VRML Scripting Implementation</TITLE>
+</HEAD>
+<BODY>
+
+<H1 ALIGN="center">Xj3D VRML Scripting Implementation</H1>
+
+Author: <I>Justin Couch</I><BR>
+Last updated: <I>$Date: 2001/07/04 11:45:04 $</I><BR>
+Revision: <I>$Revision: 1.1 $</I>
+
+<A NAME="intro">
+<H2>Intro</H2>
+</A>
+
+This document describes how the Xj3D codebase handles scripts. Scripts are
+an extremely important part of the runtime environment and they are also the
+most complex part of the specification to implement. Scripts reach into almost
+every aspect of the system.
+
+<H3>Background</H3>
+
+One of the two early motivators for the current Xj3D design and development was
+to build a codebase that allowed for experimentation with the next generation
+of coding interfaces. There was quite a bit of interest in making sure that the
+next generation specification used a common set of classes for both internal
+(scripting) and external (EAI) coders. This causes all sorts of other
+interesting problems - such as deciding at runtime which version of the
+specification a script belonged to. Basically, you can't tell until the script
+is actually loaded or parsed.
+
+<H3>Motivation</H3>
+
+Since we had to build for two different languages, and two different versions
+for both those languages, the design might as well become generic and allow any
+language to be plugged in. Thus, the design also had to suit a number of
+different application types, as well as the need to be as efficient as possible.
+<P>
+
+An important motivator in the design is to maintain the independence of the
+scripting implementation from the renderer. A scripting engine should be able
+to run in any renderer implementation, just as much as a renderer can use any
+script engine without knowing what language is being used.
+
+<P>
+<HR>
+
+<A NAME="structure">
+<H2>Structural Overview</H2>
+</A>
+
+As mentioned earlier, code is spread all over the place. Even the main code for
+loading scripts and their engines is spread across a number of packages that
+don't lie in a nice neat hierarchy.
+
+<H3>Code Layout</H3>
+
+Code can be broken into three main parts:
+<UL>
+<LI>Interfaces to describe a generic scripting engine</LI>
+<LI>Management code to load and initialise scripts</LI>
+<LI>Runtime management of scripts within the event model</LI>
+</UL>
+
+The one key part that we leave out of this discussion is the implementation
+of language specific handling. That is left to the individual documents for
+each language.
+<P>
+
+Figure 1 shows the basic layout of the public classes involved in this
+process. There are other, package-private classes, but these are not important
+to this discussion. As you can see, the two main packages that are of
+interest are <CODE>org.web3d.vrml.scripting</CODE> and
+<CODE>org.web3d.vrml.nodes.loader</CODE>.
+
+<P>
+<CENTER>
+<A HREF="script_structure.png">
+<IMG SRC="script_structure_small.png" WIDTH="166" HEIGHT="158"></A><BR>
+<B>Figure 1:</B> UML Structure diagram of the VRML scripting classes
+</CENTER>
+<P>
+
+<H3>Scene graph node representation</H3>
+
+Like all other nodes that are read from a stream, we need to provide a
+representation within the scene graph. All scene graph nodes are
+represented by the <CODE>VRMLNodeType</CODE> interface. Extended from this is
+the <CODE>VRMLScriptNodeType</CODE> interface that all scripts use. Scripts
+also pick up the <CODE>VRMLExternalNodeType</CODE> secondary capability to
+indicate that the node has content loaded from an external source.
+<P>
+
+Script nodes, although on the surface having the same fields as an inline or
+image texture node, acts quite differently. Where an inline directly uses the
+content it registers, a script must add a couple of extra layers, such as a
+runtime engine. While it is possible for the script to be given the raw
+Java class or text for ecmascript, this eliminates a number of other
+possibilities, such as dealing with classes that do not load correctly and
+therefore moving onto the next choice.
+<P>
+
+When loading scripts, we want to separate them from the normal external node
+loading process. The normal <CODE>ExternalLoadManager</CODE> will ignore
+loading scripts so that our separate process can look after the intracacies
+of dealing with the scripting engines.
+
+
+<H3>Scripting Language Support</H3>
+
+Supporting multiple languages means that there are a variety of ways that
+a particular language may wish to operate, with regard to the script execution.
+The way that the implementation is structured is to maintain the distinction
+between the language handling and an instance of one script using that
+language, in the scene graph.
+<P>
+
+Distinction between the two parts is by using two interfaces to represent the
+different responsibilites. We term the language "interpreter" as an engine,
+while the code for a particular script node is handled by a wrapper that
+contains all of the context information.
+
+<H4>Scripting Engine</H4>
+
+Scripting engines support the language and any runtime interpretation that is
+needed. For example, a Javascript interpreter has an interpretor that is called
+whenever a script is executed. It is really inefficient to keep a complete
+instance of the interpreter for each script instance, so the engine acts as a
+single, shared resource.
+<P>
+
+Engines are represented by the <CODE>ScriptEngine</CODE> interface. Each
+language takes this interface and implements it accordingly. The role of the
+interface is to present to the runtime environment a basic set of capabilities.
+<P>
+
+Firstly it nominates the type of MIME types that it supports for content. For
+example, a Java engine supports <CODE>application/x-java</CODE> where an
+ECMAScript engine supports <CODE>application/ecmascript</CODE>. This allows
+the load process to select the appropriate engine for the language described
+by the URL. It also allows an engine to support more than one MIME type. For
+example, a single engine may be able to support ECMAScript, Javascript and
+VRMLScript all at once.
+<P>
+
+The second role of the engine interface is to create a runtime handler for
+the script's executable code. The idea is that it creates and instance of
+the wrapper interface and then all of the execution details are hidden behind
+that wrapper. Whether the engine uses a shared interpreter or one instance per
+script, we don't know and don't care.
+
+<H4>Script Wrappers</H4>
+
+In abstraction the script execution in this way, we are left with the gap
+between what the scripting specification says, and what the runtime node
+wants (represented by the <CODE>VRMLScriptNodeType</CODE> interface.
+<P>
+
+The wrapper interface, represented by <CODE>ScriptWrapper</CODE> is used to
+represent all of the activities that a scene graph node needs to do in order
+to conform to the VRML specification. That is, the public interface that is
+presented to the scene graph is not the same set of capabilities that the
+script needs internally to process received events, which is again different
+to the actual executing script code itself.
+<P>
+
+In designing the wrapper, we had to be really careful to make sure that all
+of the right items were covered both for now and in the future. For example,
+the script needs to be initialised somehow, and the script code needs to access
+the real field information. At the same time, we need to subject ourselves to
+the scripting model where it is possible to buffer events before sending them
+to the script code. Although some language implementations may not like this,
+we still need to provide the capabilities for those that don't. Better too
+much capability than two little - particularly as we are trying to be
+experimental as well.
+
+<H3>Script Loading Infrastructure</H3>
+
+Looking after the script loading is the job of the classes in the
+<CODE>org.web3d.vrml.nodes.loader</CODE> package. The main class that you
+work with here is the <CODE>ScriptLoader</CODE>, which performs a similar
+task to the <CODE>ExternalLoadManager</CODE> for other nodes.
+<P>
+
+Loading of scripts, like other external nodes is an asynchronous matter. After
+registering nodes with the loader, the application returns to whatever other
+process is happening. Scripts, as they gain their files are then initialized
+as required, internally by the system (the runtime description of this process
+is presented below).
+<P>
+
+The script loader does not automatically find any script engines. It is the
+job of the application that is putting together the various components to
+locate and register script engines. We've taken this approach because a
+developer may want to provide external implementations, or test their code
+using a particular language, rather than the first one that takes. What this
+does is allow them to control which engines shall be available at any given
+time (for example, from a user interface that enables and disables them).
+<P>
+
+<BLOCKQUOTE>
+Note. The script loading process does not use an abstract interface style
+representation like route and file loader management does. That is one
+possibility, but we have decided whether it is worth the effort currently.
+</BLOCKQUOTE>
+
+<H3>Script Runtime Structure</H3>
+
+Once the script is loaded, the scene graph needs to do some work with all the
+event routing. Ensuring that events get into and out of the script code is a
+collaboration between three classes - the implementation of
+<CODE>VRMLScriptNodeType</CODE>, the language implementation of
+<CODE>ScriptWrapper</CODE> and the <CODE>RouteManager</CODE> implementation.
+<P>
+
+Starting at the top, the route manager is responsible for making sure that
+events make it to the scene graph node in the first place. It is also
+responsible for making sure that events generated by the script make it back
+out to the normal scene graph. It must also ensure that the post-event
+processing method <CODE>eventsProcessed()</CODE> gets called at the right time,
+requiring scripts to be registered separately within the route manager.
+<P>
+
+Once the event reaches the scene graph node, the node is the responsible for
+dealing with local management issues like queuing them up in the script wrapper
+and dealing with all the other method calls - in particular, dealing with any
+error conditions that may have been generated by the script's executable code.
+<P>
+
+Running code in the interpreter requires collating all of the input from the
+scene graph and then passing it through the interpreter. Of course, making
+sure that everything works correctly is the devil of the details. For a Java
+based script - that's easy, just call the right method. For interpreted
+scripting language, that's where the fun starts.
+<P>
+
+Like the load manager keeps a reference to the cache to find files in, the
+script loader keeps a reference to the collection of engines that are
+registered for its instance. We do this, because it is possible that you may
+want to create two browsers in the same VM instance that have different
+scripting engines registered. This is a test for example to compare performance
+of a ecmascript script versus one in Java. It is extremely important to keep
+this context information with each script. Just as a load manager is global
+for all files in a VM, so is the script loader. Those same conditions apply.
+
+<P>
+<HR>
+
+<A NAME="runtime">
+<H2>Runtime Semantics</H2>
+</A>
+
+At runtime, there are three basic processes that the scripting system must
+perform: loading the script, pushing events to the script code and then dealing
+with any events received.
+
+<H3>Loading a Script</H3>
+
+Loading a new script into the system is the biggest task of the scripting
+system at runtime. This process not only requires you to load the raw bytes
+of the script (which may actually be inlined in the VRML file), but also make
+sure that there is an interpreter for it and that the interpreter is getting
+the things it expected it was getting. If that is not enough, then the code
+also needs to make sure that the script has all of the right hooks into the
+runtime environment as well. The browser interface with methods like
+<CODE>createVrmlFromString</CODE> really require an awful lot of capabilities
+that cannot be simple deduced from the surround contexts.
+<P>
+
+The loading process starts by being informed of a new script that has not yet
+been initialized - in this case the "User code" actor in Figure 2. The
+script loader queues the script node for loading and then returns. At the point
+where the script is taken from the queue and load process starts, that is when
+the fun begins. As the figure points out, there is a lot of back and forth
+shuffling of methods and nodes.
+
+<P>
+<CENTER>
+<A HREF="script_load_sequence.png">
+<IMG SRC="script_load_sequence_small.png" WIDTH="214" HEIGHT="194"></A><BR>
+<B>Figure 2:</B> UML sequence diagram of the load process
+</CENTER>
+<P>
+
+This back and forth convoluted path is designed to show the basic steps of
+how the processing is done. In reality, the code is even messier than produced
+here. For example, we can load all script types except for Java scripts. Any
+Java script must go through a different path in order to get the actual class
+instance. This is due to the way that ClassLoaders work. It is not possible to
+create a class loader and have it take any arbitrary stream of bytes that then
+gives us a <CODE>Class</CODE> in return. Instead, we use the pre-packaged
+<CODE>java.net.URLClassLoader</CODE> to do the dirty work. This all, of course,
+requires some special case handling within the code that is not represented in
+Figure 2.
+<P>
+
+An interesting issue to deal with is how scripts and, more importantly,
+external code interacts with the live nodes of the scene. These pose some
+interesting issues on node loading. Under the current implementation, we are
+not sure that we have covered all the issues yet, but as a start, a script is
+never reloaded once it has already attempted to load.
+
+<H3>Processing incoming events</H3>
+
+Scripts within the event cascade go through the three interacting classes.
+Let's start by assuming that there is an event cascade already underway, as
+shown in Figure 3. One or more updates find themselves arriving at the script's
+scene graph representation node. After determining that the index is for a
+valid node, the script then passes the value into the script wrapper through
+one of the <CODE>queueEvent()</CODE> methods.
+
+<P>
+<CENTER>
+<A HREF="script_cascade_sequence.png">
+<IMG SRC="script_cascade_sequence_small.png" WIDTH="142" HEIGHT="205"></A><BR>
+<B>Figure 3:</B> UML sequence diagram of the script in an event cascade
+</CENTER>
+<P>
+
+At this point in time, the events are being queued still within our
+implementation code and have not yet reached the user's script code. For
+scripting engine implementations that don't want to queue events, they can
+call the <CODE>processEvent</CODE> method immediately and then follow it with
+a called to <CODE>eventsProcessed()</CODE>.
+<P>
+
+Once the route manager has determined that there are no further events cascades
+to process, it will instruct the script node that the cascade has completed.
+This in turn passes the notification to the wrapper through its
+<CODE>sendEvents()</CODE> method. The engine then calls
+<CODE>processEvents()</CODE> on the script followed by
+<CODE>eventsProcessed()</CODE>. When this set of calls returns to the route
+manager, it once again checks the output of the script to see if there are
+any events that need routing and begins another cascade if there is.
+
+<UL>
+<LI>effects of mustEvaluate</LI>
+<LI>figure missing discussion of setTimestamp() on wrapper</LI>
+</UL>
+
+<H3>Processing outgoing events</H3>
+
+Not implemented yet.
+
+<UL>
+<LI>effects of direct output. Needs to make sure that every clock tick the
+script is checked for changed event outs. Also need to run the route manager
+because might have reference to an node that it writes event to and then chains
+the event out for a new cascade.
+</LI>
+<LI>Difference between eventOuts of the script and user creating new events.
+    How does this work with SAI creating new fields for the script?
+</LI>
+<LI>directOutput and the ability to create routes.
+</UL>
+
+<P>
+<HR>
+
+<A NAME="extending">
+<H2>Extending the Code</H2>
+</A>
+
+There is only one way of extending this code - providing a new scripting
+engine. This starts with by implementing the <CODE>ScriptEngine</CODE>
+interface.
+
+<P>
+<HR>
+
+<H2>References</H2>
+
+<H3>Language Specific Implementations</H3>
+
+<UL>
+<LI><A HREF="jsai.html">VRML97 Java Script implementation</A></LI>
+<LI><A HREF="sai.html">VRML200x Java Script implementation</A></LI>
+<LI>VRML97 ECMAScript Implementation</LI>
+<LI>VRML200x ECMAScript Implementation</LI>
+</UL>
+
+<H3>Specifications</H3>
+
+<UL>
+<LI><A HREF="http://www.web3d.org/Specifications/VRML97/">VRML97 Specification</A></LI>
+<LI><A HREF="http://www.web3d.org/TaskGroups/x3d/specification-2000july/part1/Part1Index.html">
+    VRML 2000x Draft Specification</A></LI>
+</UL>
+
+</BODY>
+</HTML>

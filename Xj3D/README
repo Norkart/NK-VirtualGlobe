@@ -1,0 +1,74 @@
+                         Welcome to Xj3D codebase.
+
+If you have arrived at this file as a result of directly downloading the CVS
+archive, I'd suggest looking at the HowToInstall.html file.  This will
+take you through getting the proper packages needed for installation and
+compiling the codebase.
+
+If you have arrived here through a pre-built installer for the binaries,
+ignore the installation instructions.
+
+This is a simple roadmap to the entire codebase as found in CVS:
+
+Directory        Description
+---------        -----------
+apps             Standalone applications developed with Xj3D
+bin              Convenience scripts.
+contrib          Externally contributed code. Not maintained as part of
+                 the mainline codebase.
+docs             Documentation for this project
+   arch          Architecture documentation about how the code is put together
+   setup         Files that might make your personal setup easier
+   javadoc       Automatically created when you want to create javadoc
+examples         Small example projects
+    browser      Examples of how to assemble a customised browser
+                 using the internal APIs of Xj3D.
+    loader       Examples of using Xj3D as a Java3D Loader
+    sai          Examples showing how to use the X3D external SAI
+lib              3rd-party libraries needed to compile and run Xj3D.
+make             Support files used by make
+parsetest        Files used to test all aspects of the system
+spec_examples    Examples directly transcribed from the X3D specifications
+src              Source code use to build Xj3D and associated applications,
+                 such as the installers. Separate subdirectories by language.
+
+Depending on how you got here, some of these directories may not be present
+on your machine.
+
+Documentation and Support
+--------------------------
+
+We keep the majority of our documentation on our public website. This can
+be found at
+
+http://www.xj3d.org
+
+There you will find some tutorials, a FAQ and general documentation about
+the project, contributors etc.
+
+If you have problems with Xj3D, please join up and send email to the Web3D
+Consortium's Source mailing list. Details on how to sign up can be found
+on this page:
+
+http://www.web3d.org/x3d/workgroups/source.html
+
+If you have found bugs in Xj3D, please check out our bug tracker at
+
+http://bugzilla.xj3d.org
+
+to see if someone has already found the same bug as yours. We are mostly
+run as a volunteer group. Priority of response on the bugs may or may not be
+fast, depending on what the various developers are currently working on. If
+you require commercial support contracts to guarantee a response, please
+contact Yumetech, Inc
+
+http://www.yumetech.com
+
+
+License
+-------
+ This source is licensed under the GNU LGPL v2.1
+ Please read http://www.gnu.org/copyleft/lesser.html for more information
+
+ This software comes with the standard NO WARRANTY disclaimer for any
+ purpose. Use it at your own risk. If there's a problem you get to fix it.

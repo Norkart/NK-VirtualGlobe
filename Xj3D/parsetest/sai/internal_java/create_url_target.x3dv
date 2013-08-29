@@ -1,0 +1,16 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+# The target file of the createVrmlFromUrl call
+Shape {
+  appearance Appearance {
+    material Material {
+      diffuseColor 0 1 0
+    }
+    texture ImageTexture {
+      url ["vts.jpg"]
+    }
+  }
+  geometry Cylinder {}
+}

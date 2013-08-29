@@ -1,0 +1,240 @@
+<!--
+		DIS-Java-VRML 1.2 Document Type Definition (DTD)
+
+ Description:	Define the DIS tag and attribute profile for X3D.
+		These X3D native nodes correspond to VRML ExternProto declarations.
+
+ 		Elements in this tagset are enabled by setting the 
+		DIS-Java-VRMLProfile entity to "INCLUDE" at the top of an 
+		X3D scene file, as shown in several examples.  This flag then 
+		triggers inclusion of the DIS-Java-VRML tags in the 
+		x3d-compact.dtd tagset.
+
+ Status:	Supports the following Protocol Data Units (PDUs):
+ 		- EspduTransform (Entity State, Collision, Detonation, Fire)
+ 		- ReceiverPdu, SignalPdu, Transmitter
+ 
+ 		Testing results satisfactory.
+
+ Authors:	Don Brutzman and Dave Laflam
+
+ Address:	http://www.web3D.org/TaskGroups/x3d/translation/DistributedInteractiveSimulation.dtd
+
+ References:	http://www.web3D.org/WorkingGroups/vrtp/dis-java-vrml
+ 		http://www.web3D.org/TaskGroups/x3d/translation/x3d-compact.dtd
+
+ Created:	15 October 2000
+
+ Revised:	10 November 2002
+-->
+
+
+<!-- No new or additional wrapper tag definitions needed.  -->
+
+
+<!ELEMENT EspduTransform (IS?, ( %ChildrenNodes; | %WildcardNodes; )* ) >
+<!ATTLIST EspduTransform 
+
+	marking 	 		%SFString;	#IMPLIED
+	siteID  	 		%SFInt32;	#IMPLIED
+	applicationID	 		%SFInt32;	#IMPLIED
+	entityID	 		%SFInt32;	#IMPLIED
+
+	networkMode	 		(standAlone|networkReader|networkWriter)	"networkReader"
+	isStandAlone		 	%SFBool;	"true"
+	isNetworkWriter	 		%SFBool;	"false"
+	isNetworkReader	 		%SFBool;	"false"
+
+	readInterval	 		%SFTime;	"0.1"
+	writeInterval	 		%SFTime;	"1"
+	active   			%SFBool;	"false"
+	timestamp	 		%SFTime;	#IMPLIED
+
+	translation	 		%SFVec3f;	"0 0 0"
+	rotation	 		%SFRotation;	"0 0 1 0"
+	scale   	 		%SFVec3f;	"1 1 1"
+	scaleOrientation 		%SFRotation;	"0 0 1 0"
+	bboxCenter	 		%SFVec3f;	"0 0 0"
+	bboxSize	 		%SFVec3f;	"-1 -1 -1"
+	center  	 		%SFVec3f;	"0 0 0"
+
+	address 	 		%SFString;	#IMPLIED
+	port    	 		%SFInt32;	#IMPLIED
+	multicastRelayHost 		%SFString;	#IMPLIED
+	multicastRelayPort 		%SFInt32;	#IMPLIED
+	rtpHeaderExpected  		%SFBool;	"false"
+	rtpHeaderHeard     		%SFBool;	#IMPLIED
+
+	collided   			%SFBool;	"false"
+	collideTime   			%SFTime;	#IMPLIED
+	detonated   			%SFBool;	"false"
+	detonateTime   			%SFTime;	#IMPLIED
+	fired1   			%SFBool;	"false"
+	fired2   			%SFBool;	"false"
+	firedTime   			%SFTime;	#IMPLIED
+	munitionStartPoint 		%SFVec3f;	#IMPLIED
+	munitionEndPoint   		%SFVec3f;	#IMPLIED
+
+	articulationParameterCount 	%SFInt32;	#IMPLIED
+	articulationParameterValue0	%SFFloat;	#IMPLIED
+	articulationParameterValue1	%SFFloat;	#IMPLIED
+	articulationParameterValue2	%SFFloat;	#IMPLIED
+	articulationParameterValue3	%SFFloat;	#IMPLIED
+	articulationParameterValue4	%SFFloat;	#IMPLIED
+	articulationParameterValue5	%SFFloat;	#IMPLIED
+	articulationParameterValue6	%SFFloat;	#IMPLIED
+	articulationParameterValue7	%SFFloat;	#IMPLIED
+	articulationParameterValue8	%SFFloat;	#IMPLIED
+	articulationParameterValue9	%SFFloat;	#IMPLIED
+	articulationParameterValue10	%SFFloat;	#IMPLIED
+	articulationParameterValue11	%SFFloat;	#IMPLIED
+	articulationParameterValue12	%SFFloat;	#IMPLIED
+	articulationParameterValue13	%SFFloat;	#IMPLIED
+	articulationParameterValue14	%SFFloat;	#IMPLIED
+
+	traceColor   			%SFColor;	#IMPLIED
+	traceOffset   			%SFVec3f;	#IMPLIED
+	traceFontSize  			%SFFloat;	#IMPLIED
+	traceJava   			%SFBool;	"false"
+
+	nodeType			NMTOKEN		#FIXED	"Transform"
+	containerField NMTOKEN "children"
+	class         			CDATA		""
+	DEF   				ID		#IMPLIED 
+	USE             		IDREF		#IMPLIED >
+
+<!-- also included in EspduTransform:  CollisionPdu DetonatePdu FirePdu -->
+
+<!ELEMENT ReceiverPdu (IS?) >
+<!ATTLIST ReceiverPdu 
+
+	whichGeometry			%SFInt32;	#IMPLIED
+
+	siteID				%SFInt32;	#IMPLIED
+	applicationID			%SFInt32;	#IMPLIED
+	entityID			%SFInt32;	#IMPLIED
+	readInterval			%SFTime;	"1"
+	writeInterval			%SFTime;	"0"
+	active				%SFBool;	"false"
+	timestamp			%SFTime;	#IMPLIED
+
+	address				%SFString;	#IMPLIED
+	port				%SFInt32;	#IMPLIED
+	multicastRelayHost		%SFString;	#IMPLIED
+	multicastRelayPort		%SFInt32;	#IMPLIED
+	rtpHeaderExpected		%SFBool;	"false"
+	rtpHeaderHeard			%SFBool;	#IMPLIED
+
+	radioID				%SFInt32;	#IMPLIED
+	receiverPower			%SFFloat;	#IMPLIED
+	receiverState			%SFInt32;	#IMPLIED
+	transmitterSiteID		%SFInt32;	#IMPLIED
+	transmitterApplicationID	%SFInt32;	#IMPLIED
+	transmitterEntityID		%SFInt32;	#IMPLIED
+	transmitterRadioID		%SFInt32;	#IMPLIED
+
+	traceJava			%SFBool;	"false"
+	nodeType			NMTOKEN		#FIXED	"Switch"
+	containerField NMTOKEN "children"
+	class         			CDATA		""
+	DEF   				ID		#IMPLIED 
+	USE             		IDREF		#IMPLIED >
+
+
+<!ELEMENT SignalPdu (IS?) >
+<!ATTLIST SignalPdu 
+
+	whichGeometry			%SFInt32;	#IMPLIED
+
+	siteID				%SFInt32;	#IMPLIED
+	applicationID			%SFInt32;	#IMPLIED
+	entityID			%SFInt32;	#IMPLIED
+	readInterval			%SFTime;	"1"
+	writeInterval			%SFTime;	"0"
+	active				%SFBool;	"false"
+	timestamp			%SFTime;	#IMPLIED
+
+	address				%SFString;	#IMPLIED
+	port				%SFInt32;	#IMPLIED
+	multicastRelayHost		%SFString;	#IMPLIED
+	multicastRelayPort		%SFInt32;	#IMPLIED
+	rtpHeaderExpected		%SFBool;	"false"
+	rtpHeaderHeard			%SFBool;	#IMPLIED
+
+	radioID				%SFInt32;	#IMPLIED
+	encodingScheme			%SFInt32;	#IMPLIED
+	tdlType				%SFInt32;	#IMPLIED
+	sampleRate			%SFInt32;	#IMPLIED
+	samples				%SFInt32;	#IMPLIED
+	dataLength			%SFInt32;	#IMPLIED
+	data00				%SFInt32;	#IMPLIED
+	data01				%SFInt32;	#IMPLIED
+	data02				%SFInt32;	#IMPLIED
+	data03				%SFInt32;	#IMPLIED
+	data04				%SFInt32;	#IMPLIED
+	data05				%SFInt32;	#IMPLIED
+	data06				%SFInt32;	#IMPLIED
+	data07				%SFInt32;	#IMPLIED
+	data08				%SFInt32;	#IMPLIED
+	data09				%SFInt32;	#IMPLIED
+	data10				%SFInt32;	#IMPLIED
+
+	traceJava			%SFBool;	"false"
+	nodeType			NMTOKEN		#FIXED	"Switch"
+	containerField NMTOKEN "children"
+	class         			CDATA		""
+	DEF   				ID		#IMPLIED 
+	USE             		IDREF		#IMPLIED >
+
+
+<!ELEMENT TransmitterPdu (IS?) >
+<!ATTLIST TransmitterPdu 
+
+	whichGeometry			%SFInt32;	#IMPLIED
+
+	siteID				%SFInt32;	#IMPLIED
+	applicationID			%SFInt32;	#IMPLIED
+	entityID			%SFInt32;	#IMPLIED
+	readInterval			%SFTime;	"1"
+	writeInterval			%SFTime;	"0"
+	active				%SFBool;	"false"
+	timestamp			%SFTime;	#IMPLIED
+
+	address				%SFString;	#IMPLIED
+	port				%SFInt32;	#IMPLIED
+	multicastRelayHost		%SFString;	#IMPLIED
+	multicastRelayPort		%SFInt32;	#IMPLIED
+	rtpHeaderExpected		%SFBool;	"false"
+	rtpHeaderHeard			%SFBool;	#IMPLIED
+
+	radioID				%SFInt32;	#IMPLIED
+	antennaLocation			%SFVec3f;	#IMPLIED
+	antennaPatternLength		%SFInt32;	#IMPLIED
+	antennaPatternType		%SFInt32;	#IMPLIED
+	cryptoKeyId			%SFInt32;	#IMPLIED
+	cryptoSytem			%SFInt32;	#IMPLIED
+	frequency			%SFInt32;	#IMPLIED
+	inputSource			%SFInt32;	#IMPLIED
+	lengthOfModulationParameters	%SFInt32;	#IMPLIED
+	modulationTypeDetail		%SFInt32;	#IMPLIED
+	modulationTypeMajor		%SFInt32;	#IMPLIED
+	modulationTypeSpreadSpectrum	%SFInt32;	#IMPLIED
+	modulationTypeSystem		%SFInt32;	#IMPLIED
+	power				%SFInt32;	#IMPLIED
+	radioEntityTypeCategory		%SFInt32;	#IMPLIED
+	radioEntityTypeCountry		%SFInt32;	#IMPLIED
+	radioEntityTypeDomain		%SFInt32;	#IMPLIED
+	radioEntityTypeKind		%SFInt32;	#IMPLIED
+	radioEntityTypeNomenclature	%SFInt32;	#IMPLIED
+	radioEntityTypeNomenclatureVersion %SFInt32;	#IMPLIED
+	relativeAntennaLocation		%SFVec3f;	#IMPLIED
+	transmitFrequencyBandwidth	%SFInt32;	#IMPLIED
+	transmitState			%SFInt32;	#IMPLIED
+
+	traceJava			%SFBool;	"false"
+	nodeType			NMTOKEN		#FIXED	"Switch"
+	containerField NMTOKEN "children"
+	class         			CDATA		""
+	DEF   				ID		#IMPLIED 
+	USE             		IDREF		#IMPLIED >
+

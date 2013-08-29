@@ -1,0 +1,68 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+DEF TS TimeSensor { 
+  cycleInterval 10
+  loop TRUE
+}
+
+DEF TG Transform {
+  rotation 0 1 0 0.78
+  children [
+    Shape {
+      geometry Box {}
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 0 0
+        }
+        texture ImageTexture {
+          url ["vts.png"]
+        }
+      }
+    }
+
+    DEF TOUCH TouchSensor {}
+  ]
+}
+
+DEF PI PositionInterpolator {
+  key [ 0 0.25 0.5 0.75 1 ]
+  keyValue [
+     0 0 0
+    -1 0 0
+    -1 1 0
+     0 1 0
+     0 0 0
+  ]
+}
+
+#ROUTE TS.fraction_changed TO PI.set_fraction
+#ROUTE PI.value_changed TO TG.translation
+
+DEF SC Script {
+  directOutput TRUE
+  inputOnly SFTime touched 
+  url ["ecmascript:
+    var on = false;
+    function touched() {
+      scene = Browser.currentScene;
+      
+      sensor = scene.getNamedNode('TS');
+      interp = scene.getNamedNode('PI');
+      trans = scene.getNamedNode('TG');
+      
+      if(on) {
+        Browser.currentScene.deleteRoute(sensor, 'fraction_changed', interp, 'set_fraction');
+        Browser.currentScene.deleteRoute(interp, 'value_changed', trans, 'set_translation');
+        on = false;
+      } else {
+        Browser.currentScene.addRoute(sensor, 'fraction_changed', interp, 'set_fraction');
+        Browser.currentScene.addRoute(interp, 'value_changed', trans, 'set_translation');
+        on = true;
+      }
+    }
+  "]
+}
+
+ROUTE TOUCH.touchTime TO SC.touched

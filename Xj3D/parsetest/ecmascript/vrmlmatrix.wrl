@@ -1,0 +1,32 @@
+#VRML V2.0 utf8
+
+DEF sc Script {
+  eventIn SFBool activated
+  url [ "javascript:
+        function activated(value) {
+          if(value) {
+            matrix = new VrmlMatrix(0);
+            Browser.println('stock matrix\n' + matrix.toString());
+
+            matrix = new VrmlMatrix(0, 1, 4, 3, 4, 5, 6, 7, 11, 9, 10, 11, 14, 13, 14, 16);
+            
+            Browser.println('number matrix\n' + matrix.toString());
+            Browser.println('inverted\n' + matrix.inverse().toString());
+          }
+        }
+        "]
+}
+
+Group {
+  children [
+    Shape {
+      geometry Box {}
+      appearance Appearance {
+        material Material { diffuseColor 1 1 0 }
+      }
+    }
+    DEF ts TouchSensor {}
+  ]
+}
+
+ROUTE ts.isActive TO sc.activated

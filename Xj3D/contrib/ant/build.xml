@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!--
+                Ant 1.4 main build script for Xj3d
+
+                Roger I Martin PhD
+                hypernexdev@hypernexinc.com
+                neuralworks@home.com
+-->
+<project name="xj3d" default="all" basedir=".">
+  <property name="build.sysclasspath" value="ignore"/>
+  <property name="javahome" location="c:/jdk1.4"/>
+  <property name="jdkhome" location="c:/jdk1.4"/>
+  <property name="javacchome" location="c:/javacc"/>
+  <property name="xj3d.dest" value="jar"/>
+ 
+  <!-- To make people happy who want to do `ant clean all': -->
+  <target name="all" depends="all-w3d,all-xj3d,all-examples" description="Build the vrml and Xj3D and run a sanity check."/>
+
+  <target name="bootstrap-init">
+    <property name="binroot" location="."/>
+    <available property="have-binaries-already" file="${binroot}/lib/httpclient.jar"/>
+  </target>
+
+  <target name="bootstrap" depends="check-for-binaries"
+          description="Bootstrap Xj3D-specific Ant extensions.">
+    <echo message="Bootstrapping Xj3D-specific Ant extensions..."/>
+    <!--jar jarfile="nbantext.jar" basedir="antsrc">
+      <exclude name="**/*.java"/>
+    </jar-->
+  </target>
+
+  <target name="setup-jdkhome-1">
+    <!-- Note: user-configured -Djavahome=... will always override this: -->
+    <property name="jdkhome" location="${java.home}"/>
+    <available property="javahome-valid" file="${javahome}/lib/tools.jar"/>
+  </target>
+  <target name="setup-jdkhome-2" depends="setup-jdkhome-1" if="javahome-valid">
+    <property name="jdkhome" value="${javahome}"/>
+    <property name="jdkhome-valid" value="true"/>
+  </target>
+  <target name="setup-jdkhome-3" depends="setup-jdkhome-1" unless="javahome-valid">
+    <property name="jdkhome" location="${javahome}/.."/>
+    <available property="jdkhome-valid" file="${jdkhome}/lib/tools.jar"/>
+  </target>
+  <target name="setup-jdkhome-4" depends="setup-jdkhome-2,setup-jdkhome-3" unless="jdkhome-valid">
+    <fail message="No tools.jar found in ${javahome}! Set -Djavahome=... as needed."/>
+  </target>
+
+  <target name="init" depends="bootstrap,setup-jdkhome-4">
+    <tstamp>
+    	<format property="buildnumber" pattern="yyyyMMddHHmm"/>
+    </tstamp>
+    <!-- Overridable. Note: need not necessarily be a number at all): -->
+    <property name="buildnum" value="dev-${buildnumber}"/>
+    <property name="test.user.dir" location="testuserdir"/>
+    <!-- For example, "-nogui -nosplash" is useful on headless machines: -->
+    <property name="sanitystart.args.additional" value=""/>
+    <property name="tryme.args.additional" value=""/>
+    <!-- Only useful to override in conjunction with merge target during development: -->
+    <property name="fixedmodules" value="core,openide"/>
+    <!-- Override this with the Ant command, e.g. -Dmoduleconfig=superslim -->
+    <property name="moduleconfig" value="stable"/>
+    <!-- You can also explicitly set a particular list of modules if you prefer: -->
+    <!-- -Dmodules=foo,bar,... (do not include core or openide) -->
+      <!-- [PENDING] A poor name; 'standard' would be more in line with the CVS pseudomodule. -->
+      <!-- You are on your own for getting the binaries for some of these: -->
+    <!--configmods property="modules" selectedconfig="${moduleconfig}">
+      <config name="superslim" modules="classfile,clazz,editor,html,image,java,openidex,projects,text,utilities"/>
+      <config name="slim" modules="autoupdate,beans,classfile,clazz,debuggercore,debuggerjpda,debuggertools,editor,form,html,httpserver,image,java,objectbrowser,openidex,projects,text,utilities"/>
+      <config name="stable" modules="ant,apisupport/lite,applet,autoupdate,beans,classfile,clazz,debuggercore,debuggerjpda,debuggertools,editor,extbrowser,form,html,httpserver,i18n,image,j2eeserver,jarpackager,java,javacvs,javadoc,jndi,objectbrowser,openidex,projects,properties,rmi,scripting,text,usersguide,utilities,vcscore,vcscvs/compat,vcsgeneric,web"/>
+      <config name="stable-with-apisupport" modules="ant,apisupport,apisupport/lite,applet,autoupdate,beans,classfile,clazz,debuggercore,debuggerjpda,debuggertools,editor,extbrowser,form,html,httpserver,i18n,image,j2eeserver,jarpackager,java,javacvs,javadoc,jndi,objectbrowser,openidex,projects,properties,rmi,scripting,text,usersguide,utilities,vcscore,vcscvs/compat,vcsgeneric,web"/>
+      <config name="bloated" modules="ant,apisupport,apisupport/lite,applet,autoupdate,beans,classfile,clazz,cpp,cpplite,debuggercore,debuggerjpda,debuggertools,editor,extbrowser,externaleditor,form,html,httpserver,i18n,icebrowser,image,innertesters,j2eeserver,jarpackager,java,javacvs,javadoc,logger,makefile,multicompile,objectbrowser,openidex,projects,properties,remotefs,rmi,scripting,serialversion,sysprops,text,usersguide,utilities,vcscore,vcscvs,vcscvs/compat,vcsgeneric,web"/>
+      <config name="bloated-plus-extrabins" modules="ant,apisupport,apisupport/lite,applet,autoupdate,beans,classfile,clazz,cpp,cpplite,debuggercore,debuggerjpda,debuggertools,editor,extbrowser,externaleditor,form,html,httpserver,i18n,icebrowser,image,innertesters,j2eeserver,jarpackager,java,javacvs,javadoc,jini,logger,makefile,multicompile,objectbrowser,openidex,projects,properties,remotefs,rmi,scripting,serialversion,sysprops,text,usersguide,utilities,vcscore,vcscvs,vcscvs/compat,vcsgeneric,web"/>
+    </configmods-->
+  </target>
+
+  <target name="check-for-binaries" depends="bootstrap-init" unless="have-binaries-already">
+    <fail message="You seem to be missing the required download of binaries which are required to build the IDE. Please see: http://www.web3d.org/TaskGroups/source/index.html"/>
+  </target>
+
+  <target name="all-w3d" depends="check-for-binaries">
+    <echo message="Building Web3D APIs..."/>
+    <ant dir="./src/" antfile="build-xj3d.xml" target="parsejj"/>
+  </target>
+  <!-- How to build the Xj3D core: -->
+  <target name="all-xj3d" depends="all-w3d, check-for-binaries">
+    <echo message="Building Xj3D APIs..."/>
+    <ant dir="./src/" antfile="build-xj3d.xml" target="compile"/>
+    <jar jarfile="xj3d.jar" basedir="${xj3d.dest}">
+      <!--include name="*.class"/>
+      <include name="*/*.class"/>
+      <include name="*/*/*.class"/>
+      <include name="*/*/*/*.class"/>
+      <include name="*/*/*/*/*.class"/>
+      <include name="*/*/*/*/*.class"/>
+      <include name="*/*/*/*/*/*.class"/>
+      <include name="*/*/*/*/*/*/*.class"/-->
+    </jar>
+  </target>
+  <target name="all-examples" depends="all-xj3d, check-for-binaries">
+    <echo message="Building Xj3D examples..."/>
+    <ant dir="./examples/" antfile="build-samples.xml" target="compile"/>
+  </target>
+  <!--target name="all-vrml" depends="all-xj3d">
+    <echo message="Building IDE core implementation..."/>
+    <ant dir="./src/vrml" target="."/>
+  </target-->
+
+  <target name="javadoc">
+  <javadoc packagenames="org.web3d.*,vrml.*,editor.*,loader.*"
+           sourcepath="src:src:examples"
+           excludepackagenames="com.dummy.test.doc-files.*"
+           defaultexcludes="yes"
+           destdir="docs/api"
+           author="true"
+           version="true"
+           use="true"
+	       classpath="${binroot}/lib/junit.jar;C:/jdk1.4/lib/X3dSai.jar"
+           windowtitle="Xj3D Extensible 3D (X3D) Graphics Implementation">
+    <doctitle><![CDATA[<h1>Xj3D API</h1>]]></doctitle>
+    <bottom><![CDATA[<i>Copyright &#169; 2000 Web3D CONSORTIUM.</i>]]></bottom>
+    <group title="Core API Packages" packages="org.web3d.*"/>
+    <group title="Extra Packages" packages="vrml:vrml.*"/>
+    <group title="Examples Packages" packages="editor:loader"/>
+    <link offline="true" href="http://java.sun.com/products/jdk/1.4/docs/api/" packagelistLoc="C:\jdk1.4\docs\api"/>
+    <link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
+  </javadoc>
+  </target>
+
+  <target name="nuke" depends="init">
+    <delete dir="${xj3d.dest}/org">
+    </delete>
+    <delete dir="${xj3d.dest}/vrml">
+    </delete>
+    <delete>
+      <fileset dir="${xj3d.dest}" includes="**/*.class"/>
+    </delete>
+    <delete>
+      <fileset dir="./src" includes="**/*.class"/>
+    </delete>
+    <delete>
+      <fileset dir="./examples" includes="**/*.class"/>
+    </delete>
+  </target>
+
+  <target name="localclean" depends="init">
+    <delete>
+      <fileset dir="${xj3d.dest}/*" includes="**/*.class"/>
+    </delete>
+  </target>
+
+  <target name="clean" depends="init,localclean"
+          description="Clean out (almost) all build products.">
+    <!--cleanall topdir="." modules="${fixedmodules},${modules}" targetname="clean"/-->
+    <!--echo message="Run `ant real-clean' if desired."/-->
+  </target>
+
+</project>

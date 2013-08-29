@@ -1,0 +1,15 @@
+A simple editor for X3D.  Mostly designed to test the DOM access to the 
+scenegraph. 
+
+Setup:
+	For JDK's less then 1.4 you will need to copy jars/xj3d.jar to your ext
+	directory(ex: jdk1.3.1/jre/lib/ext) or whereever JAXP is installed.
+
+To use:
+	java SEX3D
+
+Other:
+	The error reporting on this example is not very good in regards to 
+	malformed documents.  The method convertDoc will fail cryptically.  I'd
+	suggest using a validating editor like X3D-EDIT to confirm you have a 
+	good file.

@@ -1,0 +1,42 @@
+#VRML V2.0 utf8
+
+DEF sc Script {
+  eventIn SFBool activated
+  eventOut SFColor output
+  url [ "javascript:
+        function initialize() {
+          Browser.println('initialize called');
+        }
+        function activated(value) {
+          if(value) {
+            Browser.println('activated ' + value);
+            output = new SFColor(0, 1, 0);
+          }
+        }
+        "]
+}
+
+DEF sc_out Script {
+  eventIn SFColor madeActive
+  url [ "javascript:
+        function madeActive(value) {
+            Browser.println('new colour is ' + value.toString());
+        }
+        "]
+}
+
+Group {
+  children [
+    Shape {
+      geometry Box {}
+      appearance Appearance {
+        material DEF MAT Material { diffuseColor 1 0 0 }
+      }
+    }
+    DEF ts TouchSensor {}
+  ]
+}
+
+ROUTE ts.isActive TO sc.activated
+ROUTE sc.output TO sc_out.madeActive
+ROUTE sc.output	TO MAT.set_diffuseColor

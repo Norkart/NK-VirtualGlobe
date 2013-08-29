@@ -1,0 +1,40 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+DEF TG Transform {
+  children [
+    Shape {
+      geometry Box {}
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 0 0
+        }
+      }
+    }
+    DEF TS TouchSensor {}
+ ]
+}
+
+DEF tAdap TimeTrigger {}
+
+DEF TIMESENSOR TimeSensor { 
+  cycleInterval 10
+}
+
+DEF OI OrientationInterpolator {
+  key [ 0 0.25 0.5 0.75 1 ]
+  keyValue [
+     0 1 0 0
+     0 1 0 1.571 
+     0 1 0 3.142 
+     0 1 0 4.712 
+     0 1 0 6.2831
+  ]
+}
+
+ROUTE TIMESENSOR.fraction_changed TO OI.set_fraction
+ROUTE OI.value_changed TO TG.rotation
+ROUTE TS.isActive TO tAdap.set_boolean
+ROUTE tAdap.triggerTime TO TIMESENSOR.startTime
+

@@ -1,0 +1,77 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+#
+#  Tested with MIP-MAPS on
+#
+
+#   Expected Size:
+#      2048*2048*3 = 12500 K
+#      1024*1024*3 =  3200 K
+#      512*512*3   =   786 K
+#      256*256*3   =   196 K
+#      128*128*3   =    49 K
+#       64*64*3    =    12 K
+#       32*32*3    =     3 K
+#       16*16*3    =     1 K
+#                  =  16.75 megs   per image  total 50 megs of textures
+                   
+#   Version                                       Size
+#   Xj3D 1.0                                      186 megs
+#   Xj3D 2.0    01092007 DEV Release              234 megs
+#   Xj3D 2.0    CVS Head                          235
+   
+#   BitManagement:
+#     Three Textures          96
+#
+#  Octaga
+#     Three Textures          80
+#
+#
+#  Xj3D
+#     Base World              52
+#     One Texture             113
+#     Two Textures            172              adds 60 megs per texture
+#     Three Textures          232
+
+Transform {
+   translation -3 0 0 
+   children [
+	Shape {
+	   geometry Box {}
+	   appearance Appearance {
+		  texture ImageTexture {
+			 url ["bigred.jpg"]
+		  }
+	   }
+	}
+]}
+
+
+Transform {
+   translation 0 0 0 
+   children [
+	Shape {
+	   geometry Box {}
+	   appearance Appearance {
+		  texture ImageTexture {
+			 url ["biggreen.jpg"]
+		  }
+	   }
+	}
+]}
+
+Transform {
+   translation 3 0 0 
+   children [
+	Shape {
+	   geometry Box {}
+	   appearance Appearance {
+		  texture ImageTexture {
+			 url ["bigblue.jpg"]
+		  }
+	   }
+	}
+]}
+

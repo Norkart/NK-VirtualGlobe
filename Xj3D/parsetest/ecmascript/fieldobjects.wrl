@@ -1,0 +1,35 @@
+#VRML V2.0 utf8
+
+DEF sc Script {
+  eventIn SFBool activated
+  field SFColor myField 0 1 0
+  url [ "javascript:
+        function initialize() {
+          Browser.println('initialize called');
+        }
+        function activated(value) {
+          if(value) {
+            color = new SFColor();
+            color.setHSV(1, 0.5, 0);
+            Browser.println('new colour is ' + color.toString());
+            Browser.println('myField initial value is ' + myField.toString());
+            myField.r = 1;
+            Browser.println('myField after set is ' + myField.toString());
+          }
+        }
+        "]
+}
+
+Group {
+  children [
+    Shape {
+      geometry Box {}
+      appearance Appearance {
+        material Material { diffuseColor 1 0 0 }
+      }
+    }
+    DEF ts TouchSensor {}
+  ]
+}
+
+ROUTE ts.isActive TO sc.activated

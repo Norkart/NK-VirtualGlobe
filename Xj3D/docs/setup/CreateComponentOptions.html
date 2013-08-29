@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+<title>EAI and SAI Configuration Properties</title>
+</head>
+<body>
+The EAI BrowserFactory.createComponent and the SAI BrowserFactory.createX3DComponent
+methods both allow user code to specify configuration options.  While the two methods
+differ in how the options are passed in (the EAI requires the options to be encoded as
+Option=Value strings and the SAI requires the options to be stored in a Map object)
+the same configuration options are used.
+<B>
+These options are inherently non-standard since the VRML and X3D specifications provide
+no list of standard configuration parameters.
+<DL>
+<DT>Xj3D_NavbarShown
+<DD>true or false to control the display the toolbar with navigational controls and viewpoint selection
+<DT>Xj3D_NavbarPosition
+<DD>top or bottom to specify whether the navigation toolbar is on the top or bottom of the
+browser panel
+<DT>Xj3D_LocationShown
+<DD>true or false to control the display of the toolbar with the world URL and load URL button
+<DT>Xj3D_ViewpointShown
+<DD>true or false to control the display of the viewpoint controls in the navigation toolbar
+<DT>Xj3D_LocationPosition
+<DD>top or bottom to control whether the location toolbar is on the top or bottom of the browser panel
+<DT>Xj3D_LocationReadOnly
+<DD>true or false to control whether the address field of the location toolbar is editable and by
+extension whether the load URL button on the lcoation toolbar is enabled
+<DT>Xj3D_ShowConsole
+<DD>true or false to control whether the browser console window (used to output debugging information)
+is displayed when the panel is created
+<DT>Xj3D_ServerPort
+<DD>Integer specifying the port to listen on in support of the getBrowser(InetAddress,port) method.
+If not specified the browser does not listen on any port.  In the M10 release only EAI is supported.
+<DT>Xj3D_BrowserSkin
+<DD>For the SAI createX3DComponent method only and allows specifying a Map containing browser skin
+parameters.  See the browser skin documentation for details.
+</DL>
+<I>Last Revised: $Date: 2004/11/22 03:21:27 $</I>
+</body>
+</html>

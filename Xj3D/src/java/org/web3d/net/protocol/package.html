@@ -1,0 +1,49 @@
+<HTML>
+<BODY>
+Protocol handler implementation code to allow the Xj3D code to load inline
+javascript and ecmascript scripts.
+<p>
+
+As our asynchronous load mechanism for Xj3D does not use the standard
+<CODE>java.net</CODE> packages for loading external content, we extend the
+classes used by our system. It can be used with the standard java.net system,
+but will not use it for it's own internal loading.
+<P>
+
+<H2>Registering VRML Protocol Handlers</H2>
+
+Protocol handlers are not automatically registered with the system. This means
+that inlines will fail to load unless you register one of these handlers with
+the URI resolver system <I>within your own code</I>. To register one, you need
+to use the following code guide.
+
+<PRE>
+import org.ietf.uri.URI;
+import org.ietf.uri.URIResourceFactory;
+
+...
+
+     URIResourceStreamFactory fac = URI.getURIResourceStreamFactory();
+     if(!(fac instanceof Web3DResourceFactory)) {
+         fac = new Web3DResourceFactory(fac);
+         URI.setURIResourceStreamFactory(fac);
+     }
+</PRE>
+<P>
+
+There are a number of different protocol handler factories available. In
+general, we recommend you stick with one of the Do It All factories that
+handle all the types. The others are provided for completeness. Which you
+choose depends on what version of the spec(s) you need to support.
+<P>
+
+
+If you wish to get the source for the URI system, the handler makes use of
+Justin Couch's <A HREF="http://www.vlc.com.au/urilib">URIlib</A> Java library
+for loading URNs and URLs. The standard <CODE>java.net</CODE> library is not
+used. Note that if you are using URNs, you will need to set a few system
+properties defined by that package.
+
+
+</BODY>
+</HTML>

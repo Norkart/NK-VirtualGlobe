@@ -1,0 +1,43 @@
+#VRML V2.0 utf8
+
+Viewpoint {
+	position 0 0 10
+}
+
+DEF	NewView Viewpoint {
+	position 0 0 5
+}
+
+Group {
+	children [
+	Shape {
+		geometry Sphere	{}
+	}
+	DEF	TS TouchSensor {}
+]
+}
+
+PROTO TimeAdaptor [
+	eventIn	SFTime inTime
+	eventOut SFBool outBoolPos
+	eventOut SFBool	outBoolNeg
+]
+{
+	Script {
+	   eventIn	SFTime inTime IS inTime
+	   eventOut SFBool outBoolPos IS outBoolPos
+	   eventOut	SFBool outBoolNeg IS outBoolNeg
+
+	   url	["javascript:
+	   	   function inTime() {
+				outBoolPos = true;
+				outBoolNeg = false;
+		   }
+		"]
+	}
+}
+
+DEF	Time_To_Bool TimeAdaptor {}
+
+ROUTE TS.touchTime TO Time_To_Bool.inTime
+ROUTE Time_To_Bool.outBoolPos TO NewView.set_bind

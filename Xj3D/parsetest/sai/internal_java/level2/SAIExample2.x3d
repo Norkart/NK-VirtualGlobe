@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile="Immersive">
+  <head>
+    <meta content="CreateNodes.x3d" name="filename"/>
+    <meta content="Xeena VRML importer" name="translator"/>
+    <meta content="*enter date of initial version here*" name="created"/>
+    <meta content="23 February 2005" name="imported"/>
+    <meta content="23 February 2005" name="revised"/>
+    <meta
+content="X3D-Edit, http://www.web3D.org/TaskGroups/x3d/translation/README.X3D-Edit.html" name="generator"/>
+    <meta content="Vrml97ToX3dNist, http://ovrt.nist.gov/v2_x3d.html" name="generator"/>
+  </head>
+  <Scene>
+    <Transform DEF="HOLDER" translation="-2.0 0.0 0.0"/>
+    <Script DEF="SC" url="SAIExample2.class">
+      <field accessType="outputOnly" name="children" type="MFNode"/>
+    </Script>
+    <ROUTE fromField="children" fromNode="SC" toField="children" toNode="HOLDER"/>
+  </Scene>
+</X3D>

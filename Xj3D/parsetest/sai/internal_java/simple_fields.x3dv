@@ -1,0 +1,11 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Script {
+  mustEvaluate TRUE
+  directOutput FALSE
+  initializeOnly SFInt32 myIntinitializeOnly 20
+  inputOnly MFFloat myFloatIn
+  outputOnly SFVec3f myVecOut
+}

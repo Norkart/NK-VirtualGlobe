@@ -1,0 +1,72 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_PickingUtilities:1
+
+DEF TS TimeSensor {
+  cycleInterval 10
+  loop TRUE
+}
+
+DEF TG Transform {
+  children Shape {
+    geometry Box { size 0.2 0.2 0.2 }
+    appearance Appearance {
+      material DEF MAT Material {
+        diffuseColor 1 0 0
+      }
+    }
+  }
+}
+
+DEF PI PositionInterpolator {
+  key [ 0 0.5 1 ]
+  keyValue [
+    -1 0 0
+     0 0 0
+     1 0 0
+  ]
+}
+
+DEF PICKER PointPicker {  
+  pickingGeometry DEF PICK_POINT PointSet { 
+    coord Coordinate { 
+      point [ 0 0 0 ]
+    }
+  }
+  pickTarget [ USE TG ]
+}
+
+# put some geometry where the pick location is
+Shape {
+  geometry USE PICK_POINT
+  appearance Appearance {
+    material Material {
+      diffuseColor 1 0 1
+    }
+  }
+}
+
+DEF S Script {
+  inputOnly SFBool setActive 
+  outputOnly SFColor color_changed
+  url "ecmascript:
+     function setActive(value) {
+         if(value) {
+           color_changed.r = 0;
+           color_changed.g = 1;
+           color_changed.b = 0;
+         } else {
+           color_changed.r = 1;
+           color_changed.g = 0;
+           color_changed.b = 0;
+         }
+     }
+  "
+}
+
+ROUTE PICKER.isActive TO S.setActive
+ROUTE S.color_changed TO MAT.diffuseColor
+
+ROUTE TS.fraction_changed TO PI.set_fraction
+ROUTE PI.value_changed TO TG.translation

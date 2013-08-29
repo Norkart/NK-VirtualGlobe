@@ -1,0 +1,9 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+DEF SC Script {
+    inputOnly SFTime touchTime
+
+    url ["SAIExample4.class"]
+}

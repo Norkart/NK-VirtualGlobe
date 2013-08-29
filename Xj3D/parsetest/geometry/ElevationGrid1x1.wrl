@@ -1,0 +1,25 @@
+#VRML V2.0 utf8
+
+Background {
+   skyColor [0 0 0.25 ]
+}
+
+Transform {
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {}
+      }
+      geometry DEF EG ElevationGrid {
+        xDimension 1
+        xSpacing 1
+        zDimension 1
+        zSpacing 1
+        height [ 10 ]
+      }
+    }
+  ]
+}
+
+DirectionalLight { direction -0.80 -0.6 0 }
+Viewpoint { position 3 2 9 }

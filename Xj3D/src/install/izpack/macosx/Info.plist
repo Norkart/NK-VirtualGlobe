@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
+<plist version="0.9">
+<dict>
+    <key>CFBundleName</key>
+    <string>Xj3DBrowser</string>
+    <key>CFBundleVersion</key>
+    <string>10.2</string>
+    <key>CFBundleAllowMixedLocalizations</key>
+    <string>true</string>
+    <key>CFBundleExecutable</key>
+    <string>JavaApplicationStub</string>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>English</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleIconFile</key>
+    <string>Xj3DIcons.icns</string>
+    <key>Java</key>
+<!--    Attempt at fixing associations, but doesn't work
+    <key>CFBundleDisplayName</key>
+    <string>Xj3DBrowser</string>
+        <key>CFBundleIdentifier</key>
+        <string>xj3d.browser.Xj3DBrowser</string>   
+    <key>CFBundleSignature</key>
+        <string>Xj3D</string>   
+-->
+
+    <dict>
+        <key>VMOptions</key>
+        <string>-Xbootclasspath/p:./Xj3DBrowser.app/Contents/Resources/bin -Djava.library.path=./Xj3DBrowser.app/Contents/Resources/bin -Djogl.verbose=true -DJOGL_SINGLE_THREADED_WORKAROUND=false -Xmx450M</string>
+        <key>MainClass</key>
+        <string>xj3d.browser.Xj3DBrowser</string>
+        <key>JVMVersion</key>
+        <string>1.4+</string>
+        <key>ClassPath</key>
+            <array>
+            <string>$JAVAROOT/xj3d-all_2.0.0.jar</string>
+            <string>$JAVAROOT/aviatrix3d-all_2.0.0.jar</string>
+            <string>$JAVAROOT/FastInfoset.jar</string>
+            <string>$JAVAROOT/smack.jar</string>
+            <string>$JAVAROOT/smackx.jar</string>
+            <string>$JAVAROOT/dis.jar</string>
+            <string>$JAVAROOT/disxml.jar</string>
+            <string>$JAVAROOT/dom4j.jar</string>
+            <string>$JAVAROOT/gnu-regexp-1.0.8.jar</string>
+            <string>$JAVAROOT/gt2-main-2.2.jar</string>
+            <string>$JAVAROOT/gt2-referencing-2.2.jar</string>
+            <string>$JAVAROOT/HIDWrapper.jar</string>
+            <string>$JAVAROOT/httpclient.jar</string>
+            <string>$JAVAROOT/j3d-org-all_0.9.0.jar</string>
+            <string>$JAVAROOT/j3d-org-java3d_0.9.0.jar</string>
+            <string>$JAVAROOT/jinput.jar</string>
+            <string>$JAVAROOT/jogl.jar</string>
+            <string>$JAVAROOT/gluegen-rt.jar</string>
+            <string>$JAVAROOT/joal.jar</string>
+            <string>$JAVAROOT/jutils.jar</string>
+            <string>$JAVAROOT/js.jar</string>
+            <string>$JAVAROOT/log4j.jar</string>
+            <string>$JAVAROOT/odejava.jar</string>
+            <string>$JAVAROOT/geoapi-2.0.jar</string>
+            <string>$JAVAROOT/jsr108-0.01.jar</string>
+            <string>$JAVAROOT/uri.jar</string>
+            <string>$JAVAROOT/vecmath.jar</string>
+            <string>$JAVAROOT/vlc_uri.jar</string>
+            <string>$JAVAROOT/jhall.jar</string>
+            <string>$JAVAROOT/xj3d_browser_2.0.0.jar</string>
+            </array>
+    </dict>
+</dict>
+</plist>

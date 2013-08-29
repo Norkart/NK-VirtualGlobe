@@ -1,0 +1,80 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT KeyDeviceSensor:1
+
+DEF KEYS KeySensor {
+}
+
+DEF SC Script {
+  inputOnly SFInt32 actionKeyPress
+  inputOnly SFInt32 actionKeyRelease
+  inputOnly SFBool  altKey
+  inputOnly SFBool  controlKey
+  inputOnly SFBool  isActive
+  inputOnly SFString keyPress
+  inputOnly SFString keyRelease
+  inputOnly SFBool  shiftKey
+  outputOnly SFBool bindVP1
+  outputOnly SFBool bindVP2
+
+  url ["ecmascript:
+    function actionKeyPress(val) {
+       if (val == 1)
+          bindVP1 = true;
+       else
+          bindVP2 = true;
+      Browser.println('actionKeyPress ' + val);
+    }
+
+    function actionKeyRelease(val) {
+      Browser.println('actionKeyRelease ' + val);
+    }
+
+    function altKey(val) {
+      Browser.println('altKey ' + val);
+    }
+
+    function controlKey(val) {
+      Browser.println('controlKey ' + val);
+    }
+
+    function isActive(val) {
+      Browser.println('isActive ' + val);
+    }
+
+    function keyPress(val) {
+      Browser.println('keyPress ' + val);
+    }
+
+    function keyRelease(val) {
+      Browser.println('keyRelease ' + val);
+    }
+
+    function shiftKey(val) {
+      Browser.println('shiftKey ' + val);
+    }
+  "]
+}
+
+ROUTE KEYS.actionKeyPress TO SC.actionKeyPress
+ROUTE KEYS.actionKeyRelease TO SC.actionKeyRelease
+ROUTE KEYS.altKey TO SC.altKey
+ROUTE KEYS.controlKey TO SC.controlKey
+ROUTE KEYS.shiftKey TO SC.shiftKey
+ROUTE KEYS.keyPress TO SC.keyPress
+ROUTE KEYS.keyRelease TO SC.keyRelease
+ROUTE KEYS.isActive TO SC.isActive
+
+
+Shape {
+    geometry Box {}
+}
+
+DEF VP1 Viewpoint {}
+DEF VP2 Viewpoint {
+   position 1 1 10
+}
+
+ROUTE SC.bindVP1 TO VP1.set_bind
+ROUTE SC.bindVP2 TO VP2.set_bind

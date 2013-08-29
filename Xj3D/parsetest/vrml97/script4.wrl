@@ -1,0 +1,88 @@
+#VRML    V2.0 utf8
+
+Script {
+  mustEvaluate TRUE
+  field SFInt32 constant 0 0 0
+  eventIn SFVec3f setter
+  eventOut SFVec3f getter
+  field SFNode myAppearance NULL
+}
+
+Script {
+  mustEvaluate TRUE
+  field SFInt32 constant 0 0 0
+  eventIn SFVec3f setter
+  eventOut SFVec3f getter
+  field SFNode myAppearance Appearance {}
+}
+
+Script {
+  mustEvaluate TRUE
+  field SFInt32 constant 0 0 0
+  eventIn SFVec3f setter
+  eventOut SFVec3f getter
+  field SFNode myAppearance Appearance {
+    material Material {}
+  }
+}
+
+
+Script {
+  mustEvaluate TRUE
+  field SFInt32 constant 0 0 0
+  eventIn SFVec3f setter
+  eventOut SFVec3f getter
+  field SFNode myAppearance NULL
+  url "blah.class"
+}
+
+Script {
+  mustEvaluate TRUE
+  field SFInt32 constant 0 0 0
+  eventIn SFVec3f setter
+  eventOut SFVec3f getter
+  field SFNode myAppearance Appearance {}
+  url "blah.class"
+}
+
+Script {
+  mustEvaluate TRUE
+  field SFInt32 constant 0 0 0
+  eventIn SFVec3f setter
+  eventOut SFVec3f getter
+  field SFNode myAppearance Appearance {
+    material Material {}
+  }
+
+  url "blah.class"
+}
+
+
+Script {
+  mustEvaluate TRUE
+  field SFInt32 constant 0 0 0
+  eventIn SFVec3f setter
+  eventOut SFVec3f getter
+  field SFNode myAppearance NULL
+  url [ "blah.class", "blah2.class" ]
+}
+
+Script {
+  mustEvaluate TRUE
+  field SFInt32 constant 0 0 0
+  eventIn SFVec3f setter
+  eventOut SFVec3f getter
+  field SFNode myAppearance Appearance {}
+  url [ "blah.class", "blah2.class" ]
+}
+
+Script {
+  mustEvaluate TRUE
+  field SFInt32 constant 0 0 0
+  eventIn SFVec3f setter
+  eventOut SFVec3f getter
+  field SFNode myAppearance Appearance {
+    material Material {}
+  }
+  url [ "blah.class", "blah2.class" ]
+}

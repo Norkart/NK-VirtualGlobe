@@ -1,0 +1,130 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+COMPONENT DIS:1
+
+
+Viewpoint {
+position 28.85 3.978 -98.85
+   description "Free Navigation"
+}
+
+DEF MASTER_VP Viewpoint {
+position 28.85 3.978 -98.85
+#orientation 0.001188 -1 -0.8389 -2.86
+   description "Master Viewpoint"
+}
+
+
+DEF WORLD_PS ProximitySensor {
+   size 10000 10000 10000
+}
+
+DEF MASTER_NI NavigationInfo {
+   type ["EXAMINE","ANY"]
+}
+
+DEF CAMERA_BROADCASTER EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   networkMode "networkWriter"
+   writeInterval 0.01
+   entityID 0
+   children [
+    
+    DEF SLAVE_VP Viewpoint {
+#position 28.85 3.978 -98.85
+       position 0 0 0
+       description "Slaved Viewpoint"
+    }
+    DEF SLAVE_NI NavigationInfo {
+       type ["NONE"]
+    }
+    ]
+}
+
+DEF CONTROL_SCRIPT Script {
+   inputOnly SFBool master_bound
+   inputOnly SFBool slave_bound
+   inputOnly SFVec3f user_translation
+   inputOnly SFRotation user_rotation
+   outputOnly SFVec3f sharedvp_translation
+   outputOnly SFRotation sharedvp_rotation
+   outputOnly SFString camera_mode
+   
+    url ["ecmascript:
+    
+       var master = false;
+       var slave = false;
+       
+       function master_bound(val) {
+          Browser.println('Master bound');
+          master = val;
+          
+          if (master)
+             camera_mode = 'networkWriter';
+       }
+       
+       function slave_bound(val) {
+          Browser.println('Slave bound');
+          slave = val;
+          if (slave)
+             camera_mode = 'networkReader';
+       }
+       
+       function user_translation(val) {
+          if (master)
+             sharedvp_translation = val;
+       }
+       
+       function user_rotation(val) {
+          if (master)
+             sharedvp_rotation = val;
+       }
+  "]     
+}
+
+ROUTE MASTER_VP.isBound TO CONTROL_SCRIPT.master_bound
+ROUTE MASTER_VP.isBound TO MASTER_NI.set_bind
+ROUTE SLAVE_VP.isBound TO CONTROL_SCRIPT.slave_bound
+ROUTE SLAVE_VP.isBound TO SLAVE_NI.set_bind
+
+ROUTE WORLD_PS.position_changed TO CONTROL_SCRIPT.user_translation
+ROUTE WORLD_PS.orientation_changed TO CONTROL_SCRIPT.user_rotation
+
+ROUTE CONTROL_SCRIPT.sharedvp_translation TO CAMERA_BROADCASTER.set_translation
+ROUTE CONTROL_SCRIPT.sharedvp_rotation TO CAMERA_BROADCASTER.set_rotation
+ROUTE CONTROL_SCRIPT.camera_mode TO CAMERA_BROADCASTER.networkMode
+
+
+Background {
+   groundAngle [ 1.45, 1.57 ]
+   groundColor [ .005 .05 .03, .01 .13 .09, .025 .22 .17 ]
+   skyAngle [ .9, 1.57 ]
+   skyColor [ 0 0 .2, .1 .1 .8, .7 .7 1 ]
+}
+
+Transform {
+   translation 0 -0.1 0
+   children [
+   
+    Shape {   
+        appearance Appearance {
+           texture DEF PT PixelTexture {
+            repeatS TRUE
+            repeatT TRUE
+                image 2 2 3 0x0 0x00FF00 0x0000FF 0xFF0000
+           }
+           textureTransform TextureTransform {
+              scale 100 100        
+           }
+           
+        }
+       geometry Box { size 1000 0.1 1000 }
+    }
+   ]
+}
+

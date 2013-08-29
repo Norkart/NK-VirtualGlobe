@@ -1,0 +1,192 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT DIS:1
+
+Viewpoint {
+   position 0 0 110
+}
+
+EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   networkMode "networkReader"
+   entityID 0
+    children [
+        Shape { appearance Appearance { material Material { diffuseColor 1 0 0 }} geometry Box { size 1 1 1} }
+    ]
+}
+
+EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   networkMode "networkReader"
+   entityID 1
+    children [
+        Shape { appearance Appearance { material Material { diffuseColor 1 0 0 }} geometry Box { size 1 1 1} }
+    ]
+}
+
+EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   networkMode "networkReader"
+   entityID 2
+    children [
+        Shape { appearance Appearance { material Material { diffuseColor 1 0 0 }} geometry Box {size 1 1 1} }
+    ]
+}
+
+EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   networkMode "networkReader"
+   entityID 3
+    children [
+        Shape { appearance Appearance { material Material { diffuseColor 1 0 0 }} geometry Box {size 1 1 1} }
+    ]
+}
+
+EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   networkMode "networkReader"
+   entityID 4
+    children [
+        Shape { appearance Appearance { material Material { diffuseColor 1 0 0 }} geometry Box {size 1 1 1} }
+    ]
+}
+
+# Second 5
+
+EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   networkMode "networkReader"
+   entityID 5
+    children [
+        Shape { appearance Appearance { material Material { diffuseColor 0 1 0 }} geometry Box { size 1 1 1} }
+    ]
+}
+
+EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   networkMode "networkReader"
+   entityID 6
+    children [
+        Shape { appearance Appearance { material Material { diffuseColor 0 1 0 }} geometry Box { size 1 1 1} }
+    ]
+}
+
+EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   networkMode "networkReader"
+   entityID 7
+    children [
+        Shape { appearance Appearance { material Material { diffuseColor 0 1 0 }} geometry Box {size 1 1 1} }
+    ]
+}
+
+EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   networkMode "networkReader"
+   entityID 8
+    children [
+        Shape { appearance Appearance { material Material { diffuseColor 0 1 0 }} geometry Box {size 1 1 1} }
+    ]
+}
+
+EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   networkMode "networkReader"
+   entityID 9
+    children [
+        Shape { appearance Appearance { material Material { diffuseColor 0 1 0 }} geometry Box {size 1 1 1} }
+    ]
+}
+
+# Third 5
+
+EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   networkMode "networkReader"
+   entityID 10
+    children [
+        Shape { appearance Appearance { material Material { diffuseColor 0 0 1 }} geometry Box { size 1 1 1} }
+    ]
+}
+
+EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   networkMode "networkReader"
+   entityID 11
+    children [
+        Shape { appearance Appearance { material Material { diffuseColor 0 0 1 }} geometry Box { size 1 1 1} }
+    ]
+}
+
+EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   networkMode "networkReader"
+   entityID 12
+    children [
+        Shape { appearance Appearance { material Material { diffuseColor 0 0 1 }} geometry Box {size 1 1 1} }
+    ]
+}
+
+EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   networkMode "networkReader"
+   entityID 13
+    children [
+        Shape { appearance Appearance { material Material { diffuseColor 0 0 1 }} geometry Box {size 1 1 1} }
+    ]
+}
+
+EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   networkMode "networkReader"
+   entityID 14
+    children [
+        Shape { appearance Appearance { material Material { diffuseColor 0 0 1 }} geometry Box {size 1 1 1} }
+    ]
+}

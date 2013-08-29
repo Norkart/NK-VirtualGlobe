@@ -1,0 +1,32 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Group {
+  children [
+    Shape {
+      geometry Box {}
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 0 0
+        }
+      }
+    }
+    DEF TS TouchSensor {}
+ ]
+}
+
+DEF toggle BooleanToggle {}
+
+DEF SC Script {
+   inputOnly SFBool printBool
+
+   url ["ecmascript:
+      function printBool(val) {
+         Browser.println('boolVal: ' + val);
+      }
+   "]
+}
+
+ROUTE TS.isActive TO toggle.set_boolean
+ROUTE toggle.toggle_changed TO SC.printBool

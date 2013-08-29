@@ -1,0 +1,31 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Group {
+  children [
+    Shape {
+      geometry Box {}
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 0 0
+        }
+      }
+    }
+    DEF TS TouchSensor {}
+ ]
+}
+
+DEF tAdap BooleanTrigger {}
+
+DEF SC Script {
+   inputOnly SFBool printBool
+   url ["ecmascript:
+      function printBool(val) {
+         Browser.println('bool: ' + val);
+      }
+   "]
+}
+
+ROUTE TS.touchTime TO tAdap.set_triggerTime
+ROUTE tAdap.triggerTrue TO SC.printBool

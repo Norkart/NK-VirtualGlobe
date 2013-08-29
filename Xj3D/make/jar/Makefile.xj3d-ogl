@@ -1,0 +1,74 @@
+#*********************************************************************
+#
+#  (C) 2001 - 2006 Web3D Consortium
+#    http://www.web3d.org/
+#
+# Package makefile producing xj3d-ogl.jar
+#
+# Author: Justin Couch
+# Version: $Revision: 1.27 $
+#
+#*********************************************************************
+
+# A version number we tack onto the JAR file name for eclipse versioning
+# purposes.
+JAR_VERSION=2.0.0
+
+# Describe every directory that you want included in the JAR file here.
+# This is not recursive, so if you want parent directory and the
+# sub-directory, say so. These directories should not have '/' appended.
+JAR_CONTENT=org/web3d/vrml/renderer/ogl \
+    org/web3d/vrml/renderer/ogl/browser \
+    org/web3d/vrml/renderer/ogl/input \
+    org/web3d/vrml/renderer/ogl/nodes \
+    org/web3d/vrml/renderer/ogl/nodes/cadgeometry \
+    org/web3d/vrml/renderer/ogl/nodes/core \
+    org/web3d/vrml/renderer/ogl/nodes/dis \
+    org/web3d/vrml/renderer/ogl/nodes/enveffects \
+    org/web3d/vrml/renderer/ogl/nodes/environment \
+    org/web3d/vrml/renderer/ogl/nodes/eventutils \
+    org/web3d/vrml/renderer/ogl/nodes/extensions \
+    org/web3d/vrml/renderer/ogl/nodes/geom2d \
+    org/web3d/vrml/renderer/ogl/nodes/geom3d \
+    org/web3d/vrml/renderer/ogl/nodes/geospatial \
+    org/web3d/vrml/renderer/ogl/nodes/group \
+    org/web3d/vrml/renderer/ogl/nodes/hanim \
+    org/web3d/vrml/renderer/ogl/nodes/interpolator \
+    org/web3d/vrml/renderer/ogl/nodes/layering \
+    org/web3d/vrml/renderer/ogl/nodes/lighting \
+    org/web3d/vrml/renderer/ogl/nodes/navigation \
+    org/web3d/vrml/renderer/ogl/nodes/networking \
+    org/web3d/vrml/renderer/ogl/nodes/particle \
+    org/web3d/vrml/renderer/ogl/nodes/picking \
+    org/web3d/vrml/renderer/ogl/nodes/render \
+    org/web3d/vrml/renderer/ogl/nodes/rigidphysics \
+    org/web3d/vrml/renderer/ogl/nodes/scripting \
+    org/web3d/vrml/renderer/ogl/nodes/sensor \
+    org/web3d/vrml/renderer/ogl/nodes/shape \
+    org/web3d/vrml/renderer/ogl/nodes/sound \
+    org/web3d/vrml/renderer/ogl/nodes/text \
+    org/web3d/vrml/renderer/ogl/nodes/texture \
+    org/web3d/vrml/renderer/ogl/nodes/time \
+    org/xj3d/loaders/ogl \
+    org/xj3d/ui/construct \
+    org/xj3d/ui/construct/event \
+    org/xj3d/ui/construct/ogl \
+    org/xj3d/ui/awt/browser/ogl \
+    org/xj3d/ui/awt/device/ \
+    org/xj3d/ui/awt/device/ogl/mouse \
+    org/xj3d/ui/awt/device/keyboard \
+    org/xj3d/ui/awt/net/content \
+    org/xj3d/ui/awt/widgets \
+    org/xj3d/ui/swt/browser/ogl \
+    org/xj3d/ui/swt/device/ \
+    org/xj3d/ui/swt/device/ogl/mouse \
+    org/xj3d/ui/swt/device/keyboard \
+    org/xj3d/ui/swt/net/content \
+    org/xj3d/ui/swt/widgets \
+    org/xj3d/ui/swt/view \
+    org/xj3d/ui/swt/util \
+
+# Manifest file name. Stored in the make/manifest directory
+MANIFEST=xj3d-ogl.mf
+
+include ${PROJECT_ROOT}/make/Makefile.jav

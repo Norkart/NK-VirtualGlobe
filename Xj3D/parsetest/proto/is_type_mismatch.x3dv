@@ -1,0 +1,18 @@
+#X3D V3.0 utf8
+
+# A test to make sure that protos that have mismatched field data types
+# barf as required.
+PROFILE Immersive 
+
+PROTO MyBadProto [
+  initializeOnly SFVec3d bounds 10 10 10
+] {
+  Group {
+    bboxSize IS bounds
+    children Shape {
+      geometry Box {}
+    }
+  }
+}
+
+MyBadProto {}

@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!--
+                Ant 1.4 build script for Xj3d Samples
+
+                Roger I Martin PhD
+                hypernexdev@hypernexinc.com
+                neuralworks@home.com
+-->
+
+<project name="xj3d" default="build" basedir=".">
+
+  <property name="jdkhome" location="c:/jdk1.4"/>
+  <property name="binroot" location=".."/>
+  <property name="homepage.base" value="web3d.org"/>
+  <property name="dist.base" value="www.web3d.org/TaskGroups/source/HowToInstall.html#Xj3D"/>
+  <property name="license.file" value=""/>
+
+  <target name="parsejj">
+	<echo message="${jdkhome}"/>
+    <javacc target="javacc/vrml/VRML97Field.jj" outputdirectory="org/web3d/vrml/parser/vrml97" javacchome="${javacchome}" static="false"/>
+    <javacc target="javacc/vrml/VRML97Relaxed.jj" outputdirectory="org/web3d/vrml/parser/vrml97" javacchome="${javacchome}" static="false"/>
+    <javacc target="javacc/x3d/X3DField.jj" outputdirectory="org/web3d/vrml/parser/x3d" javacchome="${javacchome}" static="false"/>
+    <javacc target="org/web3d/x3d/jaxp/dom/j3d/X3DFieldParser.jj" outputdirectory="org/web3d/x3d/jaxp/dom/j3d" javacchome="${javacchome}" static="false"/>
+  </target>
+  <target name="compile">
+	<echo message="${jdkhome}"/>
+    <javac destdir="." deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}">
+      <src path="./"/>
+      <exclude name="browser/MultiCanvasBrowser.java"/>
+      <exclude name="org/web3d/j3d/loaders/*.java"/>
+      <exclude name="org/web3d/x3d/jaxp/dom/j3d/*.java"/>
+      <!--exclude name="org/web3d/vrml/j3d/nodes/core/*.java"/-->
+      <exclude name="org/web3d/vrml/scripting/*.java"/>
+      <exclude name="org/web3d/j3d/loaders/J3DScene.java"/>
+      <exclude name="org/web3d/j3d/loaders/VRML97Loader.java"/>
+      <exclude name="org/web3d/x3d/jaxp/dom/j3d/DOMtoJ3D.java"/>
+      <exclude name="org/web3d/x3d/jaxp/dom/j3d/TestDOMtoJ3D.java"/>
+      <exclude name="org/web3d/x3d/jaxp/dom/j3d/VRMLBrowser.java"/>
+      <exclude name="org/web3d/x3d/jaxp/dom/j3d/X3DFieldData.java"/>
+      <exclude name="org/web3d/x3d/jaxp/dom/j3d/X3DTypeMap.java"/>
+      <exclude name="org/web3d/vrml/j3d/nodes/core/J3DIndexedFaceSet.java"/>
+      <classpath>
+        <!-- Hopefully set up by ../build.xml: -->
+        <pathelement location="${binroot}/xj3d.jar"/>
+        <pathelement location="${jdkhome}/lib/tools.jar"/>
+        <pathelement location="${jdkhome}/lib/jaxp.jar"/>
+        <pathelement location="${jdkhome}/lib/parser.jar"/>
+        <pathelement location="${jdkhome}/lib/SaiX3d.jar"/>
+        <pathelement location="${binroot}/lib/gnu-regexp-1.0.8.jar"/>
+        <pathelement location="${binroot}/lib/j3d-org-all_0.9.0.jar"/>
+        <pathelement location="${binroot}/lib/j3d-org-images.jar"/>
+        <pathelement location="${binroot}/lib/uri.jar"/>
+        <pathelement location="${binroot}/lib/vlc_uri.jar"/>
+        <pathelement location="${binroot}/lib/dtdparser113a.jar"/>
+        <pathelement location="${binroot}/lib/junit.jar"/>
+        <pathelement location="${binroot}/lib/httpclient.jar"/>
+        <pathelement location="${binroot}/lib/js.jar"/>
+        <pathelement location="${binroot}/src"/>
+      </classpath>
+    </javac>
+  </target>
+
+</project>
+
+

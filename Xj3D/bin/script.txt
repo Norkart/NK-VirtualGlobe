@@ -1,0 +1,289 @@
+#!/bin/sh
+PATH=/usr/bin
+more <<"EOF"
+
+
+	             	  xj3d tr
+		Binary Code Evaluation License 
+
+SUN MICROSYSTEMS, INC., THROUGH ITS JAVASOFT BUSINESS ("SUN") IS
+WILLING TO LICENSE THE XJ3D TECHNOLOGY-RELEASE SOFTWARE AND 
+THE ACCOMPANYING DOCUMENTATION INCLUDING AUTHORIZED COPIES OF EACH 
+(THE "SOFTWARE") TO LICENSEE ONLY ON THE CONDITION THAT LICENSEE 
+ACCEPTS ALL OF THE TERMS IN THIS AGREEMENT.  PLEASE READ THE TERMS 
+CAREFULLY BEFORE TYPING "YES" BELOW.  BY TYPING "YES" BELOW , 
+LICENSEE ACKNOWLEDGES THAT LICENSEE HAS READ AND UNDERSTANDS THIS 
+AGREEMENT AND AGREES TO BE BOUND BY ITS TERMS AND CONDITIONS.  IF 
+LICENSEE DOES NOT ACCEPT THESE LICENSE TERMS, SUN DOES NOT GRANT ANY 
+LICENSE TO THE SOFTWARE, AND LICENSEE SHOULD TYPE "NO" BELOW TO EXIT 
+THIS PAGE.
+
+1.  EVALUATION LICENSE PERIOD
+
+    Licensee may use the binary Software for a period of sixty (60)
+    days from the date Licensee downloads the Software from a Sun
+    website (the "Term"). At the end of the Term, Licensee must
+    immediately cease use of and destroy the Software or, upon request
+    from Sun, return the Software to Sun. The Software may contain a
+    mechanism which (i) disables the Software at the end of the Term or
+    (ii) advises the end user that the license has expired.
+
+2.  LICENSE GRANT
+
+    (A) License Rights
+
+	Licensee is granted a non-exclusive and non-transferable
+	license to download, install and internally use the binary
+	Software for beta testing and evaluation purposes only.
+	Licensee may make one copy of the Software only for archival
+	purposes in support of Licensee's use of the Software, provided
+	that Licensee reproduce all copyright and other proprietary
+	notices that are on the original copy of the Software.
+
+    (B) License Restrictions
+
+	The Software is licensed to Licensee only under the terms of
+	this Agreement, and Sun reserves all rights not expressly
+	granted to Licensee. Licensee may not use, copy, modify, or
+	transfer the Software, or any copy thereof, except as expressly
+	provided for in this Agreement. Except as otherwise provided by
+	law for purposes of decompilation of the Software solely for
+	inter-operability, Licensee may not reverse engineer,
+	disassemble, decompile, or translate the Software, or otherwise
+	attempt to derive the source code of the Software. Licensee may
+	not rent, lease, loan, sell, or distribute the Software, or any
+	part of the Software. No right, title, or interest in or to any
+	trademarks, service marks, or trade names of Sun or Sun's
+	licensors is granted hereunder.
+
+    (C) Acknowledgment that Software is Experimental
+
+	Licensee acknowledges that Software furnished hereunder is
+	experimental and may have defects or deficiencies which cannot
+	or will not be corrected by Sun and that Sun is under no
+	obligation to release the Software as a product. Licensee will
+	release and discharge Sun from any liability from any claims
+	that any product released by Sun is incompatible with the
+	Software. Further, Licensee will defend and indemnify Sun from
+	any claims made by Licensee's customers that are based on
+	incompatibility between the Software and any products released
+	by Licensee. Licensee will have sole responsibility for the
+	adequate protection and backup of Licensee's data and/or
+	equipment used with the Software.
+
+    (D) Aircraft Product and Nuclear Applications Restriction
+
+	SOFTWARE IS NOT DESIGNED OR INTENDED FOR USE IN ON-LINE CONTROL
+	OF AIRCRAFT, AIR TRAFFIC, AIRCRAFT NAVIGATION OR AIRCRAFT
+	COMMUNICATIONS; OR IN THE DESIGN, CONSTRUCTION, OPERATION OR
+	MAINTENANCE OF ANY NUCLEAR FACILITY. SUN DISCLAIMS ANY EXPRESS
+	OR IMPLIED WARRANTY OF FITNESS FOR SUCH USES. LICENSEE
+	REPRESENTS AND WARRANTS THAT IT WILL NOT USE THE SOFTWARE FOR
+	SUCH PURPOSES.
+
+3.  CONFIDENTIALITY
+
+    (A) The Software is the confidential and proprietary information of
+	Sun and/or its licensors. The terms of this Agreement and the
+	existence of this early access evaluation program constitute
+	confidential information of Sun. Licensee agrees not to
+	disclose confidential information to anyone except employees of
+	Licensee who have a need to know. The Software is protected by
+	United States copyright law and international treaty.
+	Unauthorized reproduction or distribution is subject to civil
+	and criminal penalties. Licensee agrees to take adequate steps
+	to protect the Software from unauthorized disclosure or use.
+
+    (B) In consideration for this Agreement, you are requested to
+	provide your confidential evaluation comments to Sun. Sun shall
+	be free to utilize your input or not with respect to any future
+	versions of the Software. All such comments shall constitute
+	confidential information of Sun.
+
+4.  TERM, TERMINATION AND SURVIVAL
+
+    (A) The Agreement is effective until expiration of the Term, unless
+	sooner terminated as provided for herein.
+
+    (B) Licensee may terminate this Agreement at any time by destroying
+	all copies of the Software.
+
+    (C) This Agreement will immediately terminate without notice if
+	Licensee fails to comply with any obligation of this
+	Agreement.
+
+    (D) Upon termination, Licensee must immediately cease use of and
+	destroy the Software or, upon request from Sun, return the
+	Software to Sun.
+
+    (E) The provisions set forth in paragraphs 2(B), 3, 7, 8, 9, and 10
+	will survive termination or expiration of this Agreement.
+
+5.  NO WARRANTY
+
+    THE SOFTWARE IS PROVIDED TO LICENSEE "AS IS". ALL EXPRESS OR
+    IMPLIED CONDITIONS, REPRESENTATIONS, AND WARRANTIES, INCLUDING ANY
+    IMPLIED WARRANTY OF MERCHANTABILITY, SATISFACTORY QUALITY, FITNESS
+    FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT, ARE DISCLAIMED,
+    EXCEPT TO THE EXTENT THAT SUCH DISCLAIMERS ARE HELD TO BE LEGALLY
+    INVALID.
+
+6.  MAINTENANCE AND SUPPORT
+
+    Sun has no obligation to provide maintenance, support, updates or
+    error corrections for the Software under this Agreement. In the
+    event Sun, in its sole discretion, provides updates to Licensee,
+    Licensee agrees to install and update the Software with such
+    updates within fifteen (15) days from notification by Sun of the
+    updates availability. Updates will be deemed Software hereunder and
+    unless subject to terms of a specific update license, will be
+    furnished to Licensee under the terms of this Agreement.
+
+7.  LIMITATION OF DAMAGES
+
+    TO THE EXTENT NOT PROHIBITED BY APPLICABLE LAW, SUN'S AGGREGATE
+    LIABILITY TO LICENSEE OR TO ANY THIRD PARTY FOR CLAIMS RELATING TO
+    THIS AGREEMENT, WHETHER FOR BREACH OR IN TORT, WILL BE LIMITED TO
+    THE FEES PAID BY LICENSEE FOR SOFTWARE WHICH IS THE SUBJECT MATTER
+    OF THE CLAIMS. IN NO EVENT WILL SUN BE LIABLE FOR ANY INDIRECT,
+    PUNITIVE, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGE IN CONNECTION
+    WITH OR ARISING OUT OF THIS AGREEMENT (INCLUDING LOSS OF BUSINESS,
+    REVENUE, PROFITS, USE, DATA OR OTHER ECONOMIC ADVANTAGE), HOWEVER
+    IT ARISES, WHETHER FOR BREACH OR IN TORT, EVEN IF SUN HAS BEEN
+    PREVIOUSLY ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. LIABILITY FOR
+    DAMAGES WILL BE LIMITED AND EXCLUDED, EVEN IF ANY EXCLUSIVE REMEDY
+    PROVIDED FOR IN THIS AGREEMENT FAILS OF ITS ESSENTIAL PURPOSE.
+
+8.  GOVERNMENT USER
+
+    Rights in Data: Use, duplication, or disclosure, to the U.S.
+    Government, of technical data, computer software and computer
+    software documentation, as specified in the license under which
+    the computer software was procured is subject to restrictions as
+    set forth in FAR 52.227-14(g)(2), FAR 52-227-19, DFARS
+    252.227-7015(b), and DFARS 227.7202-3(a), as applicable. Licensee
+    shall not provide Software nor technical data to any third party,
+    including the U.S. Government, unless such third party accepts the
+    same restrictions. Licensee is responsible for ensuring that proper
+    notice is given to all such third parties and that the Software and
+    technical data are properly marked.
+
+9.  EXPORT LAW
+
+    Licensee acknowledges and agrees that this Software and/or
+    technology is subject to the U.S.  Export Administration Laws and
+    Regulations. Diversion of such Software and/or technology contrary
+    to U.S. law is prohibited. Licensee agrees that none of this
+    Software and/or technology, nor any direct product therefrom, is
+    being or will be acquired for, shipped, transferred, or reexported,
+    directly or indirectly, to proscribed or embargoed countries or
+    their nationals, nor be used for nuclear activities, chemical
+    biological weapons, or missile projects unless authorized by the
+    U.S. Government. Proscribed countries are set forth in the U.S.
+    Export Administration Regulations. Countries subject to U.S.
+    embargo are: Cuba, Iran, Iraq, Libya, North Korea, Syria, and the
+    Sudan. This list is subject to change without further notice from
+    Sun, and Licensee must comply with the list as it exists in fact.
+    Licensee certifies that it is not on the U.S. Department of
+    Commerce's Denied Persons List or affiliated lists or on the U.S.
+    Department of Treasury's Specially Designated Nationals List.
+    Licensee agrees to comply
+
+    Licensee is responsible for complying with any applicable local
+    laws and regulations, including but not limited to, the export and
+    import laws and regulations of other countries.
+
+10. GOVERNING LAW, JURISDICTION AND VENUE
+
+    Any action related to this Agreement shall be governed by
+    California law and controlling U.S.  federal law, and choice of law
+    rules of any jurisdiction shall not apply. The parties agree that
+    any action shall be brought in the United States District Court for
+    the Northern District of California or the California superior
+    Court for the County of Santa Clara, as applicable, and the parties
+    hereby submit exclusively to the personal jurisdiction and venue of
+    the United States District Court for the Northern District of
+    California and the California Superior Court of the county of Santa
+    Clara.
+
+11. NO ASSIGNMENT
+
+    Neither party may assign or otherwise transfer any of its rights or
+    obligations under this Agreement, without the prior written consent
+    of the other party, except that Sun may assign its right to payment
+    and may assign this Agreement to an affiliated company.
+
+12. OFFICIAL LANGUAGE
+
+    The official text of this Agreement is in the English language and
+    any interpretation or construction of this Agreement will be based
+    thereon. In the event that this Agreement or any documents or
+    notices related to it are translated into any other language, the
+    English language version will control.
+
+13. ENTIRE AGREEMENT
+
+    This Agreement is the parties' entire agreement relating to the
+    Software. It supersedes all prior or contemporaneous oral or
+    written communications, proposals, warranties, and representations
+    with respect to its subject matter, and following Licensee's
+    acceptance of this license by typing "Yes", will prevail over any
+    conflicting or additional terms of any quote, order,
+    acknowledgment, or any other communications by or between the
+    parties. No modification to this Agreement will be binding, unless
+    in writing and signed by an authorized representative of each party.
+EOF
+agreed=
+while [ x$agreed = x ]; do
+    echo
+    echo "Do you agree to the above license terms? [yes or no] "
+    read reply leftover
+    case $reply in
+	y* | Y*)
+	    agreed=1;;
+	n* | n*)
+    echo "If you don't agree to the license you can't install this sofware";
+    exit 1;;
+    esac
+done
+if [ ! -w `pwd` ] ; then
+    echo "You do not have write permission to `pwd`"
+    echo "Vrml97 installation failed"
+    exit 1
+fi
+outname=install.sfx.$$
+echo "Unpacking..."
+tail +291 $0 > $outname
+if [ -x /usr/bin/sum ] ; then
+    echo "Checksumming..."
+
+    sum=`/usr/bin/sum $outname`
+    index=1
+    for s in $sum
+    do
+	case $index in
+	1)  sum1=$s;
+	    index=2;
+	    ;;
+	2)  sum2=$s;
+	    index=3;
+	    ;;
+	esac
+    done
+    if expr $sum1 != SUM1 || expr $sum2 != SUM2  ; then
+	echo "The download file appears to be corrupted.  Please refer"
+	echo "to the Troubleshooting section of the Installation"
+	echo "Instructions on the download page for more information."
+	echo "Please do not attempt to install this archive file."
+	rm -f $outname
+	exit 1
+    fi
+else
+    echo "Can't find /usr/bin/sum to do checksum.  Continuing anyway."
+fi
+echo "Extracting..."
+chmod u+x $outname
+./$outname
+rm -f $outname
+echo "Done."
+exit 0

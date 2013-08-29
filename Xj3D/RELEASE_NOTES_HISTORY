@@ -1,0 +1,881 @@
+These are release notes for Xj3D from M1 forward.  Each release will
+detail its functionality in meeting the applicable specifications and document
+any known issues.  If a feature works differently based on an encoding(utf8 or
+XML) it will be noted.
+
+Release: M8(December 10, 2003)
+-------------------------
+Major changes since M7:
+
+  SAI implementation
+     Java Issues:
+        some event model timing restrictions are incorrectly blocked.
+     ECMAScript:
+        rootNodes property of browser not implemented
+
+  Complete new input device handling implementation. Now completely generic
+      allowing anything from a mouse to joystick, to glove, to HMD to interact
+      with the scene. Mouse and keyboard nav is provided.
+
+  Elumens Dome/VisionStation support complete for the Java3D renderer.
+      (note requires installation of DLLs etc. Has a completely separate
+      installer and not part of the standard downloads).
+
+  Added new experimental application for doing file format conversions. Look
+      into the apps/converter directory. This will allow you to convert between
+      any of the encodings as well as X3D <-> VRML97.  Still very much a beta release right now.
+      Known issues with directOutput flag on scripts.
+
+  IndexedFaceSet: A lot of work going into the triangulation routines. Made
+      more efficient and sorted out a number of bugs to do with normal
+      generation and ccw handling.
+
+  Major rework of how textures are handled in the system
+  	Multitextures should now reliably load.
+  	Updated Multitexture to final specification.
+  	Experimental TextureProperties node available.
+
+  Lines and Points now use the emissive color for lighting.
+
+  TextureTransform fixed for scale/translation combinations.
+
+  Fixed bug preventing XML files from being used as the target for Inlines.
+
+  Fixed bug where Java scripts were not loading in XML files due to incorrect
+      attribute handling.
+
+  Initial implementation of DragSensors. They mainly work, but there's still
+      a few bugs around dealing with autoOffset/offset.
+
+  Basic NURBs nodes implementation. This is according to the original X3D ISO
+      spec document. In the final version, it is dramatically different, so use
+      at your own risk!
+
+  Fog is back functional again.
+
+  Background nodes fully functional.
+
+  apps/Xj3DBrowser is starting to look much more like a real browser now.
+    Cursor Shapes (including ability to custom defined them) is now provided
+        within the infrastructure. These are used anywhere that Xj3D provides a
+        canvas or higher abstraction of the viewing process. Setup immediately
+        for the SAI/EAI and Xj3DBrowser in the apps directory.
+
+    Files now correctly obey the file extensions when using the URL interface.
+        For X3D VRML-encoded files, you now _must_ have the .x3dv file extension.
+        The old .wrl file extension shall be only interpreted to mean VRML97
+        files. We also have the new mime-types handleded too, but there's no
+        content being served up from webservers using the new extension yet.
+
+  Billboard now functions correctly.
+
+  Last of the createVrmlFromUrl architecture updates are debugged. The entire
+      event model should work as advertised in the VRML97 spec now.
+
+  Anchors now pass conformance tests.  A few bugs fixed in this process.
+
+  Dot product fixed ecmascript VrmlMatrix
+
+  Initial binding of bindables now spec compliant.  Scripts which bind bindables
+  during initialize will work right.
+
+  Blank viewpoints not added to viewpoint list as spec recommendation
+
+  Bug 58 fixed.  JavascriptScriptWrapper doesn't set the error reporter on the Context object
+  before invoking the initialize method.
+
+  Bug 31 and 53 fixed.  Not getting all vrmlEvents using VrmlEventListener
+
+  Tilt navigation restored to browser.
+
+  Reload should work better in the browser.  World reloads are synched to the event model.
+
+  Bug 19 fixed.  Routes need to type check
+
+  Lots of PROTO related issues fixed.
+
+  MIDI input now available.  See the xj3d_sound component.
+
+  Parsing speed improvements for large sets of MF* fields. Anywhere from 20% to
+      70% faster.
+
+  EventUtilities debugging. Everything should be working as advertised now.
+
+  IndexedTriangleSet, TriangleSet nodes implemented.
+
+
+Release: M7(March 05, 2003)
+-------------------------
+Major changes since M6:
+
+Navigation fix to stop mouse stutter
+XML support for final ISO doctype, SF/MFString handling and meta tags.
+Block comments support in the VRML Classic Encoding
+Transparency fix for multiple transparent objects.
+Experimental Sound and Movie Texture.  Requires Java3D 1.3.1 beta.
+Initial drag sensor support.
+Touch Sensors on Cylinders fixed.
+
+These are release notes for Xj3D for M7.  If a feature works differently based
+on an encoding(utf8 or XML) it will be noted.
+
+Release: M6(January 03 , 2003)
+-------------------------
+Major changes since M5:
+    XML Parsing now a first class supported operation and handled seamlessly.
+	    Supports the latest spec release and further development work past
+	    current published spec. See the X3d-3.0.dtd file for the required
+	    document structure. Required some major restructuring of the parsing
+   	    code including lots of package shuffling.
+
+    Complete rewrite of all of the event model evaluation code. It is now
+  	    fully specification compliant. It is also much more efficient and
+	    generally renderer-independent. The only time it dips into renderer
+	    dependent code is for navigation and view-dependent actions.
+	    (ie sensors) No garbage generated and only updates all objects once
+	    per frame rather than after every eventIn recieved.
+
+    ECMAScript constructors now validated to work correctly. Had to rework a
+        lot of code in the builtin object representation to do this because of
+        limitations in the Rhino capabilities (and complete abscence of docs)
+
+    EXTERNPROTO debugging. Almost every gnarly example of PROTO/EXTERNPROTO that
+        we could find on the 'net works. We've run across quite a few doing dodgy
+        stuff such as cyclic DEF/USE constructs that are illegal in VRML that
+        some other browsers support.  There is one hard-to-reproduce timing
+        oriented bug left that we haven't fixed yet. About one in ten tries of
+        using heavily nested externprotos will cause one not to show, but
+        without crashes or any other indicator.
+
+    Full runtime support for an in-memory VRML scene with no rendered output.
+	   Not all works yet, no navigation or any sensors, just basics.
+
+    ProximitySensors now support position_changed and orientation_changed
+
+    VisibilitySensors more accurate about when they are detected
+
+    Protos and Externprotos coming and going from the scene graph work correctly
+	  for the inclusion of sensors and bindables.
+
+    Hex encoding of integer values works for all SF/MFInt32 fields.
+
+    MultiTexturing. Modified version of the Blaxxun proposal but more VRML-like.
+
+    LOD is back functional again.
+
+    Added support for MFImage and SF/MFColorRGBA. New field types defined by
+        the X3D spec.
+
+    Support for centerOfRotation field in X3D Viewpoint.  EXAMINE mode now sets
+    the orientation to look at this point and orbit around it.
+
+
+These are release notes for Xj3D for M6.  If a feature works differently based
+on an encoding(utf8 or XML) it will be noted.
+
+The following VRML concepts work:
+    parsing(utf8 and XML)
+        If the last line of the file is a comment the parser generates an error
+        Supports #* *# as a block comment character which has been changed to #/* */# in the spec.
+    DEF/USE(utf8 and XML)
+	PROFILE and COMPONENT(UTF8 nad XML)
+	    Profile and components definitions follow the ISO spec
+	IMPORT/EXPORT (utf8)
+	    Keywords are supported and exports work. Imports do not, but don't
+		crash or issue an error either (silent fail)
+    Routing(utf8 and XML)
+    Scripting(utf8)
+        JSAI(Java) supported
+        ECMAScript supported
+            Except - SFNode constructor with a string (eg new SFNode('Group[]');
+                   - VrmlMatrix implemented, not tested.Obscure setTransform
+                     stuff partially implemented (missing shear handling)
+        External (EAI 2.0) supported
+    Prototypes(utf8)
+        EXTERNPROTO as the first node not supported
+    Extern prototypes (utf8)
+    URN Resolution - Local resolution works, but you need to setup the application
+        to specify the correct installation path.  See DIYBrowser for an example.
+    GeoVRML support
+        GeoInline, GeoElevationGrid, GeoPositionInterpolator tested
+        Spec issues with GeoViewpoint
+    UMEL Support
+        Works, need to setup installation path. See DIYBrowser for an example.
+    LatticeXVL
+	    Works in general. May have broken something since M4, but that's more a
+		general proto issue.
+
+The following nodes work:
+    Anchor
+    Appearance
+    Box
+    Color
+    ColorInterpolator
+    Cone
+    Coordinate
+    CoordinateInterpolator
+    Cylinder
+    DirectionalLight
+    ElevationGrid
+    Extrusion
+    FontStyle
+    Group
+    ImageTexture
+    IndexedFaceSet
+    IndexedLineSet
+        Lighting uses diffuseColor instead of emissiveColor
+    Inline
+    LoadSensor
+    KeySensor
+    LOD
+    Material
+        Look at turning lighting off for emissive only decls
+    NavigationInfo
+    Normal
+    NormalInterpolator
+    OrientationInterpolator
+    PixelTexture
+    PointLight
+    PointSet
+        Lighting uses diffuseColor instead of emissiveColor
+    PositionInterpolator
+    ScalarInterpolator
+    Script
+    Shape
+    Sphere
+    SpotLight
+    StaticGroup
+    Switch
+    TextureCoordinate
+    TextureTransform
+    TimeSensor
+    Transform
+    Viewpoint
+    WorldInfo
+
+The following nodes have some implementation but are not finished:
+    AudioClip
+	Should work with 1.3.1 beta is released.  Otherwise a null sound warning is generated.
+    Background
+	    Textures work, no sky or ground colors.
+    Billboard
+	    Functions as grouping node only, no movement to face viewer.
+    Collision
+        Proxy not supported
+    Fog
+    	Needs to be patched into the new bindable handling.
+    Text
+  	Does not handle vertical rendering, horizontal only.  Sizing still looks weird.
+    Sound
+    TouchSensor
+        Does not support hitNormal and hitTexCoord changed events. hitPoint is
+  	    OK. isOver may need a little further testing, but should be generally
+	    reliable.
+
+The following VRML97 nodes are not implemented:
+    CylinderSensor
+    MovieTexture
+    PlaneSensor
+    SphereSensor
+
+Specific Issues with example programs:
+    browser
+        Reloading a file with multiple inlines using the same URL but not DEFed
+            will cause a multi_parent exception. Switching to a
+            SimpleLoadManager instead of a MemCacheLoadManager will resolve.
+        GeoVRML and UMEL local resolution not supported in pre-compiled code,
+            you need to specify the local installation path in DIYBrowser.java
+            and recompile.
+
+    loader
+        Works as advertised
+
+X3D specification Notes:
+
+SAI interfaces are provided but no implementation is yet available.
+
+Custom Xj3D Extensions:
+
+Surfaces/Overlays: Component named xj3d_overlay is available. A sort-of
+surfaces proposal, but has about 50% commonality. There as a strawman,
+but works completely. Expect the nodes to change over time, so don't get
+too accustomed to it. Node specs are available on the xj3d.org website.
+
+Particle systems. Component named xj3d_particles. No relation to the
+Blaxxun proposal as that is way too limiting. Some implementation notes
+available on xj3d.org. Not tested yet and only runs for the Java3D renderer.
+
+Release: M5(July 12, 2002)
+-------------------------
+Major changes since M4:
+	IMPORT/EXPORT parsed but doesn't work
+	Texture Improvements:
+		GIF support
+		faster texture loading
+		rescaling looks better
+	Fixed ProximitySensor problem with 0,0,10 viewpoints
+	J3D Loader Capability Bits specification
+	New Nodes:
+		Static Group
+		VisibilitySensor
+		LoadSensor
+		Overlay
+	OGL initial implementation
+	Collision
+		Collide = FALSE now supported
+	TouchSensor
+		now uses exact geometry instead of just bounds
+	DirectionalLight
+		Fixed incorrect ambient intensity default, was 0.2 now 0
+	Viewpoint
+		Fixed a bug where the viewpoint was wrong occassionly
+	TextureCache
+		Textures are cached by URL.  This will catch most textures that have
+		the same URL but not USEd.
+
+These are release notes for Xj3D for M5.  If a feature works differently based
+on an encoding(utf8 or XML) it will be noted.
+
+The following VRML concepts work:
+    parsing(utf8 and XML)
+        If the last line of the file is a comment the parser generates an error
+    DEF/USE(utf8 and XML)
+	PROFILE and COMPONENT(UTF8)
+	    Profile and components definitions follow the Siggraph 2002 draft spec
+	IMPORT/EXPORT (utf8)
+	    Keywords are supported and exports work. Imports do not, but don't
+		crash or issue an error either (silent fail)
+    routing(utf8 and XML)
+    Scripting(utf8)
+        JSAI(Java) supported
+        ECMAScript supported
+            Except - SFNode constructor with a string (eg new SFNode('Group[]');
+                   - VrmlMatrix implemented, not tested.Obscure setTransform
+                     stuff partially implemented (missing shear handling)
+        External (EAI 2.0) supported
+            begin/endUpdate, implemented, not fully supported
+    Prototypes(utf8)
+        Proto's cannot emulate sensors currently
+        EXTERNPROTO as the first node not supported
+    Extern prototypes (utf8)
+        Those containing bindables that are not the first node do not work
+        correctly for those nodes ie Viewpoint, NavigationInfo, BackGround, Fog
+    URN Resolution - Local resolution works, but you need to setup the application
+        to specify the correct installation path.  See DIYBrowser for an example.
+    GeoVRML support
+        GeoInline, GeoElevationGrid, GeoPositionInterpolator tested
+        Spec issues with GeoViewpoint
+    UMEL Support
+        Works, need to setup installation path. See DIYBrowser for an example.
+    LatticeXVL
+	    Works in general. May have broken something since M4, but that's more a
+		general proto issue.
+
+The following nodes work:
+    Anchor
+    Appearance
+    Box
+    Color
+    ColorInterpolator
+    Cone
+    Coordinate
+    CoordinateInterpolator
+    Cylinder
+    DirectionalLight
+    ElevationGrid
+    Fog
+    FontStyle
+    Group
+    ImageTexture
+    IndexedFaceSet
+    IndexedLineSet
+        Lighting uses diffuseColor instead of emissiveColor
+    Inline
+    LoadSensor
+    LOD
+        Gone backwards slightly from M3. Can't be USEd in a renderable node
+        parent. OK to USE with scripts. Java3D's Behaviours cannot be under a
+        SharedGroup, so this has been removed pending a *major* redesign of all
+        our dynamic behaviours system in M6.
+    Material
+        Look at turning lighting off for emissive only decls
+    NavigationInfo
+    Normal
+    OrientationInterpolator
+    PixelTexture
+        does not support hex encoding of values
+    PointLight
+    PointSet
+        Lighting uses diffuseColor instead of emissiveColor
+    PositionInterpolator
+    ScalarInterpolator
+    Script
+    Shape
+    Sphere
+    StaticGroup
+    Switch
+    TextureCoordinate
+    TextureTransform
+    TimeSensor
+    Transform
+    Viewpoint
+	All parent nodes to the root of the world must be non-DEF.  So animated viewpoint will not work.
+    WorldInfo
+
+The following nodes have some implementation but are not finished:
+    Background
+	Field handling done, but no rendering.
+    KeySensor
+	Mostly done but not hooked up to the event delivery mechanism.
+    ProximitySensor
+        Does not support position_changed or orientation_changed Cannot be
+        used under a DEF scene graph due to Java3D behaviour limitations. All
+        parent nodes to the root of the world must be non-DEF.
+    SpotLight
+        Not really complete.  Works mostly as a Point light
+        BeamWidth is currently ignored.  Need to convert to spreadAngle
+        radius is currently ignored.  Need to convert to spreadAngle
+    Text
+	Field handling done, but no rendering.
+    TouchSensor
+        Does not support hitNormal and hitTexCoord changed events. hitNormal is
+	OK. isOver may need a little further testing, but should be generally
+	reliable.
+    Collision
+        Proxy not supported
+    VisibilitySensor
+        Union of USE regions not handled correctly
+
+The following VRML97 nodes are not implemented:
+    AudioClip
+    Billboard
+    CylinderSensor
+    Extrusion
+    MovieTexture
+    NormalInterpolator
+    PlaneSensor
+    Sound
+    SphereSensor
+
+Specific Issues with example programs:
+    browser
+        Reloading a file with multiple inlines using the same URL but not DEFed
+            will cause a multi_parent exception. Switching to a
+            SimpleLoadManager instead of a MemCacheLoadManager will resolve.
+        GeoVRML and UMEL local resolution not supported in pre-compiled code,
+            you need to specify the local installation path in DIYBrowser.java
+            and recompile.
+
+    DOMViewer
+        Does not support scripts or protos in XML documents.
+        Since it sets every field of a node it can uncover bugs that DIYBrowser
+        won't.
+
+    editor
+        Really basic right now, not much testing done
+        Using nodes whichs contain urls will not work for http references,
+            causes an exception.
+
+    loader
+        Undergoing some major surgery currently.
+
+    SAI_DOM_Demo
+        Nonfunctional as of M3 release.
+
+X3D specification Notes:
+
+We are tracking behind the SAI release.  The currently provided SAI system
+works but is not current.
+
+XML part temporarily disabled from the build process while we work on the SAI
+proposal. The nodes there clash with our proposal and we suspect that the
+whole lot will disappear or be replaced with something much simpler.
+
+Custom Xj3D Extensions:
+
+A new component called Xj3D_Overlay is available. A sort-of surfaces proposal,
+but has about 50% commonality. There as a strawman, but works completely.
+Expect the nodes to change over time, so don't get too accustomed to it.
+Node specs are available on the xj3d.org website.
+
+Release: M4(Feb 19, 2002)
+-------------------------
+The following VRML concepts work:
+    parsing(utf8 and XML)
+    DEF/USE(utf8 and XML)
+    routing(utf8 and XML)
+    Scripting(utf8)
+        JSAI(Java) supported
+            Except ReplaceWorld
+		ECMAScript supported
+            Except - ReplaceWorld
+			       - SFNode constructor with a string (eg new SFNode('Group[]');
+				   - VrmlMatrix implemented, not tested.Obscure setTransform
+				     stuff partially implemented (missing shear handling)
+        External (EAI 2.0) supported
+            replaceWorld not yet supported
+            begin/endUpdate, implemented, not fully supported
+    Prototypes(utf8)
+        Proto's cannot emulate sensors currently
+	Extern prototypes (utf8)
+        Those containing bindables do not work correctly for those nodes
+            ie Viewpoint, NavigationInfo, BackGround, Fog
+
+The following nodes work:
+    Appearance
+    Box
+    Color
+    ColorInterpolator
+    Cone
+    Coordinate
+    CoordinateInterpolator
+    Cylinder
+    DirectionalLight
+    ElevationGrid
+    Fog
+    Group
+    ImageTexture
+        Scaling images looks awful.  Recommend you prescale content to power 2.
+        If an image is not USEd it will be reloaded from disk everytime
+        Known issues with transparency.
+        No support for GIF's
+    IndexedFaceSet
+    IndexedLineSet
+        Lighting uses diffuseColor instead of emissiveColor
+    Inline
+    LOD
+	    Gone backwards slightly from M3. Can't be USEd in a renderable node
+		parent. OK to USE with scripts. Java3D's Behaviours cannot be under a
+		SharedGroup, so this has been removed pending a *major* redesign of all
+		our dynamic behaviours system in M5.
+    Material
+        Look at turning lighting off for emissive only decls
+    NavigationInfo
+    Normal
+    OrientationInterpolator
+    PixelTexture
+        does not support hex encoding of values
+    PointSet
+        Lighting uses diffuseColor instead of emissiveColor
+    PositionInterpolator
+    ScalarInterpolator
+    Script
+    Shape
+    Sphere
+    Switch
+    TextureCoordinate
+    TextureTransform
+    TimeSensor
+    Transform
+    Viewpoint
+    WorldInfo
+
+The following nodes have some implementation but are not finished:
+    Anchor
+    Background
+    KeySensor
+    ProximitySensor
+        Does not support position_changed or orientation_changed
+        Incorrectly tests for all viewpoints instead of just moving.  So a PS
+        which encompases 0,0,10(default VP) will always be activated. Cannot be
+		used under a DEF scene graph due to Java3D behaviour limitations. All
+		parent nodes to the root of the world must be non-DEF.
+    SpotLight
+        Not really complete.  Works mostly as a Point light
+        BeamWidth is currently ignored.  Need to convert to spreadAngle
+        radius is currently ignored.  Need to convert to spreadAngle
+    TouchSensor
+        Does not support hitpoint changed events
+
+The following nodes are not implemented:
+    AudioClip
+    Billboard
+    Collision
+    CylinderSensor
+    Extrusion
+    FontStyle
+    MovieTexture
+    NormalInterpolator
+    PlaneSensor
+    Sound
+    SphereSensor
+    Text
+    VisibilitySensor
+
+Specific Issues with example programs:
+    browser
+        Reloading a file with inlines will cause a multi_parent exception.
+        Switching to a SimpleLoadManager instead of a MemCacheLoadManager will
+        resolve.
+
+	DOMViewer
+		Does not support scripts or protos.
+        Since it sets every field of a node it can uncover bugs that DIYBrowser
+        won't.
+
+    editor
+        Really basic right now, not much testing done
+        Navigation does not work.
+        Setting appearances/material does not work
+
+    loader
+        No known issues
+
+    SAI_DOM_Demo
+        Nonfunctional as of M3 release.
+
+
+Release: M3(Oct 26, 2001)
+-------------------------
+The following VRML concepts work:
+    parsing(utf8 and XML)
+    DEF/USE(utf8 and XML)
+    routing(utf8 and XML)
+    Scripting(utf8)
+        JSAI(Java) supported
+            Except ReplaceWorld
+			url field must be [""] not ""
+        External (EAI 2.0) supported
+            VrmlEventListener not working yet
+            replaceWorld not yet supported
+            begin/endUpdate not yet supported
+    Prototypes(utf8)
+        Extern prototypes not supported
+
+The following nodes work:
+    Appearance
+    Box
+    Color
+    ColorInterpolator
+        We interpolate in HSV space which has discontinuties.  Likely a spec
+        issue.  These causes some ColorInterpolations to stop.
+    Cone
+    Coordinate
+    CoordinateInterpolator
+    Cylinder
+    DirectionalLight
+    Fog
+    Group
+    ImageTexture
+        Scaling images looks awful.  Recommend you prescale content to power 2.
+        If an image is not USEd it will be reloaded from disk everytime
+        Known issues with transparency.
+        No support for GIF's
+    IndexedFaceSet
+    IndexedLineSet
+    Inline
+    LOD
+    Material
+        Look at turning lighting off for emissive only decls
+    NavigationInfo
+    Normal
+    OrientationInterpolator
+    PixelTexture
+        does not support hex encoding of values
+    PointSet
+    PositionInterpolator
+    ScalarInterpolator
+    Script
+    Shape
+    Sphere
+    Switch
+    TextureCoordinate
+    TextureTransform
+    TimeSensor
+    Transform
+    Viewpoint
+    WorldInfo
+
+The following nodes have some implementation but are not finished:
+    Anchor
+    Background
+    KeySensor
+    ProximitySensor
+        Does not support position_changed or orientation_changed
+        Incorrectly tests for all viewpoints instead of just moving.  So a PS
+        which encompases 0,0,10(default VP) will always be activated.
+    SpotLight
+        Not really complete.  Works mostly as a Point light
+        BeamWidth is currently ignored.  Need to convert to spreadAngle
+        radius is currently ignored.  Need to convert to spreadAngle
+    TouchSensor
+        Does not support hitpoint changed events
+
+The following nodes are not implemented:
+    AudioClip
+    Billboard
+    Collision
+    CylinderSensor
+    ElevationGrid
+    Extrusion
+    FontStyle
+    MovieTexture
+    NormalInterpolator
+    PlaneSensor
+    Sound
+    SphereSensor
+    Text
+    VisibilitySensor
+
+Specific Issues with example programs:
+    browser
+        Reloading a file with inlines will cause a multi_parent exception.
+        Switching to a SimpleLoadManager instead of a MemCacheLoadManager will
+        resolve.
+
+	DOMViewer
+		Does not support scripts or protos.
+        Since it sets every field of a node it can uncover bugs that DIYBrowser
+        won't.
+
+    editor
+        Really basic right now, not much testing done
+        Setting appearances/material does not work
+
+    loader
+        No known issues
+
+    SAI_DOM_Demo
+        Nonfunctional as of M3 release.
+
+Release: M2
+-----------
+The following VRML concepts work:
+	parsing(utf8 and XML)
+	DEF/USE
+	routing(utf8)
+	Scripting
+		JSAI(Java) supported
+			Except ReplaceWorld
+
+	Prototypes are not supported
+
+The following nodes are thought to work:
+	Appearance
+	Box
+	Color
+	ColorInterpolator
+	Cone
+	Coordinate
+	CoordinateInterpolator
+	Cylinder
+	DirectionalLight
+	Fog
+	Group
+	ImageTexture
+		Scaling images looks awful.  Use BufferedImage routines instead of Image
+		Slow loading
+		Known issues with transparency.
+		No support for GIF's
+	IndexedFaceSet
+	IndexedLineSet
+	Inline
+	LOD
+	Material
+		Look at turning lighting off for emissive only decls
+	NavigationInfo
+	Normal
+	OrientationInterpolator
+	PixelTexture
+		support hex encoding of values
+		test alpha channel usage
+	PointSet
+	PositionInterpolator
+	ScalarInterpolator
+	Shape
+	Sphere
+	Switch
+	TextureCoordinate
+	TextureTransform
+	TimeSensor
+	Transform
+	Viewpoint
+	WorldInfo
+
+The following nodes have some implementation but are not finished:
+	Anchor
+	Background
+	ColorInterpolator
+		Interps in CYK colorspace which looks wrong
+	KeySensor
+	ProximitySensor
+		Does not support position_changed or orientation_changed
+		Incorrectly tests for all viewpoints instead of just moving
+	SpotLight
+		Not really complete.  Works mostly as a Point light
+		BeamWidth is currently ignored.  Need to convert to spreadAngle
+		radius is currently ignored.  Need to convert to spreadAngle
+	TouchSensor
+		Does not support hitpoint changed events
+
+The following nodes are not implemented:
+	AudioClip
+	Billboard
+	Collision
+	CylinderSensor
+	ElevationGrid
+	Extrusion
+	FontStyle
+	MovieTexture
+	PlaneSensor
+	Sound
+	SphereSensor
+	Text
+	VisibilitySensor
+
+Release: M1
+-----------
+The following VRML concepts work:
+	parsing(utf8 and XML)
+	DEF/USE
+	routing(utf8)
+
+	prototypes are implemented but untested.
+	scripting is not implemented
+
+The following nodes are thought to work:
+	Appearance
+	Box
+	Color
+	ColorInterpolator
+	Cone
+	Coordinate
+	CoordinateInterpolator
+	Cylinder
+	DirectionalLight
+	Group
+	ImageTexture
+		Scaling images looks awful.  Use BufferedImage routines instead of Image
+		Also slow loading
+	IndexedFaceSet
+	IndexedLineSet
+	Inline
+	LOD
+	Material
+		Look at turning lighting off for emissive only decls
+	NavigationInfo
+	Normal
+	OrientationInterpolator
+	PixelTexture
+		support hex encoding of values
+		test alpha channel usage
+	PointSet
+	PositionInterpolator
+	ScalarInterpolator
+	Shape
+	Sphere
+	TextureCoordinate
+	TimeSensor
+	TouchSensor
+	Transform
+	Viewpoint
+	WorldInfo
+
+The following nodes have some implementation but are not finished:
+	Background
+	KeySensor
+	Script
+	SpotLight
+		Not really complete.  Works mostly as a Point light
+		BeamWidth is currently ignored.  Need to convert to spreadAngle
+		radius is currently ignored.  Need to convert to spreadAngle

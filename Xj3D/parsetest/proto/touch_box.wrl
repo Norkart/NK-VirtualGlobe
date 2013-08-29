@@ -1,0 +1,33 @@
+#VRML V2.0 utf8
+
+
+DEF Trans Transform {
+  children [
+    Shape {
+      geometry Box {}
+    }
+    DEF TS TouchSensor {
+    }
+  ]
+}
+
+
+DEF Mover PositionInterpolator {
+  key [0, 0.5, 1]
+  keyValue [
+    0 0 0
+    0 2 0
+    0 0 0
+  ]
+}
+
+DEF Time TimeSensor {
+  loop TRUE
+  cycleInterval 5
+  stopTime 2
+  startTime 1
+}
+
+ROUTE TS.touchTime TO Time.startTime
+ROUTE Time.fraction_changed TO Mover.set_fraction
+ROUTE Mover.value_changed TO Trans.set_translation

@@ -1,0 +1,149 @@
+#!/usr/bin/bash
+
+#Create the Eclipse install packages
+
+export VERSION="2-M1-DEV-20080118"
+export JAR_VERSION="2.0.0"
+export INSTDATA=/cygdrive/c/tmp/install_eclipse
+export INSTDATA_DOS="c:/tmp/install_eclipse"
+export NATIVEDIR=/cygdrive/c/tmp/native
+export JSDIR=/cygdrive/c/javaapis/rhino1_5R4_1
+export JOALDIR=/cygdrive/c/javaapis/joal/1.1b01
+export JINPUTDIR=/cygdrive/c/javaapis/jinput/dist
+export ODEDIR=/cygdrive/c/javaapis/odejava
+export INSTALL_COMPILE="c:/Progra~1/IzPack/bin/compile"
+export XZIPDIR="/cygdrive/c/Progra~1/7-Zip"
+export VECMATHDIR=/cygdrive/c/javaapis/java3d/1.4/lib
+export LOG4JDIR=/cygdrive/c/javaapis/log4j/jakarta-log4j-1.2.8/dist/lib
+export FINALDIR=/cygdrive/c/tmp/installers
+export FINALDIR_DOS="c:/tmp/installers"
+export JRELOCATION=/cygdrive/c/trans
+export JREINSTALL=j2re-1_4_2_11-windows-i586-p.exe
+
+export JARDIR=$INSTDATA/jars
+
+echo Creating install directories
+
+rm -rf $INSTDATA
+mkdir -p $INSTDATA
+mkdir -p $INSTDATA/eclipse
+mkdir -p $INSTDATA/eclipse/plugins
+
+
+cp jars/org.xj3d.* $INSTDATA/eclipse/plugins
+
+mkdir tmp
+mkdir tmp/org.xj3d.browser_$JAR_VERSION
+mkdir tmp/org.xj3d.libs_$JAR_VERSION
+
+cd tmp/org.xj3d.browser_$JAR_VERSION
+jar xvf $INSTDATA_DOS/eclipse/plugins/org.xj3d.browser_$JAR_VERSION.jar
+
+cd ../../tmp/org.xj3d.libs_$JAR_VERSION
+jar xvf $INSTDATA_DOS/eclipse/plugins/org.xj3d.libs_$JAR_VERSION.jar
+
+rm $INSTDATA_DOS/eclipse/plugins/org.xj3d.browser_$JAR_VERSION.jar
+rm $INSTDATA_DOS/eclipse/plugins/org.xj3d.libs_$JAR_VERSION.jar
+
+cd ..
+cp -r * $INSTDATA/eclipse/plugins
+cd ..
+
+rm -rf tmp
+
+cp src/eclipse/plugins/javax.vecmath_* $INSTDATA/eclipse/plugins
+cp src/eclipse/plugins/org.j3d.aviatrix3d* $INSTDATA/eclipse/plugins
+cp src/eclipse/plugins/org.j3d.core* $INSTDATA/eclipse/plugins
+cp src/eclipse/plugins/org.odejava.core_* $INSTDATA/eclipse/plugins
+cp src/eclipse/plugins/net.java.games.joal_* $INSTDATA/eclipse/plugins
+cp -r src/eclipse/plugins/org.j3d.opengl.swt_* $INSTDATA/eclipse/plugins
+
+Echo Creating Windows version
+
+cp -r src/eclipse/plugins/net.java.games.joal.win32.x86_* $INSTDATA/eclipse/plugins
+cp -r src/eclipse/plugins/org.j3d.opengl.swt.win32.x86_* $INSTDATA/eclipse/plugins
+cp -r src/eclipse/plugins/org.odejava.core.win32.x86_* $INSTDATA/eclipse/plugins
+
+cd $INSTDATA
+
+zip -r -q  Xj3D-${VERSION}-windows-eclipse.zip *
+
+mv "Xj3D-${VERSION}-windows-eclipse.zip" ${FINALDIR}
+
+rm -rf eclipse/plugins/net.java.games.joal.win32.x86_*
+rm -rf eclipse/plugins/org.j3d.opengl.swt.win32.x86_*
+rm -rf eclipse/plugins/org.odejava.core.win32.x86_*
+
+cd -
+
+Echo Creating Mac version
+
+cp -r src/eclipse/plugins/net.java.games.joal.osx.ppc_* $INSTDATA/eclipse/plugins
+cp -r src/eclipse/plugins/org.j3d.opengl.swt.carbon.macosx_* $INSTDATA/eclipse/plugins
+
+cd $INSTDATA
+
+zip -r -q  Xj3D-${VERSION}-macosx-eclipse.zip *
+
+mv "Xj3D-${VERSION}-macosx-eclipse.zip" ${FINALDIR}
+
+rm -rf eclipse/plugins/net.java.games.joal.osx.ppc_*
+rm -rf eclipse/plugins/org.j3d.opengl.swt.carbon.macosx_*
+
+cd -
+
+Echo Creating Mac Universal version
+
+cp -r src/eclipse/plugins/org.j3d.opengl.swt.carbon.macosx_* $INSTDATA/eclipse/plugins
+
+cd $INSTDATA
+
+zip -r -q  Xj3D-${VERSION}-macosx_universal-eclipse.zip *
+
+mv "Xj3D-${VERSION}-macosx_universal-eclipse.zip" ${FINALDIR}
+
+rm -rf eclipse/plugins/org.j3d.opengl.swt.carbon.macosx_*
+
+cd -
+
+Echo Creating Linux version
+
+cp -r src/eclipse/plugins/org.j3d.opengl.swt.linux.x86_* $INSTDATA/eclipse/plugins
+
+cd $INSTDATA
+
+zip -r -q  Xj3D-${VERSION}-linuxx86-eclipse.zip *
+
+mv "Xj3D-${VERSION}-linuxx86-eclipse.zip" ${FINALDIR}
+
+rm -rf eclipse/plugins/org.j3d.opengl.swt.linux.x86_0*
+
+cd -
+
+Echo Creating Linux 64 bit version
+
+cp -r src/eclipse/plugins/org.j3d.opengl.swt.linux.x86_64_* $INSTDATA/eclipse/plugins
+
+cd $INSTDATA
+
+zip -r -q  Xj3D-${VERSION}-linux_amd64-eclipse.zip *
+
+mv "Xj3D-${VERSION}-linux_amd64-eclipse.zip" ${FINALDIR}
+
+rm -rf eclipse/plugins/org.j3d.opengl.swt.linux.x86_64_*
+
+cd -
+
+Echo Creating Solaris version
+
+cp -r src/eclipse/plugins/org.j3d.opengl.swt.solaris.sparc_* $INSTDATA/eclipse/plugins
+
+cd $INSTDATA
+
+zip -r -q  Xj3D-${VERSION}-solaris_sparc-eclipse.zip *
+
+mv "Xj3D-${VERSION}-solaris_sparc-eclipse.zip" ${FINALDIR}
+
+rm -rf eclipse/plugins/org.j3d.opengl.swt.linux.x86_0*
+
+cd -

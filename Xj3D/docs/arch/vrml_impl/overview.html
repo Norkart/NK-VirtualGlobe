@@ -1,0 +1,208 @@
+<HTML>
+<HEAD>
+<TITLE>Xj3D VRML Implementation Overview</TITLE>
+</HEAD>
+<BODY>
+
+<H1 ALIGN="center">Xj3D VRML Implementation Overview</H1>
+
+Author: <I>Justin Couch</I><BR>
+Last updated: <I>$Date: 2001/07/04 11:45:04 $</I><BR>
+Revision: <I>$Revision: 1.2 $</I>
+
+<A NAME="intro">
+<H2>Intro</H2>
+</A>
+
+From an application developer's standpoint, the VRML implementation has two
+central requirements - abstract representation of VRML nodes, regardless of
+their implementation, and the ability to create a parser for VRML files so
+that VRML content may be used in their application.
+
+<H3>Background</H3>
+
+At the core of VRML is a <A HREF="../vrml/abstract_model.html">basic data
+model</A> of how the scene should be represented - regardless of the method
+of transmission (eg binary, XML or utf8). When building the XML parser we
+needed some way of abstracting the core representation from the parsing
+process as we had many different ways of being provided with VRML content
+while the old code was fixed towards only dealing with UTf8 content. This
+wedding of the code didn't make life easy so we set about to build a
+separate system that was robust and flexible, as required by the upcoming
+componentisation of VRML.
+<P>
+
+As developers, we also wanted to make sure that we could change parts when
+needed. The old codebase was fixed in use of Java3D. One of the other parts of
+the Web3D Consortium's Source code group is the
+<A HREF="http://www.web3d.org/TaskGroups/source/chiselIndex.html">Chisel/Vorlon</A>
+code that is now in the public domain. This does not provide any rendering
+capabilities at all, but still does all it's own parsing. Like the original
+Xj3D code, it is poorly structured and requires a great deal of effort to
+compile the code from scratch. It would be nice if overtime the two codebases
+could share common chunks of functionality, such as basic file parsing.
+
+<H3>Motivation</H3>
+
+One of the many things about standard Java development is the establishment of
+many core, reusable API sets. One of the missing features of VRML was a
+collection of reusable API sets. While we had the EAI and JSAI for driving
+already created VRML content, there was a critical lack of standard APIs for
+allowing any arbitrary application to use and generate VRML content.
+<P>
+
+Since we were already delving around trying to create abstract representations
+of the VRML scenegraph, we decided that there was only a small amount of extra
+work needed to produce a generalised representation that allows componentisation
+of the VRML handling process. Taking into account the good API design ideas from
+other areas of Java, we have built a flexible piece of kit that allows user to
+take only the amount of functionality required. The result that you see here
+are separate components for a parser, node representation and runtime handling
+based on the other abstract nodes.
+
+<P>
+<HR>
+
+<A NAME="structure">
+<H2>Structural Overview</H2>
+</A>
+
+The VRML implementation is based around three public packages of functionality.
+As part of the Xj3D codebase, we also provide another non-public package that
+is the implementation of a parser for UTF8 content. Each of these packages
+provide a set of generic interfaces that can be used to interact with the
+underlying implementation without knowing or caring what the implementation
+is.
+<P>
+
+From the <A HREF="../architecture.html#structure">main architecture diagram</A>
+, all the items represented in this series of documents relates to the VRML
+Component. This section does not deal with rendering implementation specific
+details, that is left to their appropriate documents.
+
+<H3>Code Layout</H3>
+
+Within the VRML Component there are five major packages that hold the basics
+of the system. These are represented in figure 1. Within each package there
+may be sub-packages that provide additional functionality, but they are not
+required to use the basic functionality.
+<P>
+
+<CENTER>
+<A HREF="vrml_packages.png">
+<IMG SRC="vrml_packages_small.png" WIDTH="206" HEIGHT="104"></A><BR>
+<B>Figure 1:</B> UML Structure diagram of the VRML Component and its major
+  packages.
+</CENTER>
+<P>
+
+The core package <CODE>lang</CODE> holds information that is central to the
+basic VRML language details. Principally, these are exceptions in the current
+iteration, but may include other classes in later revisions. A utilities
+package is provided for users with a number of non-essential, but useful tools
+that might be used in various implementations of the interfaces.
+<P>
+
+All packages use the <CODE>lang</CODE> for some functionality. The node
+representation and low-level parser API factories then abstract the VRML
+scene graph and parsing process. These also depend on the core package for
+some information representation. At the top of the dependency list is the
+<CODE>parser</CODE> package. This represents a particular parser implementation
+allowing the user to obtain a stream and then generate nodes and information
+from the stream containing VRML.
+<P>
+
+In the future, we expect there to be one more package available here - the
+interface to the various scripting engines. It is not included because we have
+not started the specification of this interface.
+
+<P>
+<HR>
+
+<H3>Package Summaries</H3>
+
+This section defines a basic outline of each package and its functionality.
+Use the links in each header to jump to implementation specific details.
+
+<H4><A HREF="lang.html">lang</A></H4>
+
+The core package provides classes and interfaces that represent the common
+functionality used by all the VRML code. Currently this is mainly exceptions
+that pass error information about a caller providing invalid information for
+fields and nodes within a VRML file.
+
+<H4><A HREF="util.html">util</A></H4>
+
+The util package contains utility classes that help build content and
+implementations of the other interfaces in this component. For example, the
+basic interfaces just provide raw field information is it is read from a file.
+Before using this information, we want to check that the values are within
+range etc for that field. The utils classes provide easy, convenient handling
+of this.
+
+<H4><A HREF="nodes.html">nodes</A></H4>
+
+Here you will find the basic representation of each of the node types defined
+in the <A HREF="../vrml/abstract_model.html">VRML Abstract data model</A>. As
+the VRML specification is extensible and we can never know which nodes might
+be provided, the interfaces do not present every concrete node. Instead they
+provide enough typing information to know how to assemble themselves within a
+scenegraph structure and runtime information.
+
+<H4><A HREF="sav.html">sav</A></H4>
+
+This is the Simple API for VRML parsing. A set of callback structures that
+can be registered with a VRML parser to give a serialised stream of information
+as a file containing VRML content is created. This is modelled on the widely
+used XML <A HREF="http://www.megginson.com/sax/">SAX</A> API.
+
+<H4><A HREF="parser.html">parser</A></H4>
+
+An abstract representation of the bootstrap mechanism required to create a
+VRML parser without knowing the implementation classes. Allows the swapping
+of different parser implementations without effecting the rest of the
+application.
+
+<H3>Scripting</H3>
+
+Scripting is such a large part of the VRML specification that it works its
+way into all of the above packages. While there are packages devoted to
+individual scripting languages, and even different versions of the
+specification in any one language, the effects are that the scripting classes
+are spread through many different packages.
+
+<H4><A HREF="scripting.html">Script Management</A></H4>
+
+At the core of the codebase is a system designed to support any language that
+a user may care to implement. Although the VRML97 specification only describes
+Java and ECMAScript with a normative section, it is possible that research
+groups would like to implement other languages (eg J/Python). This section is
+devoted to providing a basic infrastructure for any language.
+
+<H4><A HREF="jsai.html">VRML97 Java (JSAI)</A></H4>
+
+Being an all Java implementation, the most important place to start is by
+supporting the existing Java specification. The JSAI specification uses the
+<CODE>vrml</CODE>, <CODE>vrml.node</CODE> and <CODE>vrml.field</CODE> packages
+to provide functionality. This explains how we build a Java based scripting
+engine to support JSAI scripts.
+
+<H4><A HREF="sai.html">VRML200x SAI</A></H4>
+
+Not implemented yet.
+
+<P>
+<HR>
+
+<H2>References</H2>
+
+<UL>
+<LI><A HREF="http://www.web3d.org/Specifications/VRML97/">VRML97 Specification</A></LI>
+<LI><A HREF="http://www.web3d.org/TaskGroups/x3d/specification-2000july/part1/Part1Index.html">
+    VRML 2000x Draft Specification</A></LI>
+<LI><A HREF="http://www.web3d.org/TaskGroups/source/chiselIndex.html">Chisel/Vorlon</A>
+    Public Domain VRML reduction tools at Web3d.org.</LI>
+</UL>
+
+</BODY>
+</HTML>

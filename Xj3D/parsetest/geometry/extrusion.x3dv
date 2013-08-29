@@ -1,0 +1,15 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+    Transform {
+
+          children 
+		
+                Shape{
+                      geometry Extrusion{
+                                  crossSection [ -1 -1, -1 1, 1 1, 1 -1, -1 -1]
+                                  spine [0 -1 0 , 0 1 0 ]} 
+                } 
+
+    }

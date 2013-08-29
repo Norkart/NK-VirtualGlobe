@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='ISO-8859-1'  ?>
+<!DOCTYPE toc
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+<toc version="2.0" topicimage="topic">
+   <tocitem text="Xj3D">
+      <tocitem text="Big Picture" expand="true">
+      <tocitem text="Introduction"		target="Introduction"/>
+      <tocitem text="Contributors"		target="Contributors" />
+      <tocitem text="Terms"			target="Terms"/>
+   </tocitem>
+
+   <tocitem text="Icons" expand="false">
+      <tocitem text="open"			target="IconOpen"/>
+      <tocitem text="reload"			target="IconReload"/>
+      <tocitem text="Fly"			target="IconFly"/>
+      <tocitem text="Pan"			target="IconPan"/>
+      <tocitem text="Tilt"			target="IconTilt"/>
+      <tocitem text="Walk"			target="IconWalk"/>
+      <tocitem text="Examine"			target="IconExamine"/>
+      <tocitem text="Previous Viewpoint"	target="IconPrevious"/>
+      <tocitem text="Viewpoint List"		target="IconList"/>
+      <tocitem text="Next Viewpoint"		target="IconNext"/>
+      <tocitem text="Return to Current Viewpoint"	target="IconReturn"/>
+      <tocitem text="Look At"			target="IconLook"/>
+      <tocitem text="Fit to World"		target="IconFit"/>
+      <tocitem text="Console"		target="IconConsole"/>
+   </tocitem>
+   <tocitem text="Keyboard Shortcuts" target="Keyboard" />
+   <tocitem text="Command Line Arguments" target="CommandLine" />
+
+
+  </tocitem>
+</toc>
+
+

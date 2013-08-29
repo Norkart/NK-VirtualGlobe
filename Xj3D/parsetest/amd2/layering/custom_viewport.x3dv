@@ -1,0 +1,60 @@
+#X3D V3.2 utf8
+
+PROFILE Immersive
+COMPONENT Layering:2
+COMPONENT EnvironmentalEffects:3
+
+# Shows a custom viewport that always occupies the entire bottom
+# of the screen
+
+# The content defined for the base layer
+DEF TG Transform {
+  children Shape {
+    geometry Box {}
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+  }
+}
+
+Background {
+  skyColor 0.2 0.2 0.2
+}
+
+
+# A second layer to show that we do have stuff on screen
+LayerSet {  
+  order [ 0 1 ]
+  layers [
+    Layer {
+      viewport CustomViewport {
+        fixedX FALSE
+        fixedY FALSE
+        fixedWidth FALSE
+        x -0.5
+        y -0.5
+        width 1.0
+        height 64
+      }
+      children [
+        TextureBackground {
+          transparency 0.5
+          skyColor 0 0.5 0
+        }
+        DEF TG_LAYER Transform {
+          translation 0.3 0.4 0
+          children Shape {
+            geometry Box {}
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 1 0
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

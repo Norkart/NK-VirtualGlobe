@@ -1,0 +1,17 @@
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0 Interactive//EN" 
+  "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile="Immersive" version="3.0">
+
+<Scene>
+
+<ProtoDeclare name="BSHeadsUpDisplay">
+<ProtoInterface>
+    <field name="bearingRT" type="SFRotation" accessType="inputOnly"/>
+</ProtoInterface>
+<ProtoBody>
+   <Group />
+</ProtoBody>
+</ProtoDeclare>
+
+</Scene>
+</X3D>

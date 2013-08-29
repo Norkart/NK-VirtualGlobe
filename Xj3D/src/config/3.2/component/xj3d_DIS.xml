@@ -1,0 +1,12 @@
+<componentConfig>
+  <component name="xj3d_DIS" title="Xj3D DIS Extension component" levels="1" url="http://www.yumetech.com/">
+    <nodeLocation type="java3d" package="org.web3d.vrml.renderer.j3d.nodes.dis"/>
+    <nodeLocation type="null" package="org.web3d.vrml.renderer.norender.nodes.dis"/>
+    <nodeLocation type="ogl" package="org.web3d.vrml.renderer.ogl.nodes.dis"/>
+    <nodeLocation type="mobile" package="org.web3d.vrml.renderer.mobile.nodes.dis"/>
+    <componentLevel level="1">
+      <node name="DISEntityManager"/>
+      <node name="DISEntityTypeMapping"/>
+    </componentLevel>
+  </component>
+</componentConfig>

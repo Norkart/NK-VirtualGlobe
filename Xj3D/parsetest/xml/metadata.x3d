@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<!-- Rocky (version 0.1): an open source X3D plug-in for Maya  -->
+<X3D profile="Immersive">
+    <Scene>
+        <Switch DEF='HiddenNodeContainer' whichChoice='-1'>
+            <MetadataSet DEF='SupremeMetadataSet' containerField='metadata'>
+                <MetadataDouble DEF='metadataDouble1' containerField='value'>
+                </MetadataDouble>
+                <!-- end of metadataDouble1 -->
+                <MetadataDouble DEF='metadataDouble2' containerField='value'>
+                </MetadataDouble>
+                <!-- end of metadataDouble2 -->
+                <MetadataFloat DEF='metadataFloat1' name='goodData' reference='http://blahblah.org/blah.html#blah' value='0.3000000119 -10 4.5' containerField='value'>
+                    <MetadataDouble USE='metadataDouble1' containerField='metadata'/>
+                </MetadataFloat>
+                <!-- end of metadataFloat1 -->
+                <MetadataFloat DEF='metadataFloat2' containerField='value'>
+                </MetadataFloat>
+                <!-- end of metadataFloat2 -->
+                <MetadataInteger DEF='metadataInteger1' containerField='value'>
+                </MetadataInteger>
+                <!-- end of metadataInteger1 -->
+                <MetadataInteger DEF='metadataInteger2' value='0 0 0 0 0' containerField='value'>
+                </MetadataInteger>
+                <!-- end of metadataInteger2 -->
+                <MetadataString DEF='metadataString1' value='one two three' containerField='value'>
+                </MetadataString>
+                <!-- end of metadataString1 -->
+                <MetadataSet DEF='metadataSet1' name='moreGoodData' reference='http://blahblah.org/blah.html#blah' containerField='value'>
+                    <MetadataDouble USE='metadataDouble2' containerField='metadata'/>
+                    <MetadataFloat USE='metadataFloat1' containerField='value'/>
+                    <MetadataInteger USE='metadataInteger2' containerField='value'/>
+                    <MetadataFloat USE='metadataFloat2' containerField='value'/>
+                    <MetadataInteger USE='metadataInteger1' containerField='value'/>
+                    <MetadataString USE='metadataString1' containerField='value'/>
+                    <MetadataDouble USE='metadataDouble1' containerField='value'/>
+                </MetadataSet>
+                <!-- end of metadataSet1 -->
+            </MetadataSet>
+            <!-- end of SupremeMetaSet -->
+        </Switch>
+        <!-- end of HiddenNodeContainer -->
+    </Scene>
+</X3D>

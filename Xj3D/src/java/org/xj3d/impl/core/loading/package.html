@@ -1,0 +1,25 @@
+<html>
+<body>
+<p>
+Implementations of various content loading strategies that work with the
+interfaces and structures defined in the package {@link org.xj3d.core.loading}.
+</p>
+
+<p>
+The content loading process needs to be customised depending on the type of
+content being loaded. For example, script loading needs to also access the
+{@link org.web3d.vrml.scripting.ScriptEngine} interface during the load process
+to see if a specific script type is supported, yet texture loading will not.
+Each of the loaders in this package implement their respective loader
+interfaces and make use of the global
+{@link org.xj3d.core.loading.LoaderThreadPool} to schedule the loading.
+</p>
+
+<h3>Properties</h3>
+
+<p>
+The following properties are in use by classes in this package.
+</p>
+
+</body>
+</html>

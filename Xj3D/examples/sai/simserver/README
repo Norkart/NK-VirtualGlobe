@@ -1,0 +1,23 @@
+This example shows how to use Xj3D as world simulation server.
+A world is loaded that contains an autonomous underwater vehicle and
+some moving objects in the way.  The robot has 3 whisker sensors
+which detect whether an object is in the way of its travel.  It will
+report whenever it hits something.  Smarter code might actually
+do something about this problem instead of running them over!
+
+To run:
+
+In window 1:
+   java PickServer
+     use -visual to see the results
+
+In window 2:
+   java AUVController
+
+AUVController.java - Sends control messages to the AUV.  Mimics receiving
+real telemetry data from an AUV.  Also moves targets around randomly.  In
+a real simulation this traffic would come from several sources.
+
+PickerServer.java - Detects and reports whether the whiskers hit a target.
+Loads pick_world.x3dv which describes the world the robot is in.  Also include
+the LinePicker used to detect targets.

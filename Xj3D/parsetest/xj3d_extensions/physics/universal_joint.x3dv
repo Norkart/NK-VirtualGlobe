@@ -1,0 +1,60 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_RigidBodyPhysics:2
+
+Group {
+  children [
+    DEF BOX-GEOM-1 CollidableShape {
+      shape Shape {
+        appearance Appearance {
+          material Material {
+	    emissiveColor 1 0 0 
+	  }
+	}
+	geometry Box {
+	  size 1 0.2 0.2
+	}
+      }
+    }
+    DEF BOX-GEOM-2 CollidableShape {
+      shape Shape {
+        appearance Appearance {
+          material Material {
+	    emissiveColor 0 0 1 
+	  }
+	}
+	geometry Box {
+	  size 1 0.2 0.2
+	}
+      }
+    }
+  ]
+}
+
+RigidBodyCollection {
+  bodies [ 
+    DEF BODY-1 RigidBody {
+      mass 0.1
+      position 0.5 0 0
+      angularVelocity 0.5 0 0
+      geometry [ USE BOX-GEOM-1 ] 
+      useGlobalGravity FALSE
+    }
+    DEF BODY-2 RigidBody {
+      mass 0.1
+      position -0.35355 -0.35355 0
+      orientation 0 0 1 0.7854
+      geometry [ USE BOX-GEOM-2 ] 
+      useGlobalGravity FALSE
+    }
+  ]
+  joints[
+    UniversalJoint {
+      body1 USE BODY-1
+      body2 USE BODY-2
+      axis1 0.7071 0.7071 0
+      axis2 0 0 1
+    }
+  ]
+}

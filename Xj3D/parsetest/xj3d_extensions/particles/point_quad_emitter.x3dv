@@ -1,0 +1,23 @@
+#X3D V3.0 utf8
+
+PROFILE Interactive
+COMPONENT xj3d_ParticleSystem:1
+
+Viewpoint {
+  position 0 0 4
+}
+
+NavigationInfo {
+  headlight FALSE
+}
+
+ParticleSystem {
+  geometryType "QUAD"
+  maxParticles 100
+  emitter PointEmitter {
+    speed 0.2
+  }
+  appearance Appearance {
+    material Material { emissiveColor 1 0 0 }
+  }
+}

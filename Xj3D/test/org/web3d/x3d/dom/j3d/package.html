@@ -1,0 +1,14 @@
+<html>
+<body>
+Utility classes to convert an arbitrary X3D DOM into a Java3D runtime structure
+that may be executed and displayed.
+<p>
+
+The implementation is partially limited in how it functions. If the DOM is
+capable of supporting DOM 2 events then we will register and operate event
+listeners between the DOM and the rendering core. However, we cannot operate
+in the opposite direction - changes in the rendering core are not currently
+reflected in the DOM as attributes and structure changes.
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0 Interactive//EN" 
+  "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile="Immersive">
+	<component name="xj3d_overlay" level="1"/>
+	<Scene>
+		<Overlay>
+			<BorderLayout horizontalAlign="&quot;CENTER&quot;" horizontalFraction="0.5" verticalAlign="&quot;BOTTOM&quot;">
+				<GridLayout gridSize="1 3" containerField="children">
+					<Text2D bboxSize="128 32" string="&quot;Info&quot;" textColor="0 1 1" backgroundColor="1 0 0" transparency="0.9"/>
+					<Text2D DEF="InfoText" bboxSize="128 32" string="&quot;URL&quot;" textColor="1 1 1" backgroundColor="0 0 0"/>
+				</GridLayout>
+			</BorderLayout>
+		</Overlay>
+	</Scene>
+</X3D>

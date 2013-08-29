@@ -1,0 +1,55 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+# Start with the timesensor set to loop, but the loop conditions
+# are so that it should not be looping. Later, when the user clicks
+# on the object, start and stop time are set to the same value, thus
+# causing it to start looping next frame.
+DEF TS TimeSensor {
+  cycleInterval 10
+  stopTime 1
+}
+
+DEF TG Transform {
+  rotation 0 1 0 0.78
+  children [
+     Shape {
+    geometry Box {}
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+  }
+  DEF TOUCH TouchSensor {}
+  ]
+}
+
+DEF PI PositionInterpolator {
+  key [ 0 0.25 0.5 0.75 1 ]
+  keyValue [
+     0 0 0
+    -1 0 0
+    -1 1 0
+     0 1 0
+     0 0 0
+  ]
+}
+
+ROUTE TS.fraction_changed TO PI.set_fraction
+ROUTE PI.value_changed TO TG.translation
+
+DEF STARTER Script {
+   inputOnly SFTime touchTime
+   outputOnly SFTime time
+   url ["ecmascript:
+      function touchTime(val) {
+        time = val;
+      }
+    "]
+ }
+ 
+ROUTE TOUCH.touchTime TO STARTER.touchTime
+ROUTE STARTER.time TO TS.startTime
+ROUTE STARTER.time TO TS.stopTime

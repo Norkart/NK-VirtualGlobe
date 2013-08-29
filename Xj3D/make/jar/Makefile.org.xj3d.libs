@@ -1,0 +1,49 @@
+#*********************************************************************
+#
+#  (C) 2001 - 2006 Web3d Consortium
+#    http://www.web3d.org/
+# 
+# Package makefile producing org.xj3d.libs_.jar
+#
+# Author: Justin Couch
+# Version: $Revision: 1.4 $
+#
+#*********************************************************************
+
+# A version number we tack onto the JAR file name for eclipse versioning
+# purposes.
+JAR_VERSION=2.0.0
+
+# Describe every directory that you want included in the JAR file here.
+# This is not recursive, so if you want parent directory and the 
+# sub-directory, say so. These directories should not have '/' appended.
+
+# This needs some files to not crash
+JAR_CONTENT=
+
+# Include the following pre-generated JARs from the JAR directory into
+# this JAR file. This assumes that the JAR has already been built before
+# this JAR is built.
+INCLUDE_JARS=
+
+# Include the following JARs from the lib directory into this JAR file. 
+INCLUDE_LIBS=dis.jar \
+  disxml.jar \
+  FastInfoset.jar \
+  geoapi-nogenerics-2.1-M2.jar \
+  gnu-regexp-1.0.8.jar \
+  gt2-main-2.3.1.jar \
+  gt2-referencing-2.3.1.jar \
+  httpclient.jar \
+  jinput.jar \
+  jsr108-0.01.jar \
+  jutils.jar \
+  smack.jar \
+  smackx.jar \
+  uri.jar \
+  vlc_uri.jar 
+
+# Manifest file name. Stored in the make/manifest directory
+MANIFEST=org.xj3d.libs.mf
+
+include ${PROJECT_ROOT}/make/Makefile.jav

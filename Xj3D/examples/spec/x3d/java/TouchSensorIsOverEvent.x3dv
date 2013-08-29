@@ -1,0 +1,36 @@
+#X3D V3.0 utf8
+
+#   Web3d.org Copyright (c) 2001-2005
+#        X3D Source
+#
+# This source is licensed under the BSD license.
+# Please read docs/BSD.txt for the text of the license.
+#
+# This software comes with the standard NO WARRANTY disclaimer for any
+# purpose. Use it at your own risk. If there's a problem you get to fix it.
+
+PROFILE Immersive
+
+Group {
+    children [
+        Shape {
+            appearance Appearance {
+                material DEF MAT Material {
+                    diffuseColor 0 0 1
+                }
+            }
+            geometry Box {}
+        }
+        DEF TS TouchSensor {}
+    ]
+}
+
+DEF SC Script {
+    inputOnly SFBool isOver
+    outputOnly SFColor diffuseColor_changed
+
+    url ["SAIExample1.class"]
+}
+
+ROUTE TS.isOver TO SC.isOver
+ROUTE SC.diffuseColor_changed TO MAT.set_diffuseColor

@@ -1,0 +1,49 @@
+<HTML>
+<BODY>
+
+Classes that provide X3D DOM document capabilities.
+<P>
+
+The classes here can be used to create a DOM model from scratch. There are
+two ways of doing this: either through a parser for an existing document or
+by building a new document programmatically.
+<P>
+
+<H3>Document Parsing</H3>
+
+To parse a document to return these classes, it is advised that you use the
+{@link org.web3d.x3d.jaxp.X3DDocumentBuilderFactory} in the parent package.
+This will automatically create a document of the correct type and populate it
+accordingly.
+<P>
+
+<H3>New Document Building</H3>
+
+If your application would like to build a new document from scratch, then it
+will start with the {@link org.web3d.x3d.jaxp.dom.X3DDocument} as an instance.
+You can then provide profile information for the types of nodes to be built.
+As per the W3C DOM recommendations, you should build the documents based on
+the Document class and it's methods. If you do this, then it will guarantee
+a model that implements both the SAI and DOM classes providing nice behaviour
+in either direction.
+
+<H3>SAI - DOM Integration</H3>
+
+If you select to use the default factory for producing elements, then the
+documents produced will guarantee that the SAI and DOM methods may be mixed.
+It will allow a mixed mode operation such as this:
+
+<PRE>
+Element el = document.getElementById("MyTransformGroup");
+TransformGroup tg = (TransformGroup)el;
+tg.setTranslation(new Vector3Field(0, 1, 1));
+</PRE>
+
+Use of any other factory will not guarantee this behaviour.
+
+@see <a href="http://www.web3d.org/Taskgroups/x3d/sai/">SAI Doc</A>
+@see <a href="http://java.sun.com/xml/">SUN's XML</A>
+@see <a href="http://www.w3.org/TR/">W3C Reports and Publications</A>
+
+</BODY>
+</HTML>

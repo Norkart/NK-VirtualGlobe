@@ -1,0 +1,38 @@
+#X3D V3.0 utf8
+
+PROFILE Interactive
+COMPONENT xj3d_ParticleSystem:1
+
+Viewpoint {
+  position 0 0 4
+}
+
+ParticleSystem {
+  geometryType "POINT"
+  maxParticles 100
+  emitter DEF EMITTER PointEmitter {
+    speed 0.1
+  }
+  appearance Appearance {
+    material Material { diffuseColor 1 0 0 }
+  }
+}
+
+DEF TS TimeSensor {
+  cycleInterval 10
+  loop TRUE
+}
+
+DEF PI PositionInterpolator {
+  key [ 0 0.25 0.5 0.75 1 ]
+  keyValue [
+     0 0 0
+    -1 0 0
+    -1 1 0
+     0 1 0
+     0 0 0
+  ]
+}
+
+ROUTE TS.fraction_changed TO PI.set_fraction
+ROUTE PI.value_changed TO EMITTER.position

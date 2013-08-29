@@ -1,0 +1,27 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+DEF SC Script {
+  mustEvaluate TRUE
+  directOutput FALSE
+  inputOnly SFTime touchInput
+
+  url [ "EventTest.class" ]
+}
+
+Group {
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 0 0
+        }
+      }
+      geometry Box {}
+    }
+    DEF TS TouchSensor {}
+  ]
+}
+
+ROUTE TS.touchTime TO SC.touchInput

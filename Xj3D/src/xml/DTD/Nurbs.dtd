@@ -1,0 +1,208 @@
+<!--
+		Nurbs 1.0 Document Type Definition (DTD)
+
+ Description:	Define the Nurbs tag and attribute profile for X3D.
+		These X3D native nodes will correspond to forthcoming
+		VRML ExternProto declarations.
+
+ 		Elements in this tagset are enabled by setting the 
+		NurbsProfile entity to "INCLUDE" at the top of an 
+		X3D scene file, as shown in several examples such as
+		examples/Nurbs/newNurbsScene.xml.  This flag then 
+		triggers inclusion of the Nurbs tags in the 
+		x3d-compromise.dtd tagset.  Thus the Nurbs.dtd
+		demonstrates X3D extensibility for profiles.
+
+ Status:	Under development.  Working node prototypes needed.
+ 		Compact form also needed (eliminate all field tags except
+ 		inputCoord and outputCoord).
+
+ Authors:	blaxxun interactive proposed the Nurbs extensions,
+		Don Brutzman produced XML encoding of Nurbs nodes for X3D
+
+ Reference:	Nurbs Extension for VRML 97 proposal
+ 		http://www.blaxxun.com/developer/contact/3d/nurbs/overview.html
+		http://www.blaxxun.com/support/developerguide/developer/contact/3d/nurbs/spec/nurbsproposal.html
+		
+ Issues:	- why isn't a complete set of prototype implementations available?
+ 		- nodeTypeHints need to be checked, proposal and examples inconsistent
+ 		- what are NurbsCurve2ILS and NurbsSurface2ILS? Utility prototypes?
+ 		  (yes)
+ 		- should they be included in the DTD and extension profile?
+ 		  (no, but these can be good example/prototype authoring assists)
+ 		- how is (unimplemented) NurbsTextureSurface utilized?  examples?
+ 		- what is default value of NurbsCurve tessellation, 0? (yes)
+ 		- should NurbsPositionInterpolator have more fields:
+ 		  fraction (is in prototype; how else to set fraction along curve)? (yes)
+ 		  value (is in prototype; how else to get output)? (yes)
+ 		  key (probably not, keyValues probably correspond to knots)?
+ 		  dimension (probably not, but mentioned in description paragraph)?
+ 		  computeTangent, tangent (seem important to add)?
+
+ Address:	http://www.web3D.org/TaskGroups/x3d/translation/Nurbs.dtd
+
+ Created:	  7 November 2000
+
+ Revised:	 30 December 2002
+-->
+
+<!-- Field tags for contained nodes -->
+
+<!ELEMENT inputCoord		( Coordinate? ) >
+<!ELEMENT inputTransform	( Transform?  ) >
+<!ELEMENT outputCoord		( Coordinate? ) >
+
+<!-- Nurbs nodes -->
+
+<!ELEMENT Contour2D (IS?, ( %ChildrenNodes; | %WildcardNodes; )* ) >
+<!ATTLIST Contour2D
+	bboxCenter	%SFVec3f;	"0 0 0"	
+	bboxSize	%SFVec3f;	"-1 -1 -1"	
+	nodeType	NMTOKEN 	#FIXED	"Group"
+	containerField NMTOKEN "children"
+	class         	CDATA		""
+	DEF		ID		#IMPLIED
+	USE		IDREF		#IMPLIED>
+
+<!ELEMENT CoordinateDeformer (IS?, (
+   (inputCoord, ((outputCoord,	((inputTransform,( %ChildrenNodes; | %WildcardNodes; )*) | (( %ChildrenNodes; | %WildcardNodes; )*,inputTransform)?)?) |
+		(inputTransform,((outputCoord,( %ChildrenNodes; | %WildcardNodes; )*) | (( %ChildrenNodes; | %WildcardNodes; )*,outputCoord?))?) |
+		(( %ChildrenNodes; | %WildcardNodes; )*,((outputCoord,inputTransform?) | (inputTransform,outputCoord?))?) )? )
+ | (outputCoord, ((inputCoord, ((inputTransform,( %ChildrenNodes; | %WildcardNodes; )*) | (( %ChildrenNodes; | %WildcardNodes; )*,inputTransform)?)?) |
+		(inputTransform,((inputCoord,( %ChildrenNodes; | %WildcardNodes; )*) | (( %ChildrenNodes; | %WildcardNodes; )*,inputCoord?))?) |
+		(( %ChildrenNodes; | %WildcardNodes; )*,((inputCoord,inputTransform?) | (inputTransform,inputCoord?))?) )? )
+ | (inputTransform, ((outputCoord,((inputCoord,( %ChildrenNodes; | %WildcardNodes; )*) | (( %ChildrenNodes; | %WildcardNodes; )*,inputCoord?))?) |
+		(inputCoord,((outputCoord,( %ChildrenNodes; | %WildcardNodes; )*) | (( %ChildrenNodes; | %WildcardNodes; )*,outputCoord?))?) |
+		(( %ChildrenNodes; | %WildcardNodes; )*,((outputCoord,inputCoord?) | (inputCoord,outputCoord?))?) )? )
+ | (( %ChildrenNodes; | %WildcardNodes; )*, (	(outputCoord,	((inputCoord,inputTransform?) | (inputTransform,inputCoord?))?) |
+		(inputCoord,((outputCoord,inputTransform?) | (inputTransform,outputCoord?))?) |
+		(inputTransform,((outputCoord,inputCoord?) | (inputCoord,outputCoord?))?) )? )?
+) )>
+<!ATTLIST CoordinateDeformer
+	uDimension	%SFInt32;	"0"
+	vDimension	%SFInt32;	"0"
+	wDimension	%SFInt32;	"0"
+	uKnot		%MFFloat;	#IMPLIED
+	vKnot		%MFFloat;	#IMPLIED
+	wKnot		%MFFloat;	#IMPLIED
+	uOrder		%SFInt32;	"2"
+	vOrder		%SFInt32;	"2"
+	wOrder		%SFInt32;	"2"
+	controlPoint	%MFVec3f;	#IMPLIED
+	weight		%MFFloat;	#IMPLIED
+	bboxCenter	%SFVec3f;	"0 0 0"	
+	bboxSize	%SFVec3f;	"-1 -1 -1"	
+	nodeType	NMTOKEN 	#FIXED	"Group"
+	containerField NMTOKEN "children"
+	class         	CDATA		""
+	DEF		ID		#IMPLIED
+	USE		IDREF		#IMPLIED>
+	
+<!ELEMENT NurbsCurve (IS?) >
+<!ATTLIST NurbsCurve
+	knot		%MFFloat;	#IMPLIED
+	order		%SFInt32;	"3"
+	controlPoint	%MFVec3f;	#IMPLIED
+	weight		%MFFloat;	#IMPLIED
+	tessellation	%SFInt32;	"0"
+	nodeType	NMTOKEN 	#FIXED	"IndexedLineSet"
+	containerField NMTOKEN "geometry"
+	class         	CDATA		""
+	DEF		ID		#IMPLIED
+	USE		IDREF		#IMPLIED>
+
+<!ELEMENT NurbsCurve2D (IS?) >
+<!ATTLIST NurbsCurve2D
+	knot		%MFFloat;	#IMPLIED
+	order		%SFInt32;	"3"
+	controlPoint	%MFVec2f;	#IMPLIED
+	weight		%MFFloat;	#IMPLIED
+	tessellation	%SFInt32;	"0"
+	nodeType	NMTOKEN 	#FIXED	"IndexedLineSet"
+	containerField NMTOKEN "geometry"
+	class         	CDATA		""
+	DEF		ID		#IMPLIED
+	USE		IDREF		#IMPLIED>
+
+<!ELEMENT NurbsGroup (IS?, (%ChildrenNodes; | %WildcardNodes; )* ) >
+<!ATTLIST NurbsGroup
+	tessellationScale	%SFFloat;	"1.0"
+	bboxCenter		%SFVec3f;	"0 0 0"	
+	bboxSize		%SFVec3f;	"-1 -1 -1"	
+	nodeType		NMTOKEN 	#FIXED	"Group"
+	containerField NMTOKEN "children"
+	class         		CDATA		""
+	DEF			ID		#IMPLIED
+	USE			IDREF		#IMPLIED>
+
+<!ELEMENT NurbsPositionInterpolator (IS?) >
+<!ATTLIST NurbsPositionInterpolator
+	knot			%MFFloat;	#IMPLIED
+	order			%SFInt32;	"3"
+	set_fraction		%SFFloat;	#FIXED ""
+	keyValue		%MFVec3f;	#IMPLIED
+	keyWeight		%MFFloat;	#IMPLIED
+	value_changed		%SFVec3f;	#FIXED ""
+	computeTangent		%SFBool;	"false"
+	tangent			%SFVec3f;	#IMPLIED
+	nodeType		NMTOKEN #FIXED	"PositionInterpolator"
+	containerField NMTOKEN "children"
+	class         		CDATA		""
+	DEF			ID	#IMPLIED
+	USE			IDREF	#IMPLIED>
+
+<!ELEMENT NurbsSurface (IS?, ( %TextureCoordinateNodes; )? ) >
+<!ATTLIST NurbsSurface
+	uDimension	%SFInt32;	"0"
+	vDimension	%SFInt32;	"0"
+	uKnot		%MFFloat;	#IMPLIED
+	vKnot		%MFFloat;	#IMPLIED
+	uOrder		%SFInt32;	"3"
+	vOrder		%SFInt32;	"3"
+	controlPoint	%MFVec3f;	#IMPLIED
+	weight		%MFFloat;	#IMPLIED
+	uTessellation	%SFInt32;	"0"
+	vTessellation	%SFInt32;	"0"
+	ccw		%SFBool;  	"true"
+	solid		%SFBool;  	"true"
+	nodeType	NMTOKEN 	#FIXED	"IndexedFaceSet"
+	containerField NMTOKEN "geometry"
+	class         	CDATA		""
+	DEF		ID		#IMPLIED
+	USE		IDREF		#IMPLIED>
+
+<!ELEMENT NurbsTextureSurface (IS?) >
+<!ATTLIST NurbsTextureSurface
+	uDimension	%SFInt32;	"0"
+	vDimension	%SFInt32;	"0"
+	uKnot		%MFFloat;	#IMPLIED
+	vKnot		%MFFloat;	#IMPLIED
+	uOrder		%SFInt32;	"3"
+	vOrder		%SFInt32;	"3"
+	controlPoint	%MFVec3f;	#IMPLIED
+	weight		%MFFloat;	#IMPLIED
+	nodeType	NMTOKEN 	#FIXED	"TextureCoordinate"
+	containerField NMTOKEN "texCoord"
+	class         	CDATA		""
+	DEF		ID		#IMPLIED
+	USE		IDREF		#IMPLIED>
+
+<!ELEMENT Polyline2D (IS?) >
+<!ATTLIST Polyline2D
+	point		%MFVec2f;	#IMPLIED
+	nodeType	NMTOKEN 	#FIXED	"IndexedLineSet"
+	containerField NMTOKEN "geometry"
+	class         	CDATA		""
+	DEF		ID		#IMPLIED
+	USE		IDREF		#IMPLIED>
+
+<!-- single NurbsSurface, preceded or followed by Contour2D -->
+
+<!ELEMENT TrimmedSurface (IS?, ((NurbsSurface,Contour2D*) | (Contour2D+,NurbsSurface,Contour2D*)) ) >
+<!ATTLIST TrimmedSurface
+	nodeType	NMTOKEN 	#FIXED	"IndexedFaceSet"
+	containerField NMTOKEN "geometry"
+	class         	CDATA		""
+	DEF		ID		#IMPLIED
+	USE		IDREF		#IMPLIED>
+

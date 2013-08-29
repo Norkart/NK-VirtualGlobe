@@ -1,0 +1,36 @@
+#VRML V2.0 utf8
+
+Transform {
+  translation 0 1.2 0
+  children [
+    Shape {
+      geometry Box {size 1 1 1}
+    }
+    DEF TS TouchSensor {}
+
+  ]
+}
+
+DEF S Script {
+  eventIn SFVec3f set_hitPoint_changed
+  eventIn SFVec3f set_hitNormal_changed
+  eventIn SFBool set_isOver
+  eventOut SFColor color_changed
+  url "javascript:
+     function set_hitPoint_changed(value) {
+        print('HitPoint: ' + value.x + ' ' + value.y);
+     }
+     function set_hitNormal_changed(value) {
+        print('HitNormal: ' + value.x + ' ' + value.y + ' ' + value.z);
+     }
+     function set_isOver(value) {
+        print('isOver: ' + value);
+     }
+  "
+}
+
+ROUTE TS.hitPoint_changed TO S.set_hitPoint_changed
+ROUTE TS.hitNormal_changed TO S.set_hitNormal_changed
+ROUTE TS.isOver TO S.set_isOver
+
+

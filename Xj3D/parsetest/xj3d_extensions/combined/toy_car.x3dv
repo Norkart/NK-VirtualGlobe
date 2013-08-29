@@ -1,0 +1,410 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_RigidBodyPhysics:2
+COMPONENT xj3d_IODevice:2
+
+# An example that combines the wheel to control a car that can be driven over
+# various objects in the terrain. 
+# The wheel controls the steering
+# The throttle controls base speed (brake applies reverse)
+
+# Where are we viewing from?
+Viewpoint { 
+#  position 10 2 0 
+#  orientation 0 1 0 1.5712
+   position 0 2 49
+#position 0 100 50
+#orientation 1 0 0 -1  
+}
+
+Background {
+  skyColor [ 0 1 0  0 0 1  0 0 0 ]
+  skyAngle [ 1.5712 3.142 ]
+}
+
+NavigationInfo {
+  type "NONE"
+}
+
+# This group contains all the renderable stuff in the scene
+Group {
+  children [
+    DEF CAR-CONTAINER Group {
+      children [
+        DEF FRONT-LEFT-WHEEL-TX Transform {
+          translation -0.8 0.5 -1.5
+	  children DEF WHEEL-SHAPE Transform {
+	    rotation 0 0 1 1.572 
+	    children Shape {
+	      appearance Appearance {
+                material Material {
+		  emissiveColor 1 0 0 
+	        }
+	      }
+	      geometry Cylinder { 
+	        radius 0.5
+	        height 0.1
+	      }
+	    }
+	  }
+	}
+        DEF FRONT-RIGHT-WHEEL-TX Transform {
+          translation 0.9 0.5 -1.5
+	  children USE WHEEL-SHAPE
+	}
+        DEF BACK-LEFT-WHEEL-TX Transform {
+          translation -0.9 0.5 1.5
+	  children USE WHEEL-SHAPE
+	}
+        DEF BACK-RIGHT-WHEEL-TX Transform {
+          translation 0.9 0.5 1.5
+	  children USE WHEEL-SHAPE
+	}
+	DEF CAR-BODY-TX Transform {
+	  # Untransform the geometry relative to the center of mass
+	  children [
+	    Shape {
+	      appearance Appearance {
+	        material Material {
+		  emissiveColor 0.8 0.8 0
+		}
+	      }
+   	      geometry DEF CHASSIS-BOX Box { size 1.8 0.2 5 }
+	    }
+	    Transform {
+	      translation 0 0.4 0
+	      children [
+  	        Shape {
+	          appearance Appearance {
+	            material Material {
+		      emissiveColor 0 0 0.8
+		      transparency 0.5
+		    }
+	          }
+   	          geometry Box { size 1.8 1 5.1 }
+		}
+              ]
+	    }
+	  ]
+	}
+      ] 
+    }
+    DEF TERRAIN-CONTAINER Group {
+      children [
+        DEF GROUND-GEOM CollidableShape {
+          translation 0 -0.5 0
+          shape Shape {
+            appearance Appearance {
+              material Material {
+	        emissiveColor 0 1 0
+	      }
+	    }
+	    geometry Box { size 100 0.1 100 }
+          }
+	}
+        DEF BACK-WALL-GEOM CollidableShape {
+          translation 0 50 -50
+          shape DEF WALL-BOX-SHAPE Shape {
+            appearance Appearance {
+              material Material {
+	        emissiveColor 0 1 1
+		transparency 0.1
+	      }
+	    }
+	    geometry Box { size 100 100 0.1 }
+          }
+	}
+        DEF FRONT-WALL-GEOM CollidableShape {
+          translation 0 50 50
+          shape USE WALL-BOX-SHAPE
+	}
+        DEF RIGHT-WALL-GEOM CollidableShape {
+          translation 50 50 0
+	  rotation 0 1 0 1.5712
+          shape USE WALL-BOX-SHAPE
+	}
+        DEF LEFT-WALL-GEOM CollidableShape {
+          translation -50 50 0
+	  rotation 0 1 0 1.5712
+          shape USE WALL-BOX-SHAPE
+	}
+
+        DEF RAMP-GEOM CollidableShape {
+	  rotation 0 0 1 0.156
+	  translation 10 -0.8 0
+	  shape Shape {
+            appearance Appearance {
+              material Material {
+	        emissiveColor 0 0 1
+	      }
+	    }
+	    geometry Box { size 2 1 4 }
+	  }
+	}
+      ]
+    }
+  ]
+}
+
+# Put all the physics models stuff here. 
+DEF BODY-COLLECTION RigidBodyCollection {
+  errorCorrection 1
+  constantForceMix 0.001
+  contactSurfaceThickness 0.001
+  bodies [
+    DEF FRONT-LEFT-WHEEL-BODY RigidBody {
+      useFiniteRotation TRUE
+      position -0.9 0.5 -2.5
+      mass 10
+      massDensityModel DEF WHEEL-MASS Sphere { radius 0.5 }
+      geometry DEF FRONT-LEFT-WHEEL-GEOM CollidableShape {
+        shape DEF WHEEL-GEOM Shape {
+	  geometry USE WHEEL-MASS
+	}
+      }
+    }
+    DEF FRONT-RIGHT-WHEEL-BODY RigidBody {
+      useFiniteRotation TRUE
+      position 0.9 0.5 -2.5
+      mass 10
+      massDensityModel USE WHEEL-MASS
+      geometry DEF FRONT-RIGHT-WHEEL-GEOM CollidableShape {
+        shape USE WHEEL-GEOM
+      }
+    }
+    DEF BACK-LEFT-WHEEL-BODY RigidBody {
+      useFiniteRotation TRUE
+      position -0.9 0.5 2.5
+      mass 10
+      massDensityModel USE WHEEL-MASS
+      geometry DEF BACK-LEFT-WHEEL-GEOM CollidableShape {
+        shape USE WHEEL-GEOM
+      }
+    }
+    DEF BACK-RIGHT-WHEEL-BODY RigidBody {
+      useFiniteRotation TRUE
+      position 0.9 0.5 2.5
+      mass 10
+      massDensityModel USE WHEEL-MASS
+      geometry DEF BACK-RIGHT-WHEEL-GEOM CollidableShape {
+        shape USE WHEEL-GEOM
+      }
+    }
+    DEF CAR-BODY RigidBody {
+      position 0 0.5 0 
+      massDensityModel USE CHASSIS-BOX 
+      geometry DEF CAR-BODY-GEOM CollidableShape {
+      	shape Shape {
+      	  geometry USE CHASSIS-BOX
+   	}
+      }
+      mass 900
+    }
+  ]
+  joints [
+    DEF FRONT-LEFT-JOINT DoubleAxisHingeJoint {
+      axis1 0 1 0
+      axis2 1 0 0
+      anchorPoint -0.9 0.5 -2.5
+      minAngle1 0
+      maxAngle1 0
+      desiredAngularVelocity2 0
+      maxTorque1 10
+      body1 USE CAR-BODY
+      body2 USE FRONT-LEFT-WHEEL-BODY
+      suspensionForce 0.004
+      suspensionErrorCorrection 0.25
+      mustOutput [ "body2Axis" "hinge1Angle" ]
+    }
+    DEF FRONT-RIGHT-JOINT DoubleAxisHingeJoint {
+      axis1 0 1 0
+      axis2 1 0 0
+      anchorPoint 0.9 0.5 -2.5
+      minAngle1 0
+      maxAngle1 0
+      desiredAngularVelocity2 0
+      maxTorque1 10
+      body1 USE CAR-BODY
+      body2 USE FRONT-RIGHT-WHEEL-BODY
+      suspensionForce 0.004
+      suspensionErrorCorrection 0.25
+    }
+    DEF BACK-LEFT-JOINT DoubleAxisHingeJoint {
+      axis1 0 1 0
+      axis2 1 0 0
+      anchorPoint -0.9 0.5 2.5
+      minAngle1 0
+      maxAngle1 0
+      desiredAngularVelocity2 0
+      maxTorque1 100
+      body1 USE CAR-BODY
+      body2 USE BACK-LEFT-WHEEL-BODY
+      suspensionForce 0.004
+      suspensionErrorCorrection 0.25
+      mustOutput "body2Axis"
+    }
+    DEF BACK-RIGHT-JOINT DoubleAxisHingeJoint {
+      axis1 0 1 0
+      axis2 1 0 0
+      anchorPoint 0.9 0.5 2.5
+      minAngle1 0
+      maxAngle1 0
+      desiredAngularVelocity2 0
+      maxTorque1 100
+      body1 USE CAR-BODY
+      body2 USE BACK-RIGHT-WHEEL-BODY
+      suspensionForce 0.004
+      suspensionErrorCorrection 0.25
+    }
+  ]
+  collider DEF COLLISION-GROUP CollisionCollection {
+    frictionCoefficients 250 0
+    softnessConstantForceMix 0.0001
+    softnessErrorCorrection 0.1
+    bounce 0.3
+    minBounceSpeed 0.3
+    collidables [
+#      DEF CAR-SPACE CollisionSpace {
+#        collidables [
+	  USE FRONT-LEFT-WHEEL-GEOM
+	  USE FRONT-RIGHT-WHEEL-GEOM
+	  USE BACK-LEFT-WHEEL-GEOM
+	  USE BACK-RIGHT-WHEEL-GEOM
+	  USE CAR-BODY-GEOM
+	  
+	  USE FRONT-WALL-GEOM
+	  USE RIGHT-WALL-GEOM
+	  USE LEFT-WALL-GEOM
+	  USE BACK-WALL-GEOM
+#        ]
+#      }
+#      DEF TERRAIN-SPACE CollisionSpace {
+#        collidables [
+	  USE GROUND-GEOM
+	  USE RAMP-GEOM
+#        ]
+#      }
+    ]
+  }
+}
+
+DEF COLLISION-OUTPUT CollisionSensor {
+  collidables USE COLLISION-GROUP
+}
+
+ROUTE FRONT-LEFT-WHEEL-BODY.position_changed TO FRONT-LEFT-WHEEL-TX.set_translation
+ROUTE FRONT-LEFT-WHEEL-BODY.orientation_changed TO FRONT-LEFT-WHEEL-TX.set_rotation
+
+ROUTE FRONT-RIGHT-WHEEL-BODY.position_changed TO FRONT-RIGHT-WHEEL-TX.set_translation
+ROUTE FRONT-RIGHT-WHEEL-BODY.orientation_changed TO FRONT-RIGHT-WHEEL-TX.set_rotation
+
+ROUTE BACK-LEFT-WHEEL-BODY.position_changed TO BACK-LEFT-WHEEL-TX.set_translation
+ROUTE BACK-LEFT-WHEEL-BODY.orientation_changed TO BACK-LEFT-WHEEL-TX.set_rotation
+
+ROUTE BACK-RIGHT-WHEEL-BODY.position_changed TO BACK-RIGHT-WHEEL-TX.set_translation
+ROUTE BACK-RIGHT-WHEEL-BODY.orientation_changed TO BACK-RIGHT-WHEEL-TX.set_rotation
+
+ROUTE FRONT-LEFT-JOINT.body2Axis TO FRONT-LEFT-WHEEL-BODY.set_finiteRotationAxis
+ROUTE FRONT-RIGHT-JOINT.body2Axis TO FRONT-RIGHT-WHEEL-BODY.set_finiteRotationAxis
+ROUTE BACK-LEFT-JOINT.body2Axis TO BACK-LEFT-WHEEL-BODY.set_finiteRotationAxis
+ROUTE BACK-RIGHT-JOINT.body2Axis TO BACK-RIGHT-WHEEL-BODY.set_finiteRotationAxis
+
+
+ROUTE CAR-BODY.position_changed TO CAR-BODY-TX.set_translation
+ROUTE CAR-BODY.orientation_changed TO CAR-BODY-TX.set_rotation
+
+DEF CAR-CONTROL-SCRIPT Script {
+  directOutput TRUE
+  initializeOnly SFFloat speedLimit 20
+  initializeOnly SFFloat steeringLimitAngle  0.70714 #0.5236    # 30 degrees 
+  initializeOnly SFFloat steeringDeadspot 0.01
+  initializeOnly SFFloat maxEngineTorque 150
+  initializeOnly SFFloat maxBrakingTorque 60
+  initializeOnly SFNode chassis USE CAR-BODY-GEOM
+  initializeOnly SFNode frontLeftWheel USE FRONT-LEFT-WHEEL-GEOM
+  initializeOnly SFNode frontRightWheel USE FRONT-RIGHT-WHEEL-GEOM
+  initializeOnly SFNode backLeftWheel USE BACK-LEFT-WHEEL-GEOM
+  initializeOnly SFNode backRightWheel USE BACK-RIGHT-WHEEL-GEOM
+  initializeOnly MFNode terrain [
+    USE GROUND-GEOM
+    USE RAMP-GEOM
+    USE FRONT-WALL-GEOM
+    USE RIGHT-WALL-GEOM
+    USE LEFT-WALL-GEOM
+    USE BACK-WALL-GEOM
+  ]
+  initializeOnly MFNode bodies [
+    USE FRONT-LEFT-WHEEL-BODY
+    USE FRONT-RIGHT-WHEEL-BODY
+    USE BACK-LEFT-WHEEL-BODY
+    USE BACK-RIGHT-WHEEL-BODY
+  ]
+  inputOutput SFFloat brakeBias 0.8
+  inputOutput SFFloat engineBias 1.0
+  inputOutput SFFloat dragCoefficient 0.25
+  inputOnly SFBool reverseSelected
+  inputOnly MFNode collisionContacts
+  inputOnly SFVec3f carVelocity
+  inputOnly SFRotation carOrientation
+  inputOnly SFFloat currentSteeringAngle
+  inputOnly SFFloat wheelAcceleratorInput
+  inputOnly SFFloat wheelDirectionInput
+  inputOnly SFVec3f frontWheelOrientation
+  inputOnly SFVec3f rearWheelOrientation
+  outputOnly MFNode correctedContacts
+  outputOnly SFRotation correctedChassisOrientation
+  outputOnly SFFloat frontWheelMinStop
+  outputOnly SFFloat frontWheelMaxStop
+  outputOnly SFFloat steeringSpeed
+  outputOnly SFFloat rearWheelSpeed
+  outputOnly SFFloat frontWheelTorque
+  outputOnly SFFloat rearWheelTorque
+  outputOnly SFVec3f frontAxleAxis
+  outputOnly SFVec3f rearAxleAxis
+  outputOnly MFVec3f frictionForces
+  url "CarControlScript.class"
+}
+
+DEF WHEEL WheelSensor { name "Wheel-0" }
+DEF GAMEPAD GamepadSensor { name "Gamepad-0" }
+
+ROUTE WHEEL.wheelX TO CAR-CONTROL-SCRIPT.wheelDirectionInput
+ROUTE WHEEL.throttleSlider TO CAR-CONTROL-SCRIPT.wheelAcceleratorInput
+ROUTE WHEEL.button2 TO CAR-CONTROL-SCRIPT.reverseSelected
+
+ROUTE GAMEPAD.leftStickX      TO CAR-CONTROL-SCRIPT.wheelDirectionInput
+ROUTE GAMEPAD.rightStickY     TO CAR-CONTROL-SCRIPT.wheelAcceleratorInput
+ROUTE GAMEPAD.l1Button        TO CAR-CONTROL-SCRIPT.reverseSelected
+
+ROUTE FRONT-LEFT-JOINT.body2Axis TO CAR-CONTROL-SCRIPT.frontWheelOrientation
+ROUTE BACK-LEFT-JOINT.body2Axis TO CAR-CONTROL-SCRIPT.rearWheelOrientation
+ROUTE COLLISION-OUTPUT.contacts TO CAR-CONTROL-SCRIPT.collisionContacts
+ROUTE CAR-BODY.linearVelocity TO CAR-CONTROL-SCRIPT.carVelocity
+ROUTE CAR-BODY.orientation TO CAR-CONTROL-SCRIPT.carOrientation
+ROUTE FRONT-LEFT-JOINT.hinge1Angle TO CAR-CONTROL-SCRIPT.currentSteeringAngle
+
+ROUTE CAR-CONTROL-SCRIPT.frontWheelMinStop TO FRONT-LEFT-JOINT.set_minAngle1
+ROUTE CAR-CONTROL-SCRIPT.frontWheelMinStop TO FRONT-RIGHT-JOINT.set_minAngle1
+ROUTE CAR-CONTROL-SCRIPT.frontWheelMaxStop TO FRONT-LEFT-JOINT.set_maxAngle1
+ROUTE CAR-CONTROL-SCRIPT.frontWheelMaxStop TO FRONT-RIGHT-JOINT.set_maxAngle1
+ROUTE CAR-CONTROL-SCRIPT.steeringSpeed TO FRONT-LEFT-JOINT.desiredAngularVelocity1
+ROUTE CAR-CONTROL-SCRIPT.steeringSpeed TO FRONT-RIGHT-JOINT.desiredAngularVelocity1
+
+ROUTE CAR-CONTROL-SCRIPT.rearWheelSpeed TO FRONT-LEFT-JOINT.set_desiredAngularVelocity2
+ROUTE CAR-CONTROL-SCRIPT.rearWheelSpeed TO FRONT-RIGHT-JOINT.set_desiredAngularVelocity2
+ROUTE CAR-CONTROL-SCRIPT.rearWheelSpeed TO BACK-LEFT-JOINT.set_desiredAngularVelocity2
+ROUTE CAR-CONTROL-SCRIPT.rearWheelSpeed TO BACK-RIGHT-JOINT.set_desiredAngularVelocity2
+ROUTE CAR-CONTROL-SCRIPT.frontWheelTorque TO FRONT-LEFT-JOINT.set_maxTorque2
+ROUTE CAR-CONTROL-SCRIPT.frontWheelTorque TO FRONT-RIGHT-JOINT.set_maxTorque2
+ROUTE CAR-CONTROL-SCRIPT.rearWheelTorque TO BACK-LEFT-JOINT.set_maxTorque2
+ROUTE CAR-CONTROL-SCRIPT.rearWheelTorque TO BACK-RIGHT-JOINT.set_maxTorque2
+
+ROUTE CAR-CONTROL-SCRIPT.frontAxleAxis TO FRONT-LEFT-JOINT.set_axis2
+ROUTE CAR-CONTROL-SCRIPT.frontAxleAxis TO FRONT-RIGHT-JOINT.set_axis2
+ROUTE CAR-CONTROL-SCRIPT.rearAxleAxis TO BACK-LEFT-JOINT.set_axis2
+ROUTE CAR-CONTROL-SCRIPT.rearAxleAxis TO BACK-RIGHT-JOINT.set_axis2
+
+#ROUTE CAR-CONTROL-SCRIPT.frictionForces TO CAR-BODY.set_forces
+ROUTE CAR-CONTROL-SCRIPT.correctedContacts TO BODY-COLLECTION.set_contacts
+ROUTE CAR-CONTROL-SCRIPT.correctedChassisOrientation TO CAR-BODY.set_orientation

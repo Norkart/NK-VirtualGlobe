@@ -1,0 +1,16 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Shape {
+   geometry DEF TEXT Text {
+      string "Doesn't work"
+   }
+}
+
+DEF SC Script {
+   outputOnly MFString string
+   url ["escript.js"]
+}
+
+ROUTE SC.string TO TEXT.set_string

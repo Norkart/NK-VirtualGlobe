@@ -1,0 +1,36 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Shape {
+   appearance Appearance {
+    texture DEF PT PixelTexture {
+        repeatS TRUE
+        repeatT TRUE
+    }
+   }
+   geometry Box {}
+}
+
+DEF TS TimeSensor {
+   cycleInterval 3
+   loop TRUE
+}
+
+DEF SC Script {
+   inputOnly SFFloat fraction
+   outputOnly SFImage pt
+   url ["ecmascript:
+      function initialize() {
+         pt = new SFImage(1,2,3,new MFInt32(0x0000FF,0xFF00FF));
+      }
+
+      function fraction(val) {
+         color = val * 32000;
+         pt = new SFImage(1,2,3,new MFInt32(color, 0xFF00FF));
+      }
+   "]
+}
+
+ROUTE SC.pt TO PT.image
+ROUTE TS.fraction_changed TO SC.fraction

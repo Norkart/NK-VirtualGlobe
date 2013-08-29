@@ -1,0 +1,32 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT DIS:1
+
+Viewpoint {
+   position 0 0 110
+}
+
+#/*
+EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   entityID 0
+    children [
+        Shape { appearance Appearance { material Material { diffuseColor 1 0 0 }} geometry Box { size 1 1 1} }
+    ]
+}
+*/#
+DEF Pen Group {
+}
+
+DEF SC Script {
+  mustEvaluate TRUE
+  directOutput TRUE
+  inputOnly SFTime touchInput
+  initializeOnly SFNode target USE Pen
+
+  url [ "CreateEntities.class" ]
+}

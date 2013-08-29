@@ -1,0 +1,27 @@
+#VRML V2.0 utf8
+
+DEF sc Script {
+  eventIn SFBool activated
+  url [ "javascript:
+        function initialize() {
+          Browser.println('initialize called');
+        }
+        function activated(value) {
+          Browser.println('activated = ' + value);
+        }
+        "]
+}
+
+Group {
+  children [
+    Shape {
+      geometry Box {}
+      appearance Appearance {
+        material Material { diffuseColor 1 0 0 }
+      }
+    }
+    DEF ts TouchSensor {}
+  ]
+}
+
+ROUTE ts.isActive TO sc.activated

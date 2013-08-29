@@ -1,0 +1,45 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_RenderedTexture:1
+
+Shape {
+  appearance Appearance {
+    texture RenderedTexture {
+      update "ALWAYS"
+      scene DEF TEXTURE_TX Transform {
+        children Shape {
+          geometry IndexedFaceSet {
+            coord Coordinate { 
+              point [ 0.25 0 -1, 0.25 0.25 -1, 0 0.25 -1, 0 0 -1 ]
+            }
+            coordIndex [ 0 1 2 3 ]
+            color Color {
+              color [ 1 0 0, 0 1 0, 0 0 1, 1 1 1 ]
+            }
+          }
+        }
+      }
+    }
+  }
+  geometry Box {}
+}
+
+DEF TS TimeSensor {
+  cycleInterval 10
+  loop TRUE
+}
+
+DEF PI PositionInterpolator {
+  key [ 0 0.25 0.5 0.75 1 ]
+  keyValue [
+     0 0       -1
+    -0.25  0   -1
+    -0.25 0.25 -1
+     0 0.25    -1
+     0 0       -1
+  ]
+}
+
+ROUTE TS.fraction_changed TO PI.set_fraction
+ROUTE PI.value_changed TO TEXTURE_TX.translation

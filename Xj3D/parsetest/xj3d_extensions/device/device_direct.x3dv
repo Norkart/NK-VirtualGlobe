@@ -1,0 +1,148 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_IODevice:2
+
+NavigationInfo {
+   type ["NONE"]
+}
+
+DEF TG1 Transform {
+  rotation 0 1 0 0.78
+  scale 0.25 0.25 0.25
+  translation -2 0 0
+  children Shape {
+    geometry Box {}
+    appearance Appearance {
+      material DEF MAT1 Material {
+        diffuseColor 0 0 1
+      }
+    }
+  }
+}
+
+DEF TG2 Transform {
+  rotation 0 1 0 0.78
+  translation 2 0 0
+  scale 0.25 0.25 0.25
+  children Shape {
+    geometry Box {}
+    appearance Appearance {
+      material DEF MAT2 Material {
+        diffuseColor 0 0 1
+      }
+    }
+  }
+}
+
+DEF PI1 PositionInterpolator {
+  key [ -1 -0.5 0 0.5 1 ]
+  keyValue [
+     -2 1 0
+     -2 0.5 0
+     -2 0 0
+     -2 -0.5 0
+     -2 -1 0
+  ]
+}
+
+DEF PI2 PositionInterpolator {
+  key [ -1 -0.5 0 0.5 1 ]
+  keyValue [
+     2 1 0
+     2 0.5 0
+     2 0 0
+     2 -0.5 0
+     2 -1 0
+  ]
+}
+
+DEF SC Script {
+   inputOnly SFBool l1Trigger
+   inputOnly SFBool r1Trigger
+   inputOnly SFBool startTrigger
+   inputOnly SFFloat throttleSlider
+   inputOnly SFFloat hatX
+   inputOnly SFFloat hatY
+   outputOnly SFColor l1Color
+   outputOnly SFColor r1Color
+   outputOnly SFFloat rumblerX
+   outputOnly SFFloat rumblerY
+
+   url ["ecmascript:
+      var defColor = new SFColor(0,0,1);
+      var red = new SFColor(1,0,0);
+      var blue = new SFColor(0,0,1);
+      var green = new SFColor(0,1,0);
+
+      function throttleSlider(val) {
+         newColor = (val + 1) / 3 + 0.33;
+         defColor.b = newColor;
+
+         l1Color = defColor;
+         r1Color = defColor;
+      }
+
+      function l1Trigger(val) {
+Browser.println('l1 trigger: ' + val);
+         if (val)
+            l1Color = red;
+         else
+            l1Color = defColor;
+      }
+      function r1Trigger(val) {
+Browser.println('r1 trigger: ' + val);
+         if (val)
+            r1Color = red;
+         else
+            r1Color = defColor;
+      }
+
+      function startTrigger(val) {
+Browser.println('start: ' + val);
+         if (val) {
+            r1Color = green;
+            l1Color = green;
+         } else {
+            r1Color = defColor;
+            l1Color = defColor;
+         }
+      }
+
+      function hatX(val) {
+Browser.println('hatX: ' + val);
+         rumblerX = val;
+      }
+
+      function hatY(val) {
+Browser.println('hatY: ' + val);
+         rumblerY = val;
+      }
+  "]
+}
+
+ROUTE PI1.value_changed TO TG1.translation
+ROUTE PI2.value_changed TO TG2.translation
+
+DEF GP GamepadSensor { name "Gamepad-0" }
+DEF WH WheelSensor { name "Wheel-0" }
+
+ROUTE GP.leftStickY TO PI1.set_fraction
+ROUTE GP.rightStickY TO PI2.set_fraction
+ROUTE GP.l1Button TO SC.l1Trigger
+ROUTE GP.r1Button TO SC.r1Trigger
+ROUTE GP.throttleSlider TO SC.throttleSlider
+ROUTE GP.startButton TO SC.startTrigger
+ROUTE GP.leftHatX TO SC.hatX
+ROUTE GP.leftHatY TO SC.hatY
+ROUTE SC.l1Color TO MAT1.set_diffuseColor
+ROUTE SC.r1Color TO MAT2.set_diffuseColor
+ROUTE SC.rumblerX TO GP.rumblerX
+ROUTE SC.rumblerY TO GP.rumblerY
+
+ROUTE WH.wheelX TO PI1.set_fraction
+ROUTE WH.button1 TO SC.startTrigger
+ROUTE WH.button2 TO SC.l1Trigger
+ROUTE WH.button3 TO SC.r1Trigger
+ROUTE WH.throttleSlider TO SC.throttleSlider
+

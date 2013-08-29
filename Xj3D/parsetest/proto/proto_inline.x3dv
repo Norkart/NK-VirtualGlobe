@@ -1,0 +1,13 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+PROTO Boxes [
+]
+{
+    Inline {
+        url [ "inlined_boxes.x3dv" ]
+    }
+}
+
+Boxes {}

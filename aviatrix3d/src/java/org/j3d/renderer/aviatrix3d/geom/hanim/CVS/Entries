@@ -1,0 +1,21 @@
+/AVHumanoid.java/1.5/Mon Nov 13 14:30:16 2006//
+/AVHumanoidPart.java/1.3/Mon Nov 13 14:30:15 2006//
+/AVJoint.java/1.4/Mon Nov 13 14:30:15 2006//
+/AVSegment.java/1.3/Mon Nov 13 14:30:16 2006//
+/AVShaderHAnimFactory.java/1.3/Mon Nov 13 14:30:16 2006//
+/AVSite.java/1.3/Mon Nov 13 14:30:16 2006//
+/AVSoftwareHAnimFactory.java/1.3/Mon Nov 13 14:30:15 2006//
+/HAnimShaderProgram.java/1.2/Mon Nov 13 14:30:16 2006//
+/Makefile/1.3/Mon Nov 13 14:30:15 2006//
+/ShaderHumanoid.java/1.6/Mon Nov 13 14:30:15 2006//
+/ShaderJoint.java/1.3/Mon Nov 13 14:30:15 2006//
+/ShaderObjectParent.java/1.2/Mon Nov 13 14:30:16 2006//
+/SoftwareJoint.java/1.3/Mon Nov 13 14:30:16 2006//
+/SoftwareSpaceHumanoid.java/1.2/Mon Nov 13 14:30:15 2006//
+/SoftwareSpaceJoint.java/1.2/Mon Nov 13 14:30:16 2006//
+/SoftwareSpeedHumanoid.java/1.2/Mon Nov 13 14:30:16 2006//
+/SoftwareSpeedJoint.java/1.2/Mon Nov 13 14:30:15 2006//
+/package.html/1.2/Mon Nov 13 14:30:16 2006//
+/HAnimShader.java/1.9/Mon Apr 23 11:29:55 2007//
+/SoftwareHumanoid.java/1.6/Mon Apr 23 11:29:55 2007//
+D

@@ -1,0 +1,631 @@
+<isjeProject name="test" class="com.installshield.isje.product.TypicalProductProject" framework="com.installshield.isje.product.ProductWizardFramework">
+<section name="projectProperties" class="com.installshield.isje.project.ProjectPropertiesSection">
+    <property name="authorName" displayName="Author Name" category="Author Info"></property>
+    <property name="authorEmail" displayName="Author Email" category="Author Info"></property>
+    <property name="companyName" displayName="Company Name" category="Company Info"></property>
+    <property name="companyAddress" displayName="Company Address" category="Company Info" ui="3"></property>
+    <property name="companyTelephone" displayName="Company Telephone" category="Company Info"></property>
+    <property name="companyFax" displayName="Company Fax" category="Company Info"></property>
+    <property name="companyWebsite" displayName="Company Website" category="Company Info"></property>
+    <property name="comments" displayName="Comments" category="Comments" ui="10"></property>
+</section>
+<section name="Product" class="com.installshield.isje.product.ProductSection">
+<productTree>
+    <uninstaller>
+        <property name="beanId">uninstaller</property>
+        <property name="active">True</property>
+        <property name="installLocation">_uninst</property>
+        <property name="archiveName">uninstall.jar</property>
+        <property array="True" length="0" name="resourceExclusions" type="string"/>
+        <property array="True" length="0" name="installedFiles" type="string"/>
+        <property name="resourcesFileName">uninstall.dat</property>
+    </uninstaller>
+    <uninstallerLauncher>
+        <property name="active">False</property>
+        <property name="wizardArguments"/>
+        <property name="javaArguments"/>
+        <property array="True" length="0" name="additionalClassPaths" type="string"/>
+        <property array="True" length="0" name="systemProperties" type="string"/>
+        <property name="beanId">bean2</property>
+    </uninstallerLauncher>
+    <uninstallerJVMResolution>
+        <property name="JVMId">jvm</property>
+        <property name="installLocation">_jvm</property>
+        <property name="useInstalledJVM">True</property>
+        <property name="replaceJVMResponse">unspecified</property>
+        <property name="active">False</property>
+        <property name="resolveOnReinstalls">False</property>
+        <property name="beanId">bean3</property>
+    </uninstallerJVMResolution>
+    <logFile>log.txt</logFile>
+    <selectedLocales/>
+    <product id="bean55">
+        <key>
+            <uid>d00d451ef5305320e818111151739990</uid>
+            <version/>
+        </key>
+        <built>19691131 160000.000-0800</built>
+        <name>product1</name>
+        <displayName>Product</displayName>
+        <localizedDisplayName>Xj3D M4</localizedDisplayName>
+        <location>C:\Program Files\Java\j2re1.4.0</location>
+        <shareable>false</shareable>
+        <active>true</active>
+        <installStatus>0</installStatus>
+        <replaceOption>0</replaceOption>
+        <removeOption>0</removeOption>
+        <installFailureOption>1</installFailureOption>
+        <feature id="feature1">
+            <key>
+                <uid>89d91eea1ea581dcd724f17e04dedc27</uid>
+                <version/>
+            </key>
+            <built>19691131 160000.000-0800</built>
+            <name>feature1</name>
+            <displayName>Feature 1</displayName>
+            <localizedDisplayName>Java Runtime 1.4</localizedDisplayName>
+            <shareable>false</shareable>
+            <active>true</active>
+            <installStatus>0</installStatus>
+            <replaceOption>0</replaceOption>
+            <removeOption>0</removeOption>
+            <installFailureOption>1</installFailureOption>
+            <component id="bean24">
+                <key>
+                    <uid>f5da3332b8ee281039e7063c26d1d301</uid>
+                    <version/>
+                </key>
+                <built>19691131 160000.000-0800</built>
+                <name>component2</name>
+                <displayName>Java JRE</displayName>
+                <shareable>false</shareable>
+                <active>true</active>
+                <installStatus>0</installStatus>
+                <replaceOption>0</replaceOption>
+                <removeOption>0</removeOption>
+                <installFailureOption>3</installFailureOption>
+                <onFailSummaryMessage/>
+                <action class="com.installshield.product.actions.ExecAction" id="bean25">
+                    <displayName>Exec Action</displayName>
+                    <active>true</active>
+                    <property name="command">C:\Program Files\InstallShield\IPMP401\Projects\Xj3d\zip files\j2re-1_4_0-win.exe</property>
+                    <property array="True" length="0" name="arguments" type="string"/>
+                    <property name="waitForCompletion">True</property>
+                    <property name="runtime">0</property>
+                </action>
+            </component>
+        </feature>
+        <feature id="bean127">
+            <key>
+                <uid>dbff60985712293c50a8735a33af0c49</uid>
+                <version/>
+            </key>
+            <built>19691131 160000.000-0800</built>
+            <name>feature5</name>
+            <displayName>Java3D</displayName>
+            <localizedDisplayName>Java3D 1.2.1_03 OpenGL</localizedDisplayName>
+            <shareable>false</shareable>
+            <active>true</active>
+            <installStatus>0</installStatus>
+            <replaceOption>0</replaceOption>
+            <removeOption>0</removeOption>
+            <installFailureOption>1</installFailureOption>
+            <component id="bean133">
+                <key>
+                    <uid>a355df2dfe6a8db941d12a49b37e940b</uid>
+                    <version/>
+                </key>
+                <built>19691131 160000.000-0800</built>
+                <name>component6</name>
+                <displayName>Java3D</displayName>
+                <shareable>false</shareable>
+                <active>true</active>
+                <installStatus>0</installStatus>
+                <replaceOption>0</replaceOption>
+                <removeOption>0</removeOption>
+                <installFailureOption>3</installFailureOption>
+                <onFailSummaryMessage/>
+                <action class="com.installshield.product.actions.ExecAction" id="bean33">
+                    <displayName>Exec Action</displayName>
+                    <active>true</active>
+                    <property name="command">C:\Program Files\InstallShield\IPMP401\Projects\Xj3d\zip files\java3d-1_2_1_03-win32-opengl-rt.exe</property>
+                    <property array="True" length="0" name="arguments" type="string"/>
+                    <property name="waitForCompletion">True</property>
+                    <property name="runtime">0</property>
+                </action>
+            </component>
+        </feature>
+        <feature id="bean211">
+            <key>
+                <uid>dc0794821eb10f8ee734e9c4984e49c8</uid>
+                <version/>
+            </key>
+            <built>19691131 160000.000-0800</built>
+            <name>feature9</name>
+            <displayName>Xj3D Files</displayName>
+            <localizedDisplayName>Xj3D Jar Files</localizedDisplayName>
+            <shareable>false</shareable>
+            <active>true</active>
+            <installStatus>0</installStatus>
+            <replaceOption>0</replaceOption>
+            <removeOption>0</removeOption>
+            <installFailureOption>1</installFailureOption>
+            <component id="bean217">
+                <key>
+                    <uid>6635b582e48e81804c66e2c8ff60696a</uid>
+                    <version/>
+                </key>
+                <built>19691131 160000.000-0800</built>
+                <name>component9</name>
+                <displayName>Jar Files</displayName>
+                <location>lib/ext</location>
+                <shareable>false</shareable>
+                <active>true</active>
+                <installStatus>0</installStatus>
+                <replaceOption>0</replaceOption>
+                <removeOption>0</removeOption>
+                <installFailureOption>3</installFailureOption>
+                <onFailSummaryMessage/>
+                <action class="com.installshield.product.actions.Files" id="bean218">
+                    <displayName>Files</displayName>
+                    <active>true</active>
+                    <property array="True" length="1" name="files" type="com.installshield.product.actions.SourceFile">
+                        <arrayItem type="com.installshield.product.actions.SourceFile">
+                            <property name="type">3</property>
+                            <property name="usingGNUPattern">False</property>
+                            <property name="pattern"/>
+                            <property name="fileName">C:\Program Files\InstallShield\IPMP401\Projects\Xj3d\jars</property>
+                            <property name="resolveRuntimeFileName">False</property>
+                        </arrayItem>
+                    </property>
+                    <property name="totalBytes">-1</property>
+                    <property name="owner"/>
+                    <property name="group"/>
+                </action>
+            </component>
+            <component id="component1">
+                <key>
+                    <uid>3de6d40c443437608442c41ca97dd1d8</uid>
+                    <version/>
+                </key>
+                <built>19691131 160000.000-0800</built>
+                <name>component170</name>
+                <displayName>Component 1</displayName>
+                <shareable>false</shareable>
+                <active>true</active>
+                <installStatus>0</installStatus>
+                <replaceOption>0</replaceOption>
+                <removeOption>0</removeOption>
+                <installFailureOption>3</installFailureOption>
+                <onFailSummaryMessage/>
+                <action class="com.installshield.product.actions.Files" id="files1">
+                    <displayName>Files</displayName>
+                    <active>true</active>
+                    <property array="True" length="1" name="files" type="com.installshield.product.actions.SourceFile">
+                        <arrayItem type="com.installshield.product.actions.SourceFile">
+                            <property name="attributes" type="com.installshield.util.FileAttributes">
+                                <property name="attributes">79</property>
+                            </property>
+                            <property name="type">4</property>
+                            <property name="usingGNUPattern">False</property>
+                            <property name="pattern"/>
+                            <property name="fileName">C:\Program Files\InstallShield\IPMP401\Projects\Xj3d\X3d</property>
+                            <property name="resolveRuntimeFileName">False</property>
+                        </arrayItem>
+                    </property>
+                    <property name="totalBytes">-1</property>
+                    <property name="owner"/>
+                    <property name="group"/>
+                    <property name="installLocation">c:\xj3d</property>
+                </action>
+            </component>
+            <component id="bean3156">
+                <key>
+                    <uid>4ecbc044670030eafb82d68ff058f33b</uid>
+                    <version/>
+                </key>
+                <built>19691131 160000.000-0800</built>
+                <name>component198</name>
+                <displayName>Classpath</displayName>
+                <shareable>false</shareable>
+                <active>true</active>
+                <installStatus>0</installStatus>
+                <replaceOption>0</replaceOption>
+                <removeOption>0</removeOption>
+                <installFailureOption>3</installFailureOption>
+                <onFailSummaryMessage/>
+                <action class="com.installshield.product.actions.EnvironmentVariableUpdate" id="bean2">
+                    <displayName>Environment Variable Update</displayName>
+                    <active>true</active>
+                    <property name="variableName">CLASSPATH</property>
+                    <property name="variableValue">c:\xj3d;.</property>
+                    <property name="operation">2</property>
+                    <property name="includePathSeparator">True</property>
+                    <property name="rebootRequired">False</property>
+                </action>
+            </component>
+            <component id="bean3">
+                <key>
+                    <uid>af807f7840d4acfbb51ced9baaef1b62</uid>
+                    <version/>
+                </key>
+                <built>19691131 160000.000-0800</built>
+                <name>component3</name>
+                <displayName>DesktopIcon 2</displayName>
+                <shareable>false</shareable>
+                <active>true</active>
+                <installStatus>0</installStatus>
+                <replaceOption>0</replaceOption>
+                <removeOption>0</removeOption>
+                <installFailureOption>1</installFailureOption>
+                <onFailSummaryMessage>Couldn&apos;t install icon</onFailSummaryMessage>
+                <action class="com.installshield.product.actions.DesktopIcon" id="bean4">
+                    <displayName>Desktop Icon</displayName>
+                    <active>true</active>
+                    <extendedProperty name="win32ppk" type="com.installshield.wizard.platform.win32.Win32DesktopIconExtra">
+                        <property name="relativePlatformSpecificTarget">True</property>
+                        <property name="platformSpecificTarget"/>
+                        <property name="iconFile"/>
+                        <property name="folderContext">$UserDesktop$</property>
+                        <property name="iconFileType">1</property>
+                    </extendedProperty>
+                    <property name="folder">Xj3D</property>
+                    <property name="name">SEX3D</property>
+                    <property name="target">bin/java.exe</property>
+                    <property name="relativeTarget">True</property>
+                    <property name="args">-classpath c:/xj3d/examples/editor;c:/xj3d SEX3D</property>
+                    <property name="workingDirectory">c:/xj3d/examples/editor</property>
+                    <property name="workingDirectoryRelative">False</property>
+                    <property name="itemOwner"/>
+                    <property name="itemGroup"/>
+                    <property name="folderOwner"/>
+                    <property name="folderGroup"/>
+                </action>
+            </component>
+            <component id="bean3303">
+                <key>
+                    <uid>c6a86abaddb992ce796d92a1b3412607</uid>
+                    <version/>
+                </key>
+                <built>19691131 160000.000-0800</built>
+                <name>component203</name>
+                <displayName>DesktopIcon</displayName>
+                <shareable>false</shareable>
+                <active>true</active>
+                <installStatus>0</installStatus>
+                <replaceOption>0</replaceOption>
+                <removeOption>0</removeOption>
+                <installFailureOption>1</installFailureOption>
+                <onFailSummaryMessage>Couldn&apos;t install icon</onFailSummaryMessage>
+                <action class="com.installshield.product.actions.DesktopIcon" id="bean5">
+                    <displayName>Desktop Icon</displayName>
+                    <active>true</active>
+                    <extendedProperty name="win32ppk" type="com.installshield.wizard.platform.win32.Win32DesktopIconExtra">
+                        <property name="relativePlatformSpecificTarget">True</property>
+                        <property name="platformSpecificTarget"/>
+                        <property name="iconFile"/>
+                        <property name="folderContext">$UserDesktop$</property>
+                        <property name="iconFileType">1</property>
+                    </extendedProperty>
+                    <property name="folder">Xj3D</property>
+                    <property name="name">DIYBrowser</property>
+                    <property name="target">bin/java.exe</property>
+                    <property name="relativeTarget">True</property>
+                    <property name="args">-classpath c:/xj3d/examples/browser DIYBrowser</property>
+                    <property name="workingDirectory">c:/xj3d/examples/browser</property>
+                    <property name="workingDirectoryRelative">False</property>
+                    <property name="itemOwner"/>
+                    <property name="itemGroup"/>
+                    <property name="folderOwner"/>
+                    <property name="folderGroup"/>
+                </action>
+            </component>
+        </feature>
+    </product>
+</productTree>
+</section>
+<section name="Installer" class="com.installshield.isje.wizard.WizardSection">
+<wizard name="Setup" purpose="product.install" uid="f27d7fbc98cbadcaa11fa4939eac1a02">
+    <title>$L(com.installshield.wizard.i18n.WizardResources, installer)</title>
+    <listener>com.installshield.wizard.StandardWizardListener</listener>
+    <interfaceName>awt</interfaceName>
+    <localeSelect>0</localeSelect>
+    <interface class="com.installshield.wizard.awt.AWTWizardUI" name="awt">
+        <property name="wizardImage"/>
+        <property name="wizardImageSource">C:\Program Files\InstallShield\IPMP401\Projects\Xj3d\x3d_logo.gif</property>
+        <property name="wizardImageOrientation">1</property>
+        <property name="splashImageSource"/>
+        <property name="splashDuration">0</property>
+        <property name="wizardIcon"/>
+        <property name="wizardIconSource">C:\Program Files\InstallShield\IPMP401\images\InstallShield Images\icon.gif</property>
+        <property name="width">640</property>
+        <property name="height">420</property>
+        <property name="defaultFont" type="com.installshield.util.FontDef">
+            <property name="name">Dialog</property>
+            <property name="style">0</property>
+            <property name="size">12</property>
+        </property>
+        <property name="backgroundColor">SystemColor.window</property>
+        <property name="foregroundColor">SystemColor.windowText</property>
+        <property name="splashImage"/>
+    </interface>
+    <interface class="com.installshield.wizard.console.ConsoleWizardUI" name="console"/>
+    <log>
+        <property name="optionalLogOutput"/>
+        <property name="logEchoedToScreen">True</property>
+        <property name="loggingContext">Setup.product.install</property>
+        <property name="logOutput">c:\xj3d.log</property>
+        <property name="logExceptionStackTraces">True</property>
+        <property name="optionalLogOutputEnabled">False</property>
+        <property array="True" length="2" name="eventsLogged" type="string">
+            <arrayItem>err</arrayItem>
+            <arrayItem>wrn</arrayItem>
+        </property>
+        <property name="logOutputEnabled">True</property>
+        <property name="allEventsLogged">True</property>
+    </log>
+    <startupBean class="com.installshield.wizard.commandline.SilentMode"/>
+    <startupBean class="com.installshield.wizard.commandline.WizardBeanPropertiesOption"/>
+    <startupBean class="com.installshield.wizard.commandline.WizardLogOption"/>
+    <startupBean class="com.installshield.wizard.commandline.WizardValueOption"/>
+    <startupBean class="com.installshield.wizard.commandline.GotoOption"/>
+    <startupBean class="com.installshield.product.commandline.ProductBeanPropertiesOption"/>
+</wizard>
+<wizardTree>
+    <wizardRoot>
+        <wizardBean class="com.installshield.product.wizardbeans.WelcomePanel" id="welcome">
+            <property name="displayName">Welcome Panel</property>
+            <property name="active">True</property>
+            <property name="title">Xj3D M4</property>
+            <property name="description"/>
+            <property name="navigationOptions">0</property>
+            <property name="text">$L(com.installshield.product.i18n.ProductResources, WelcomePanel.message, $P(displayName), $P(displayName), $P(displayName), $P(vendor), $P(vendorWebsite))</property>
+            <property name="textSource">1</property>
+            <property name="fileName"/>
+            <property name="includeLocalizedFiles">False</property>
+            <property name="contentType">2</property>
+            <property name="showBorder">False</property>
+        </wizardBean>
+        <wizardBean class="com.installshield.product.wizardbeans.DestinationPanel" id="destination">
+            <property name="displayName">Destination</property>
+            <property name="active">True</property>
+            <property name="title"/>
+            <property name="description">Please provide the path to your Java Runtime.  If  you are installing Java then leave the default. For JDK installs use the JRE directory, ex. c:\jdk1.3.1\jre
+
+ $L(com.installshield.product.i18n.ProductResources, DestinationPanel.description, $P(displayName))</property>
+            <property name="navigationOptions">0</property>
+        </wizardBean>
+        <wizardBean class="com.installshield.product.wizardbeans.SetupTypePanel" id="setupTypes">
+            <property name="displayName">Setup Types</property>
+            <property name="active">True</property>
+            <property name="title"/>
+            <property name="description">$L(com.installshield.product.i18n.ProductResources, SetupTypePanel.description)</property>
+            <property name="navigationOptions">0</property>
+            <property name="selectedSetupTypeId">typical</property>
+            <property array="True" length="2" name="setupTypes" type="com.installshield.product.wizardbeans.SetupType">
+                <arrayItem type="com.installshield.product.wizardbeans.SetupType">
+                    <property name="description"/>
+                    <property name="displayName">Typical</property>
+                    <property name="id">typical</property>
+                    <property array="True" length="3" name="features" type="string">
+                        <arrayItem>feature1</arrayItem>
+                        <arrayItem>bean127</arrayItem>
+                        <arrayItem>bean211</arrayItem>
+                    </property>
+                </arrayItem>
+                <arrayItem type="com.installshield.product.wizardbeans.SetupType">
+                    <property name="description">$L(com.installshield.product.i18n.ProductResources, SetupTypePanel.customDescription)</property>
+                    <property name="displayName">$L(com.installshield.product.i18n.ProductResources, SetupTypePanel.customDisplayName)</property>
+                    <property name="id">custom</property>
+                    <property array="True" length="0" name="features" type="string"/>
+                </arrayItem>
+            </property>
+        </wizardBean>
+        <wizardBean class="com.installshield.product.wizardbeans.SetupTypeSequence" id="customize">
+            <property name="displayName">Customize Sequence</property>
+            <property name="setupTypePanel">setupTypes</property>
+            <property name="setupType">custom</property>
+            <wizardBean class="com.installshield.product.wizardbeans.FeaturePanel" id="features">
+                <property name="displayName">Features</property>
+                <property name="active">True</property>
+                <property name="title"/>
+                <property name="description">$L(com.installshield.product.i18n.ProductResources, FeaturePanel.description, $P(displayName))</property>
+                <property name="navigationOptions">0</property>
+            </wizardBean>
+        </wizardBean>
+        <wizardBean class="com.installshield.product.wizardbeans.InstallCheckPanel" id="check">
+            <property name="displayName">Install Check</property>
+            <property name="active">False</property>
+            <property name="title"/>
+            <property name="description">$L(com.installshield.wizardx.i18n.WizardXResources, TextDisplayPanel.description)</property>
+            <property name="includeLocalizedFiles">False</property>
+            <property name="showBorder">False</property>
+            <property name="navigationOptions">0</property>
+            <property name="text">$L(com.installshield.wizardx.i18n.WizardXResources, TextDisplayPanel.text)</property>
+            <property name="textSource">1</property>
+            <property name="fileName"/>
+            <property name="contentType">2</property>
+            <property array="True" length="2" name="checkNames" type="string">
+                <arrayItem>diskspace</arrayItem>
+                <arrayItem>dependencies</arrayItem>
+            </property>
+            <property name="operation">1</property>
+            <property name="onFailure">1</property>
+            <property name="stopMessage">$L(com.installshield.product.i18n.ProductResources, ProductCheckPanel.defaultStopMessage)</property>
+            <property name="overrideMessage">$L(com.installshield.product.i18n.ProductResources, ProductCheckPanel.defaultOverrideMessage)</property>
+        </wizardBean>
+        <wizardBean class="com.installshield.product.wizardbeans.SummaryPanel" id="preview">
+            <property name="displayName">Install Preview</property>
+            <property name="active">False</property>
+            <property name="title"/>
+            <property name="description"/>
+            <property name="navigationOptions">0</property>
+            <property name="type">1</property>
+        </wizardBean>
+        <wizardBean class="com.installshield.product.wizardbeans.InstallAction" id="install">
+            <property name="displayName">Install</property>
+            <property name="active">True</property>
+            <property name="cancelable">True</property>
+            <property name="billboards" type="com.installshield.product.wizardbeans.BillboardDisplayInfo">
+                <property name="enabled">False</property>
+                <property name="backgroundColor">SystemColor.blue</property>
+                <property array="True" length="0" name="billboards" type="com.installshield.product.wizardbeans.BillboardInfo"/>
+            </property>
+        </wizardBean>
+        <wizardBean class="com.installshield.product.wizardbeans.SummaryPanel" id="summary">
+            <property name="displayName">Install Summary</property>
+            <property name="active">False</property>
+            <property name="title"/>
+            <property name="description"/>
+            <property name="navigationOptions">0</property>
+            <property name="type">2</property>
+        </wizardBean>
+        <wizardBean class="com.installshield.product.wizardbeans.ReadmePanel" id="bean2">
+            <property name="displayName">Readme Panel</property>
+            <property name="active">True</property>
+            <property name="title"/>
+            <property name="description">$L(com.installshield.wizardx.i18n.WizardXResources, TextDisplayPanel.description)</property>
+            <property name="navigationOptions">0</property>
+            <property name="text">$L(com.installshield.wizardx.i18n.WizardXResources, TextDisplayPanel.text)</property>
+            <property name="textSource">2</property>
+            <property name="fileName">C:\Program Files\InstallShield\IPMP401\Projects\Xj3d\postinstall.html</property>
+            <property name="includeLocalizedFiles">False</property>
+            <property name="contentType">2</property>
+            <property name="showBorder">False</property>
+        </wizardBean>
+    </wizardRoot>
+</wizardTree>
+</section>
+<section name="Uninstaller" class="com.installshield.isje.wizard.WizardSection">
+<wizard name="Uninstall" purpose="product.uninstall" uid="237ac5f2be1fc9d40fec6a03219f1400">
+    <title>$L(com.installshield.wizard.i18n.WizardResources, uninstaller)</title>
+    <listener>com.installshield.wizard.StandardWizardListener</listener>
+    <interfaceName>awt</interfaceName>
+    <localeSelect>0</localeSelect>
+    <interface class="com.installshield.wizard.awt.AWTWizardUI" name="awt">
+        <property name="wizardImage"/>
+        <property name="wizardImageSource">C:\Program Files\InstallShield\IPMP401\images\InstallShield Images\welcome.gif</property>
+        <property name="wizardImageOrientation">1</property>
+        <property name="splashImageSource"/>
+        <property name="splashDuration">0</property>
+        <property name="wizardIcon"/>
+        <property name="wizardIconSource">C:\Program Files\InstallShield\IPMP401\images\InstallShield Images\icon.gif</property>
+        <property name="width">640</property>
+        <property name="height">420</property>
+        <property name="defaultFont" type="com.installshield.util.FontDef">
+            <property name="name">Dialog</property>
+            <property name="style">0</property>
+            <property name="size">12</property>
+        </property>
+        <property name="backgroundColor">SystemColor.window</property>
+        <property name="foregroundColor">SystemColor.windowText</property>
+        <property name="splashImage"/>
+    </interface>
+    <interface class="com.installshield.wizard.console.ConsoleWizardUI" name="console"/>
+    <log>
+        <property name="logEchoedToScreen">False</property>
+        <property name="loggingContext">Uninstall.product.uninstall</property>
+        <property name="logOutput">$P(absoluteInstallLocation)/log.txt</property>
+        <property name="logExceptionStackTraces">True</property>
+        <property name="optionalLogOutputEnabled">False</property>
+        <property array="True" length="2" name="eventsLogged" type="string">
+            <arrayItem>err</arrayItem>
+            <arrayItem>wrn</arrayItem>
+        </property>
+        <property name="logOutputEnabled">True</property>
+        <property name="allEventsLogged">False</property>
+    </log>
+    <startupBean class="com.installshield.wizard.commandline.SilentMode"/>
+    <startupBean class="com.installshield.wizard.commandline.WizardBeanPropertiesOption"/>
+    <startupBean class="com.installshield.wizard.commandline.WizardLogOption"/>
+    <startupBean class="com.installshield.wizard.commandline.WizardValueOption"/>
+    <startupBean class="com.installshield.wizard.commandline.GotoOption"/>
+    <startupBean class="com.installshield.product.commandline.ProductBeanPropertiesOption"/>
+</wizard>
+<wizardTree>
+    <wizardRoot>
+        <wizardBean class="com.installshield.product.wizardbeans.UninstallWelcomePanel" id="welcome">
+            <property name="displayName">Welcome Panel</property>
+            <property name="active">True</property>
+            <property name="title"/>
+            <property name="description"/>
+            <property name="navigationOptions">0</property>
+            <property name="text">$L(com.installshield.product.i18n.ProductResources, UninstallWelcomePanel.message, $P(displayName), $P(displayName), $P(displayName), $P(vendor), $P(vendorWebsite))</property>
+            <property name="textSource">1</property>
+            <property name="fileName"/>
+            <property name="includeLocalizedFiles">False</property>
+            <property name="contentType">2</property>
+            <property name="showBorder">False</property>
+        </wizardBean>
+        <wizardBean class="com.installshield.product.wizardbeans.UninstallFeaturePanel" id="features">
+            <property name="displayName">Features</property>
+            <property name="active">True</property>
+            <property name="title"/>
+            <property name="description">$L(com.installshield.product.i18n.ProductResources, UninstallFeaturePanel.description, $P(displayName))</property>
+            <property name="navigationOptions">0</property>
+        </wizardBean>
+        <wizardBean class="com.installshield.product.wizardbeans.SummaryPanel" id="preview">
+            <property name="displayName">Uninstall Preview</property>
+            <property name="active">True</property>
+            <property name="title"/>
+            <property name="description"/>
+            <property name="navigationOptions">0</property>
+            <property name="type">3</property>
+        </wizardBean>
+        <wizardBean class="com.installshield.product.wizardbeans.UninstallAction" id="uninstall">
+            <property name="displayName">Uninstall</property>
+            <property name="active">True</property>
+            <property name="cancelable">False</property>
+        </wizardBean>
+        <wizardBean class="com.installshield.product.wizardbeans.SummaryPanel" id="summary">
+            <property name="displayName">Uninstall Summary</property>
+            <property name="active">True</property>
+            <property name="title"/>
+            <property name="description"/>
+            <property name="navigationOptions">0</property>
+            <property name="type">4</property>
+        </wizardBean>
+    </wizardRoot>
+</wizardTree>
+</section>
+<section name="Build" class="com.installshield.isje.build.BuildSection">
+<buildConfiguration name="Default">
+    <property name="name">Default</property>
+    <property name="outputDirectory">default</property>
+    <property name="archiveName">Xj3D-full-M4.jar</property>
+    <property name="archiveType">1</property>
+    <property array="True" length="3" name="support" type="com.installshield.isje.build.BuildConfigurationSupport">
+        <arrayItem type="com.installshield.isje.wizard.PlatformSupport">
+            <property array="True" length="1" name="builders" type="com.installshield.isje.build.ExtendedWizardBuilder">
+                <arrayItem type="com.installshield.wizard.platform.win32.Win32Builder"/>
+            </property>
+        </arrayItem>
+        <arrayItem type="com.installshield.isje.build.LanguageSupport">
+            <property array="True" length="0" name="locales" type="string"/>
+            <property name="localeSelectOption">0</property>
+            <property array="True" length="0" name="additionalResourceBundles" type="string"/>
+        </arrayItem>
+        <arrayItem type="com.installshield.isje.build.DistributionSupport">
+            <property array="True" length="1" name="distributions" type="com.installshield.isje.build.Distribution">
+                <arrayItem type="com.installshield.wizard.platform.win32.Win32LauncherDistribution">
+                    <property name="enabled">True</property>
+                    <property name="fileName">Xj3D-full-M4.exe</property>
+                    <property array="True" length="0" name="JVMFileSources" type="com.installshield.util.jvm.JVMFile"/>
+                    <property name="bundledJVMSource">C:\Program Files\InstallShield\IPMP401\jvms\win32\sun_win32_118.exe</property>
+                    <property array="True" length="0" name="embeddedJARs" type="string"/>
+                    <property array="True" length="0" name="additionalClassPaths" type="string"/>
+                    <property name="embedArchive">True</property>
+                    <property name="externalArchivePath"/>
+                    <property name="launcherUIDisplayTime">0</property>
+                    <property name="javaArguments"/>
+                    <property name="wizardArguments"/>
+                    <property array="True" length="0" name="systemProperties" type="string"/>
+                    <property name="showConsole">False</property>
+                </arrayItem>
+            </property>
+        </arrayItem>
+    </property>
+    <property name="projectDirectory">C:\Program Files\InstallShield\IPMP401\Projects\test</property>
+</buildConfiguration>
+</section>
+</isjeProject>

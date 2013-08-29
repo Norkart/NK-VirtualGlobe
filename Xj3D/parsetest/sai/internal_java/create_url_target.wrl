@@ -1,0 +1,18 @@
+#VRML V2.0 utf8
+
+
+# The target file of the createX3DFromUrl call
+# This test should automatically fail as createX3DFromUrl should barf at a
+# VRML97 file, but should let the X3D version through.
+
+Shape {
+  appearance Appearance {
+    material Material {
+      diffuseColor 0 1 0
+    }
+    texture ImageTexture {
+      url ["vts.jpg"]
+    }
+  }
+  geometry Cylinder {}
+}

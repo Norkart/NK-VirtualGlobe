@@ -1,0 +1,45 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+DEF TRANS Transform {
+   children [Shape {
+      geometry Sphere {
+            radius 0.25
+      }
+
+   }
+   ]
+}
+
+Transform {
+   translation 0 0 -4
+   scale 0.1 0.1 0.1
+   children [
+Collision {
+   collide FALSE
+   children Shape {
+   appearance Appearance {
+      material Material {
+         diffuseColor 0 0 1
+         transparency 0.4
+      }
+   }
+   geometry Box { size 50 50 50 }
+}
+}
+
+DEF PS ProximitySensor {
+      size 50.0 50.0 50.0
+}
+]}
+
+DEF PI PositionInterpolator {
+      key [0.0 ,1.0]
+      keyValue [0.0 0.0 0.0 ,1.0 1.0 0.0]
+}
+DEF TS TimeSensor {
+}
+ROUTE PS.enterTime TO TS.startTime
+ROUTE TS.fraction_changed TO PI.set_fraction
+ROUTE PI.value_changed TO TRANS.translation

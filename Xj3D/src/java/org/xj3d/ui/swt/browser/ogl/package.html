@@ -1,0 +1,33 @@
+<html>
+<body>
+
+Classes that are used to create or be a full browser panel embedded within
+an application using the OpenGL renderer.
+<P>
+
+The majority of these classes are used to support the EAI/SAI functionality
+so that a user can create and manipulate a full VRML/X3D browser as part of
+an application. The intention is that the programmer will never need to
+deal with all the other classes provided by Xj3D and just stick with the
+standards compliant EAI or SAI interface.
+<p>
+
+Creating a component using either of these interfaces starts with
+registering the appropriate factory implementation with the EAI/SAI.
+An end user should never have to do this, however as both standards
+define a way for each browser to nominate itself as the implementation
+of choice, through the use of Java properties files. To make sure you
+are using the right implementation, look for either vrml97.properties
+or x3d.properties in your CLASSPATH. Check that the entry is pointing
+to the appropriate class from this package. After that, all you need
+to do to use the SAI or EAI is to call the appropriate create method
+from the factory API. If you find yourself needing to call the
+<code>setBrowserFactoryImpl()</code> method then you are doing something
+wrong as this now restricts the code to a particular SAI/EAI implementation.
+This is wrong, and creates non-portable code.
+
+<P>
+These particular files are specific to the
+<a href="http://aviatrix3d.j3d.org/">Aviatrix3D</a> OpenGL based renderer.
+</body>
+</html>

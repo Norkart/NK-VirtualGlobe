@@ -1,0 +1,34 @@
+#VRML    V2.0 utf8
+
+Script {
+  field SFNode myScript Script {
+  }
+}
+
+Script {
+  field SFNode myScript Script {
+    mustEvaluate TRUE
+    field SFInt32 blah 0 0 0
+    url "blah.class"
+  }
+  mustEvaluate TRUE
+  field SFInt32 blah 0 0 0
+  url "blah.class"
+}
+
+Script {
+  field SFNode myScript Script {
+    mustEvaluate TRUE
+    field SFInt32 blah 0 0 0
+    field MFNode hello [
+      Group {}
+      Shape {
+        appearance Appearance {}
+      }
+    ]
+    url "blah.class"
+  }
+  mustEvaluate TRUE
+  field SFInt32 blah 0 0 0
+  url [ "blah.class", "blah2.class" ]
+}

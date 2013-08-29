@@ -1,0 +1,16 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Shape {
+  appearance Appearance {
+    material Material { diffuseColor 0.4 0.4 0.4 }
+  }
+  geometry IndexedFaceSet {
+    creaseAngle 0.02
+    coord Coordinate {
+      point [-1 -1 -0.5, -1 1 -0.5, 0 -1 0, 0 1 0, 1 -1 -0.5, 1 1 -0.5 ]
+    }
+    coordIndex [ 0 3 1 -1 0 2 3 -1 2 5 3 -1 2 4 5]
+  }
+}

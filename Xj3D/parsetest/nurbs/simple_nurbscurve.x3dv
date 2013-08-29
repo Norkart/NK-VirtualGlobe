@@ -1,0 +1,19 @@
+#X3D V3.0 utf8
+
+PROFILE Interactive
+COMPONENT NURBS:1
+
+Shape {
+  geometry NurbsCurve {
+    controlPoint [ 1 0 0, 0.5 1 0, 0 0 0, -0.5 1 0, -1 0 0 ]
+	order 3
+	knot [0, 0, 0, 1, 2, 3, 3, 3]
+	tessellation 50
+  }
+  appearance Appearance {
+    material Material {
+	  diffuseColor 1 0 0
+	  emissiveColor 1 0 0
+	}
+  }
+}

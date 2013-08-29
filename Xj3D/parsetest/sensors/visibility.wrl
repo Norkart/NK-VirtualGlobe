@@ -1,0 +1,43 @@
+#VRML V2.0 utf8
+
+Viewpoint {
+   position 0 0 0
+}
+
+Transform {
+  translation 0 0 -10
+  children [
+    Shape {
+      geometry Box  { size 0.25 0.25 0.25}
+      appearance Appearance {
+        material DEF MAT Material {}
+      }
+    }
+
+    DEF VS VisibilitySensor {
+      center 0 0 0
+      size 0.25 0.25 0.25
+    }
+  ]
+}
+
+DEF SC Script {
+   eventIn SFBool isActive
+   eventOut SFColor color
+   url ["javascript:
+      RED = new SFColor(1,0,0);
+      BLUE = new SFColor(0,0,1);
+
+      function isActive(val) {
+          Browser.println('Active: ' + val);
+          if (val) {
+             color = BLUE;
+          } else {
+             color = RED;
+          }
+      }
+   "]
+}
+
+ROUTE VS.isActive TO SC.isActive
+ROUTE SC.color TO MAT.diffuseColor

@@ -1,0 +1,32 @@
+#X3D V3.0 utf8
+
+# This test checks on the validity of the createX3DFromURL call. When clicking
+# on the box, a URL will be created and used to replace this world. The script
+# uses 2 URLs - one X3D and one VRML97. The VRML97 should cause an error, while
+# the X3D file works.
+
+PROFILE Immersive
+
+DEF SC Script {
+  mustEvaluate TRUE
+  directOutput FALSE
+  inputOnly SFTime touchInput
+
+  url [ "CreateURLTest.class" ]
+}
+
+Group {
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 0 0
+        }
+      }
+      geometry Box {}
+    }
+    DEF TS TouchSensor {}
+  ]
+}
+
+ROUTE TS.touchTime TO SC.touchInput

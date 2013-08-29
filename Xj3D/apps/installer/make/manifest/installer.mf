@@ -1,0 +1,8 @@
+Extension-Name: xj3d
+Specification-Vendor: Web3d Consortium
+Specification-Version: 3.0
+Implementation-Vendor-Id: com.yumetech
+Implementation-Vendor: Yumetech, Inc
+Implementation-Version: 2.0-M4
+Implementation-Title: Xj3D Web3d Toolkit
+Main-Class: web3d.install.Web3dInstaller

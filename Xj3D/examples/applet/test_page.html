@@ -1,0 +1,45 @@
+<html>
+<title>Xj3D viewer applet test</title>
+<body>
+<h1 align="center">Xj3D Viewer as an Applet</h1>
+<p>
+This is a demonstration of using Xj3D as a viewer applet. In this demonstration
+we limit the available content to reading Interchange level content.
+</p>
+
+<applet code="org.jdesktop.applet.util.JNLPAppletLauncher"
+      width=600
+      height=400
+      archive="http://download.java.net/media/applet-launcher/applet-launcher.jar,
+                http://download.java.net/media/jogl/builds/archive/jsr-231-webstart-current/jogl.jar,
+                http://download.java.net/media/gluegen/webstart/gluegen-rt.jar,
+		http://download.java.net/media/joal/webstart/joal.jar,
+		http://www.xj3d.org/applet_test/xj3d_applet_1.0.0.jar,
+		http://www.xj3d.org/applet_test/xj3d-interactive-applet-av3d_2.0.0.jar,
+		http://www.xj3d.org/applet_test/uri.jar,
+		http://www.xj3d.org/applet_test/vlc_uri.jar,
+		http://www.xj3d.org/applet_test/vecmath.jar,
+		http://www.xj3d.org/applet_test/js.jar,
+		http://www.xj3d.org/applet_test/httpclient.jar,
+		http://www.yumetech.com/~udesign/lib/aviatrix3d-all_2.0.0.jar,
+		http://www.yumetech.com/~udesign/lib/j3d-org-all_0.9.0.jar,
+"/>
+   <param name="codebase_lookup" value="false"/>
+   <param name="subapplet.classname" value="Xj3DApplet"/>
+   <param name="subapplet.displayname" value="Xj3D Demo Applet"/>
+   <param name="noddraw.check" value="true"/>
+   <param name="progressbar" value="true"/>
+
+   <param name="jnlpNumExtensions" value="2"/>
+   <param name="jnlpExtension1"
+          value="http://download.java.net/media/jogl/builds/archive/jsr-231-webstart-current/jogl.jnlp"/>
+   <param name="jnlpExtension2"
+		  value="http://download.java.net/media/joal/webstart/joal.jnlp"/>
+
+   <param name="modelURL" value="http://www.xj3d.org/applet_test/moving_box.x3dv"/>
+ </applet>
+<hr/>
+
+</body>
+
+</html>

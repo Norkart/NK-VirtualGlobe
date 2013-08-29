@@ -1,0 +1,52 @@
+#*********************************************************************
+#
+#  (C) 2001 - 2006 Web3d Consortium
+#    http://www.web3d.org/
+# 
+# Package makefile producing xj3d-all.jar
+#
+# Author: Justin Couch
+# Version: $Revision: 1.4 $
+#
+#*********************************************************************
+
+# A version number we tack onto the JAR file name for eclipse versioning
+# purposes.
+JAR_VERSION=2.0.0
+
+# Describe every directory that you want included in the JAR file here.
+# This is not recursive, so if you want parent directory and the 
+# sub-directory, say so. These directories should not have '/' appended.
+JAR_CONTENT=
+
+# Include the following pre-generated JARs from the JAR directory into
+# this JAR file. This assumes that the JAR has already been built before
+# this JAR is built.
+INCLUDE_JARS= \
+  xj3d-images_2.0.0.jar \
+  xj3d-common_2.0.0.jar \
+  xj3d-core_2.0.0.jar \
+  xj3d-eai_2.0.0.jar \
+  xj3d-ecmascript_2.0.0.jar \
+  xj3d-external-sai_2.0.0.jar \
+  xj3d-java-sai_2.0.0.jar \
+  xj3d-jaxp_2.0.0.jar \
+  xj3d-jsai_2.0.0.jar \
+  xj3d-net_2.0.0.jar \
+  xj3d-norender_2.0.0.jar \
+  xj3d-ogl_2.0.0.jar \
+  xj3d-parser_2.0.0.jar \
+  xj3d-render_2.0.0.jar \
+  xj3d-runtime_2.0.0.jar \
+  xj3d-sai_2.0.0.jar \
+  xj3d-sav_2.0.0.jar \
+  xj3d-script-base_2.0.0.jar \
+  xj3d-xml-util_2.0.0.jar 
+
+# Include the following JARs from the lib directory into this JAR file. 
+INCLUDE_LIBS= js.jar \
+
+# Manifest file name. Stored in the make/manifest directory
+MANIFEST=org.xj3d.browser.mf
+
+include ${PROJECT_ROOT}/make/Makefile.jav

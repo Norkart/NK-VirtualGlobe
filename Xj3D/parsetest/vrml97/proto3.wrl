@@ -1,0 +1,17 @@
+#VRML    V2.0 utf8
+
+PROTO simple [
+  eventIn SFInt32 setter
+  eventOut SFInt32 getter
+  field SFColor constant 0 0.2 1
+]
+{
+  Group {}
+}
+
+PROTO simple [
+  exposedField SFColor constant 0 0.2 1
+]
+{
+  Group {}
+}

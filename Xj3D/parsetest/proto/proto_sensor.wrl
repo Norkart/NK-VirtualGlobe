@@ -1,0 +1,37 @@
+#VRML V2.0 utf8
+
+PROTO MySensor [
+  eventOut SFTime startTime 
+]
+{
+  DEF TS TouchSensor {
+    touchTime IS startTime
+  }
+  
+
+}
+
+DEF Trans Transform {
+  children [
+    Shape {
+      geometry Box {}
+    }
+    DEF TS MySensor {}
+  ]
+}
+
+
+DEF Mover PositionInterpolator {
+  key [0, 0.5, 1]
+  keyValue [
+    0 0 0
+    0 2 0
+    0 0 0
+  ]
+}
+
+DEF Time TimeSensor { }
+
+ROUTE TS.startTime TO Time.startTime
+ROUTE Time.fraction_changed TO Mover.set_fraction
+ROUTE Mover.value_changed TO Trans.set_translation

@@ -1,0 +1,36 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT Geospatial:1
+
+Viewpoint {
+   description "VP1"
+   position 0 0 4
+}
+
+GeoLocation {
+   geoCoords 0 0 0
+   geoSystem ["GC"]
+   geoOrigin DEF ORIGIN GeoOrigin {
+      geoSystem ["GC"]
+   }
+   children [
+   
+GeoLOD {
+   range 5
+   geoSystem ["GC"]
+   geoOrigin USE ORIGIN
+   rootNode [
+    Shape {
+       geometry Box {}
+    }   
+   ]
+   
+   child1Url ["ref1.x3dv"]   
+   child2Url ["ref2.x3dv"]   
+   child3Url ["ref3.x3dv"]   
+   child4Url ["ref4.x3dv"]   
+}
+]
+}
+

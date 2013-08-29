@@ -1,0 +1,9 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+META "foo" "bar"
+
+Background {
+   skyColor [ 0 0 0.25 ]
+}

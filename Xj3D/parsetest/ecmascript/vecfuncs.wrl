@@ -1,0 +1,71 @@
+#VRML V2.0 utf8
+
+DEF SCRIPT Script {
+  eventOut MFString result1
+  eventOut MFString result2
+  eventOut MFString result3
+
+  url [ "javascript:
+        function initialize() {
+            sfc1 = new SFVec3f(1,0,0);
+
+            sfc2 = new SFVec3f(0.5,0,0);
+
+
+            foo = new MFVec3f();
+            foo[0] = new SFVec3f(0.1,0.2,0.3);
+            foo[1] = new SFVec3f(1,1,1);
+
+            foo[0] = foo[0].subtract(foo[1]);
+            Browser.println('result: ' + foo[0].toString());
+            result1 = new MFString(foo[0].toString());
+
+            sfc1 = new SFVec3f(1,0,0);
+            sfc1.divide(2);
+            Browser.println('result2: ' + sfc1.toString());
+			result2 = new MFString(sfc1.toString());
+
+            sfc1 = new SFVec3f(0,1,0);
+            sfc2 = new SFVec3f(1,0.5,0);
+
+            sfr = new SFRotation(sfc1.normalize(),0.5);
+            sfr2 = new SFRotation(sfc2.normalize(),0.5);
+            sfr3 = sfr.slerp(sfr2, 0.5);
+            Browser.println('res: ' + sfr3.toString());
+            result3 = new MFString(sfr.toString());
+        }
+      "]
+}
+
+Transform {
+   translation 0 3 0
+   children [
+      Shape {
+         geometry DEF TEXT1 Text { }
+      }
+   ]
+}
+
+ROUTE SCRIPT.result1 TO TEXT1.set_string
+
+Transform {
+   translation 0 0 0
+   children [
+      Shape {
+         geometry DEF TEXT2 Text { }
+      }
+   ]
+}
+
+ROUTE SCRIPT.result2 TO TEXT2.set_string
+
+Transform {
+   translation 0 -3 0
+   children [
+      Shape {
+         geometry DEF TEXT3 Text { }
+      }
+   ]
+}
+
+ROUTE SCRIPT.result3 TO TEXT3.set_string

@@ -1,0 +1,7 @@
+#X3D V3.0 utf8
+
+PROFILE Interchange
+
+Shape {
+   geometry Box { size 1 2 1 }
+}

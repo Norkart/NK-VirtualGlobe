@@ -1,0 +1,7 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+DEF SC Script {
+    url ["SAIExample3.class"]
+}

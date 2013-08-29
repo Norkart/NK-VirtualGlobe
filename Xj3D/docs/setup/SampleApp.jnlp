@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp codebase="YourCodeBase Here">
+  <information>
+    <title>Your Title Here</title>
+    <description>Your Description Here</description>
+    <vendor>Who You Are</vendor> 
+  </information>
+  <resources>
+    <j2se version="1.4+" max-heap-size="1048m" initial-heap-size="128m"/>
+    <jar href="Your JAR here"/> 
+    <jar href="httpclient.jar"/>
+    <jar href="j3d-org-all_0.9.0.jar"/>
+    <jar href="j3d-org-images.jar"/>
+    <jar href="uri.jar"/> 
+    <jar href="jmf.jar"/>
+    <jar href="vlc_uri.jar"/>
+    <jar href="gnu-regexp-1.0.8.jar"/>
+    <jar href="js.jar"/>
+    <jar href="xj3d-all.jar"/>
+  </resources>
+  <!-- Each platform is going to need a version of these libraries. -->
+  <!--     For now, only have it set up for this test. -->
+  <!--
+  <resources os="Windows">
+    <nativelib href="java3d/win/J3Ddll.jar"/>
+    <nativelib href="java3d/win/j3daudiodll.jar"/>
+    <nativelib href="java3d/win/J3DUtilsdll.jar"/>
+    <jar href="java3d/win/j3daudio.jar"/>
+    <jar href="java3d/win/j3dcore.jar"/>
+    <jar href="java3d/win/j3dutils.jar"/>  
+    <jar href="java3d/win/vecmath.jar"/>
+  </resources>
+  -->  
+  <application-desc main-class="YourMainClassHere"/>
+  <security>
+      <!-- You may need this for some features -->
+      <all-permissions/>
+  </security>
+</jnlp>

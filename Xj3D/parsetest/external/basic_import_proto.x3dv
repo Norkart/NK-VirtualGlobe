@@ -1,0 +1,23 @@
+#X3D V3.0 utf8
+
+# Extends the basic import test to now include a PROTO declaration and
+# use. Checks to make sure we can use the import, as well as create an 
+# create an instance of that proto and pipe events into an import that
+# has not yet resolved.
+
+PROFILE Immersive
+
+PROTO ImportTest [] {
+  DEF INLINE Inline {}
+
+  DEF TS TimeSensor { 
+    cycleInterval 10
+    loop TRUE
+  }
+
+  IMPORT INLINE.foo AS bar
+
+  ROUTE TS.fraction_changed TO bar.set_fraction
+}
+
+ImportTest {}

@@ -1,0 +1,5 @@
+#X3D V3.0 utf8
+
+# There is no PROFILE statement here, this should cause an error
+
+Group {}

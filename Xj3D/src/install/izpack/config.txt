@@ -1,0 +1,5 @@
+;!@Install@!UTF-8!
+Title="Xj3D"
+BeginPrompt="Do you want to install the Xj3D 2.0?"
+RunProgram="install.bat"
+;!@InstallEnd@!

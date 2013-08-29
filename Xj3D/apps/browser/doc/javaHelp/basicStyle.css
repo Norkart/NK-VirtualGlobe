@@ -1,0 +1,30 @@
+body {
+	font-family: arial, helvetica, sans serif;
+	font-size: 12pt;
+	font-weight: normal;
+	color: black;
+}
+
+h1 {
+	font-size: 140%;
+	font-weight: bold;
+}
+
+h2 {
+	font-size: 120%;
+	font-weight: bold;
+}
+
+h3 {
+	font-size: 100%;
+	font-weight: bold;
+}
+
+p {
+}
+
+.menuItem {
+	color: blue;
+	font-weight: bold;
+	font-style: italic;
+}

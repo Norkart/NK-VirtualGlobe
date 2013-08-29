@@ -1,0 +1,100 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT Geospatial:1
+
+Background {
+  groundColor [ 0.1 0.1 0.8 ]
+  skyColor [ 0.1 0.1 0.8 ]
+}
+
+NavigationInfo {
+   avatarSize [1000, 1.6, 0.75]
+   speed 100000
+   type ["EXAMINE", "ANY"]
+}
+
+GeoViewpoint {
+  description "Equator/Prime Meridian"
+  geoSystem [ "GDC" ]
+  orientation 1 0 0 -1.57
+  position 0 0 12000000
+}
+
+GeoViewpoint {
+  description "LA"
+  geoSystem [ "GDC" ]
+  orientation 1 0 0 -1.57
+  position 34.07636 -118.26667 12000000
+}
+		
+
+GeoViewpoint {
+   geoSystem [ "GDC" ]
+   position 40.74705 -74.02514 12000000
+   orientation 1 0 0 -1.57
+   description "New York"
+}
+
+Group {
+   children [
+Shape {
+  appearance Appearance {
+    material Material {
+      diffuseColor 1 0.0 0
+    }
+    texture ImageTexture { url ["earth.jpg" ] }
+  }
+  geometry GeoElevationGrid {
+    geoGridOrigin -90 -180 0
+    geoSystem [ "GDC" ]
+    solid TRUE
+    height [
+      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+      0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0                  
+      ]
+    xDimension 21
+    xSpacing 18
+    yScale 200
+    zDimension 11
+    zSpacing 18
+  }
+}
+
+]}
+
+GeoLocation {
+   geoSystem [ "GDC" ]
+   geoCoords 40.74705 -74.02514 200000 # New York, elev 200km
+   children [
+	Shape { appearance Appearance { 
+		   material Material { diffuseColor 1 0 0 } }
+		geometry Sphere { radius 100000 }
+	       }
+	DEF GTS GeoTouchSensor {
+	   geoSystem ["GDC"]
+	}
+
+	       
+   ]
+}
+
+DEF SC Script {
+   inputOnly SFVec3d hitGeoCoord_changed
+   url ["ecmascript:
+      function hitGeoCoord_changed(val) {
+         Browser.println('HitGeoCoord: ' + val.x + ' ' + val.y + ' ' + val.z);
+      }
+   "]
+}
+
+ROUTE GTS.hitGeoCoord_changed TO SC.hitGeoCoord_changed

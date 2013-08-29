@@ -1,0 +1,20 @@
+#VRML V2.0 utf8 CosmoWorlds V1.0
+
+Shape {
+  appearance Appearance {
+    material Material {
+      diffuseColor 1 0 0 
+    }
+  }
+  geometry Box {
+  }
+}
+
+Background {
+  frontUrl [ "front.gif" ]
+  backUrl [ "back.gif" ]
+  leftUrl [ "left.gif" ]
+  rightUrl [ "right.gif" ]
+  topUrl [ "top.gif" ]
+  bottomUrl [ "bottom.gif" ]
+}

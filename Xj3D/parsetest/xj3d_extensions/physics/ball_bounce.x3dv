@@ -1,0 +1,115 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_RigidBodyPhysics:2
+
+Viewpoint {
+  position 0 0 4
+}
+
+Group {
+  children [
+    DEF BALL-GEOM CollidableShape {
+      shape Shape {
+        appearance Appearance {
+          material Material {
+	    emissiveColor 1 0 0 
+	  }
+	}
+	geometry Sphere { radius 0.1 }
+      }
+    }
+    DEF GROUND-GEOM CollidableShape {
+      translation 0 -0.5 0
+      shape Shape {
+        appearance Appearance {
+          material Material {
+	    emissiveColor 0 1 0
+	  }
+	}
+	geometry Box {
+	  size 20 0.1 20
+	}
+      }
+    }
+  ]
+}
+
+# Little sphere to indicate that we have collisions
+Transform {
+  translation 1 1 0 
+  children Shape {
+    appearance Appearance {
+      material DEF INDICATOR-MATERIAL Material {
+        emissiveColor 0 0 1 
+      }
+    }
+    geometry Sphere { radius 0.2 } 
+  }
+}
+
+DEF BODY-COLLECTION RigidBodyCollection {
+  bodies [
+    DEF BODY-1 RigidBody {
+      position 0 2 0
+      geometry USE BALL-GEOM
+    }
+  ]
+  collider DEF COLLISION-GROUP CollisionCollection {
+    bounce 1
+    collidables [
+      USE BALL-GEOM
+      USE GROUND-GEOM
+    ]
+  }
+}
+
+DEF COLLISION-OUTPUT CollisionSensor {
+  collidables USE COLLISION-GROUP
+}
+
+# A script to tell us when contacts occur
+DEF CONTACT-SCRIPT Script {
+  directOutput TRUE
+  inputOnly MFNode set_jointContacts
+  outputOnly MFNode correctedContacts
+  inputOnly SFBool activeSensor
+  outputOnly SFColor indicatorColor
+  initializeOnly SFNode ground USE GROUND-GEOM
+  url "ecmascript:
+    function set_jointContacts(val) {
+      for(i = 0; i < val.length; i++) {
+        if(val[i].geometry1.equals(ground)) {
+	  val[i].geometry1 = null;
+	  val[i].body1 = null;
+	  val[i].bounce = 1;
+	}
+
+        if(val[i].geometry2.equals(ground)) {
+	  val[i].geometry2 = null;
+	  val[i].body2 = null;
+	  val[i].bounce = 1;
+	}
+      }
+      correctedContacts = val;
+    }
+
+    function activeSensor(val) {
+      if(val) {
+        indicatorColor.r = 0;
+        indicatorColor.g = 1;
+        indicatorColor.b = 0;
+      }	else {
+        indicatorColor.r = 1;
+        indicatorColor.g = 0;
+        indicatorColor.b = 0;
+      }
+    }
+  "
+}
+
+ROUTE COLLISION-OUTPUT.contacts TO CONTACT-SCRIPT.set_jointContacts
+ROUTE COLLISION-OUTPUT.isActive TO CONTACT-SCRIPT.activeSensor
+ROUTE CONTACT-SCRIPT.indicatorColor TO INDICATOR-MATERIAL.set_emissiveColor
+ROUTE CONTACT-SCRIPT.correctedContacts TO BODY-COLLECTION.set_contacts
+

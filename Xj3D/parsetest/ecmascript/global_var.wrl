@@ -1,0 +1,26 @@
+#VRML V2.0 utf8
+
+DEF TrackScript Script {
+      eventOut MFString text
+
+      url [ "javascript:
+      var pfi=0; // internal global persistent variable
+
+      function initialize (timeStamp)
+      {
+        Browser.println('pfi: ' + pfi);
+        pfi = -1;
+        Browser.println('pfi: ' + pfi);
+        if (pfi == -1)
+           text = new MFString('PASS');
+        else
+           text = new MFString('FAIL');
+      }
+      "]
+}
+
+Shape {
+   geometry DEF TEXT Text { }
+}
+
+ROUTE TrackScript.text TO TEXT.string

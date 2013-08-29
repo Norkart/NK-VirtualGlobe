@@ -1,0 +1,17 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+DEF TG Transform {
+  rotation 0 1 0 0.78
+  children Shape {
+    geometry Box {}
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+  }
+}
+
+EXPORT TG AS BOX_TRANSFORM

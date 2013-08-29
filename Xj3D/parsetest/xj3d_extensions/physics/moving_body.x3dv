@@ -1,0 +1,64 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_RigidBodyPhysics:2
+
+Group {
+  children [
+    DEF SPHERE-GEOM-1 CollidableShape {
+      shape Shape {
+        appearance Appearance {
+          material Material {
+	    emissiveColor 1 0 0 
+	  }
+	}
+	geometry Sphere {
+	  radius 0.2
+	}
+      }
+    }
+    DEF SPHERE-GEOM-2 CollidableShape {
+      shape Shape {
+        appearance Appearance {
+          material Material {
+	    emissiveColor 0 0 1 
+	  }
+	}
+	geometry Sphere {
+	  radius 0.2
+	}
+      }
+    }
+  ]
+}
+
+RigidBodyCollection {
+  bodies [ 
+    DEF BODY-1 RigidBody {
+      linearVelocity 0.1 0 0
+      mass 0.1
+      position -0.5 0 0
+      geometry [ USE SPHERE-GEOM-1 ] 
+      useGlobalGravity FALSE
+    }
+  ]
+}
+
+DEF TS TimeSensor {
+  cycleInterval 10
+  loop TRUE
+}
+
+DEF PI PositionInterpolator {
+  key [ 0 0.25 0.5 0.75 1 ]
+  keyValue [
+    -1  0 0
+     0  1 0
+     1  0 0
+     0 -1 0
+    -1  0 0
+  ]
+}
+
+ROUTE TS.fraction_changed TO PI.set_fraction
+ROUTE PI.value_changed TO BODY-1.set_linearVelocity

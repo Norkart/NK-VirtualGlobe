@@ -1,0 +1,38 @@
+#VRML V2.0 utf8
+
+Shape {
+  appearance Appearance {
+    material Material {
+      diffuseColor 1 0 0
+    }
+  }
+  geometry Box {
+  }
+}
+
+DEF TS TimeSensor {
+  cycleInterval 5
+  loop TRUE
+}
+
+DEF CI ColorInterpolator {
+  key [ 0 0.5 1]
+  keyValue [ 0 1 0, 0 0 0.8, 0 1 0]
+}
+
+DEF BG Background {}
+
+DEF SC Script {
+   eventIn SFColor set_skyColor
+   eventOut MFColor skyColor_changed
+
+   url ["javascript:
+      function set_skyColor(val) {
+         skyColor_changed = new MFColor(val);
+      }
+   "]
+}
+
+ROUTE TS.fraction_changed TO CI.set_fraction
+ROUTE CI.value_changed TO SC.set_skyColor
+ROUTE SC.skyColor_changed TO BG.set_skyColor

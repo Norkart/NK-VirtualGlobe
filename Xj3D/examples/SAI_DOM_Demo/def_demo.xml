@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE X3D SYSTEM "http://www.web3d.org/TaskGroups/x3d/translation/x3d-compact.dtd" >
+<X3D>
+  <Scene>
+    <NavigationInfo speed="10" type="EXAMINE" DEF="NAV_INFO"/>
+    <Transform rotation="0 0 1 1.57" scale="2 .5 2">
+      <Shape DEF="BOX_SHAPE">
+        <Appearance> 
+          <Material
+            ambientIntensity="0.175"
+            diffuseColor="0 0 .8"
+            DEF="BOX_MATERIAL"
+          />
+        </Appearance>
+        <Box DEF="BOX_GEOMETRY"/>
+      </Shape>
+      <Transform translation="0 10 0" DEF="SPHERE_TRANSLATION">
+        <Shape DEF="SPHERE_SHAPE"> 
+          <Sphere radius="4" DEF="SPHERE_GEOMETRY"/>
+          <Appearance> 
+            <Material ambientIntensity="0.75" diffuseColor="1 0 0"/>
+          </Appearance>
+        </Shape> 
+      </Transform>
+    </Transform> 
+  </Scene>
+</X3D>

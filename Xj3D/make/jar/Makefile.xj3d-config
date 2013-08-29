@@ -1,0 +1,38 @@
+#*********************************************************************
+#
+#  (C) 2001 - 2006 Web3d Consortium
+#    http://www.web3d.org/
+# 
+# Package makefile producing xj3d-config.jar
+#
+# Author: Alan Hudson
+# Version: $Revision: 1.5 $
+#
+#*********************************************************************
+
+# A version number we tack onto the JAR file name for eclipse versioning
+# purposes.
+JAR_VERSION=2.0.0
+
+# Describe every directory that you want included in the JAR file here.
+# This is not recursive, so if you want parent directory and the 
+# sub-directory, say so. These directories should not have '/' appended.
+JAR_CONTENT= config/common \
+  config/2.0 \
+  config/2.0/spec \
+  config/3.0 \
+  config/3.0/spec \
+  config/3.0/component \
+  config/3.0/profile \
+  config/3.1 \
+  config/3.1/spec \
+  config/3.1/component \
+  config/3.2 \
+  config/3.2/spec \
+  config/3.2/component \
+	                  
+
+# Manifest file name. Stored in the make/manifest directory
+MANIFEST=xj3d-xml.mf
+
+include ${PROJECT_ROOT}/make/Makefile.config

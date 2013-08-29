@@ -1,0 +1,12 @@
+org.web3d.x3d.jaxp
+org.web3d.x3d.jaxp.dom
+org.web3d.x3d.jaxp.dom.j3d
+org.web3d.x3d.jaxp.dom.sai
+org.web3d.x3d.jaxp.dom.sai.attribute
+org.web3d.x3d.jaxp.dom.sai.element
+org.web3d.x3d.jaxp.dom.sai.element.BaseLine
+org.web3d.x3d.jaxp.dom.sai.element.Core
+org.web3d.x3d.jaxp.dom.swing
+org.web3d.x3d.jaxp.dom.util
+org.web3d.x3d.util
+com.sun.j3d.loaders.vrml97.impl

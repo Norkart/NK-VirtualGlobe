@@ -1,0 +1,50 @@
+﻿#VRML V2.0 utf8
+#Chinese text entered using MS Pinyin IME 3.0
+#on Japanese Windows XP Pro by a person
+#who does not speak Chinese.
+#Text from a chart of Chinese zodia symbols
+#from a text which lists them as the
+#earthly branches and the symbolic animals
+#The characters for dragon(long), horse (ma)
+#and cockerel(ji) did not display correctly
+#while editing this document but the code points
+#appear to be correct.
+
+Transform {
+  translation 1 0 0
+  children Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+    geometry Text {
+      string [ 
+"子"
+"丑"
+"寅"
+"卯"
+"辰"
+"已"
+"午"
+"未"
+"申"
+"西"
+"戌"
+"亥"
+"鼠"
+"牛"
+"虎"
+"兔"
+"龙"
+"蛇"
+"马"
+"羊"
+"猴"
+"鸡"
+"犬"
+"猪"
+ ]
+    }
+  }
+}

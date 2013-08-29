@@ -1,0 +1,152 @@
+#X3D V3.0 utf8
+PROFILE Immersive
+COMPONENT Networking:3
+
+DEF Splash Transform {
+    translation 0 -2 0
+    children [
+        Shape {
+            appearance Appearance {
+                material DEF MAT Material {
+                    diffuseColor 1 1 1
+                }
+            }
+            geometry Box {size 0.5 2 0.5}
+        }
+        DEF TOUCH TouchSensor {}
+    ]
+}
+
+DEF Scene Transform {
+    children [
+Transform {
+    translation 2 0 0
+    children [
+        Shape {
+            appearance Appearance {
+            texture DEF TEX1 ImageTexture {
+              url [ "ButtonForward.png" ]
+            }
+          }
+          geometry Box { size 1 1 1 }
+      }
+  ]
+}
+
+Transform {
+    translation 0 0 0
+    children [
+        Shape {
+            appearance Appearance {
+            texture DEF TEX2 ImageTexture {
+              url [ "vts.jpg" ]
+            }
+          }
+          geometry Box { size 1 1 1}
+      }
+  ]
+}
+Transform {
+    translation -2 0 0
+    children [
+        Shape {
+            appearance Appearance {
+            texture DEF TEX3 ImageTexture {
+              url [ "x3d2-s.gif" ]
+            }
+          }
+          geometry Box { size 1 1 1}
+      }
+  ]
+}
+Transform {
+    scale 0.75 0.75 0.75
+    translation -2 2 0
+    children [
+        DEF INLINE Inline {
+            url ["ifs-01.x3dv"]
+        }
+    ]
+}
+DEF TS TimeSensor {
+    cycleInterval 2
+    loop TRUE
+}
+
+DEF TX Transform {
+    translation 2 2 0
+    children [
+        Shape {
+            geometry Box {size 1 1 1}
+            appearance Appearance {
+                material Material{}
+            }
+        }
+    ]
+}
+
+DEF S Script {
+  mustEvaluate TRUE
+  directOutput FALSE
+  inputOnly SFTime pulse
+  outputOnly SFVec3f location
+  outputOnly SFRotation orientation
+
+  url [ "MoveObjectTest.class" ]
+}
+
+]}
+
+ROUTE TS.cycleTime TO S.pulse
+ROUTE S.location TO TX.set_translation
+ROUTE S.orientation TO TX.set_rotation
+
+DEF LS LoadSensor {
+    watchList [USE TEX1, USE TEX2, USE TEX3, USE INLINE, USE S]
+}
+
+DEF Logic1 Script {
+    inputOnly SFBool isLoaded
+    inputOnly SFFloat progress
+    outputOnly SFColor status
+    inputOnly SFTime reset
+    initializeOnly SFNode resetNode USE TEX1
+    initializeOnly SFNode sensor USE LS
+    directOutput TRUE
+
+    url [ "ecmascript:
+        function initialize() {
+           if (sensor.isLoaded) {
+               Browser.println('Already loaded at Initialize');
+               status = new SFColor(0.2, 0.2, 1);
+           } else if (sensor.progress != 0) {
+              Browser.println('Progress at Initial: ' + sensor.progress);
+              status = new SFColor(0.2, 0.2, sensor.progress);
+           }
+        }
+
+        function isLoaded(value) {
+            if (value) {
+                status = new SFColor(0.2, 0.2, 1);
+            }
+            Browser.println('isLoaded1: ' + value);
+        }
+
+        function progress(value) {
+            Browser.println('progress1: ' + value);
+            status = new SFColor(0.2, 0.2, value);
+        }
+
+        // Test the reset functionality
+        function reset() {
+            resetNode.set_url = new MFString('vts.jpg');
+            sensor.watchList = new MFNode(resetNode);
+            //sensor.watchList[0] = resetNode;
+        }
+    "]
+}
+
+ROUTE Logic1.status TO MAT.set_diffuseColor
+ROUTE LS.isLoaded TO Logic1.isLoaded
+ROUTE LS.progress TO Logic1.progress
+ROUTE TOUCH.touchTime TO Logic1.reset

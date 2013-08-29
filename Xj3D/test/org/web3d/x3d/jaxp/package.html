@@ -1,0 +1,28 @@
+<HTML>
+<BODY>
+
+Classes used to build custom parsers to be used with the JAXP optional
+package.
+<P>
+
+The classes here can be used to create X3D specific parsers under the
+Java API for XML Processing (JAXP) optional package. The custom builders will
+create a DOM model that is also using the Scene Authoring Interface (SAI)
+<P>
+
+<H2>DOM Building</H2>
+
+The document builder factory will parse an X3D document and build a DOM
+tree from it. The DOM tree will then also have the capability of using the
+SAI methods to interact with it or operate in mixed mode.
+<P>
+
+To use the document builder, you need to set the system property
+<CODE>javax.xml.parsers.DocumentBuilderFactory</CODE> to the value
+<CODE>org.web3d.x3d.jaxp.DocumentBuilderFactoryImpl</CODE>.
+
+@see <a href="http://www.web3d.org/Taskgroups/x3d/sai/">SAI doc</A>
+@see <a href="http://java.sun.com/xml/">Sun's XML></A>
+
+</BODY>
+</HTML>

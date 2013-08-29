@@ -1,0 +1,65 @@
+#VRML V2.0 utf8
+
+Viewpoint {
+    description "default"
+}
+Transform {
+    rotation 0 0 1  0.570796
+    children [
+        Transform {
+            translation 1 1 1
+            rotation 0 1 0  1.570796
+            children [
+                Transform {
+                    rotation -1 0 0 1.570796
+                    children [
+                        Viewpoint {
+                            description "looking down"
+                        }
+                        Shape {
+                            geometry IndexedFaceSet {
+                                coord Coordinate {
+                                    point [ 5 5 0, 5 -5 0, -5 -5 0, -5 5 0 ]
+                                }
+                                coordIndex [
+                                    0 1 2 3 -1, #top visible from +y
+                                    3 2 1 0 -1, #bottom visible from -y
+                                ]
+                            }
+                            appearance Appearance {
+                                material Material{
+                                    emissiveColor 1 1 0
+                                    transparency 0.75
+                                }
+                            }
+                        }		
+                        Transform {
+                            scale 20 20 20
+                            children [
+                                Inline {
+                                    url [ "cartesian_axis.wrl" ]
+                                }
+                            ]
+                        }
+                        DEF tr Transform {
+                            rotation 1 0 0 1.570796
+                            children [
+                                Shape {
+                                    geometry Cone {}
+                                    appearance Appearance {
+                                        material Material {
+                                            diffuseColor .5 .5 .5
+                                            emissiveColor 0 0 .5
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                        DEF ps PlaneSensor { }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+        ROUTE ps.translation_changed TO tr.set_translation

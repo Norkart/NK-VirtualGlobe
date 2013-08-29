@@ -1,0 +1,46 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_RigidBodyPhysics:2
+
+Group {
+  children [
+    DEF SPHERE-GEOM-1 CollidableShape {
+      translation -1 0 0
+      shape Shape {
+        appearance Appearance {
+          material Material {
+	    emissiveColor 1 0 0 
+	  }
+	}
+	geometry Sphere {
+	  radius 0.2
+	}
+      }
+    }
+    DEF SPHERE-GEOM-2 CollidableShape {
+      translation 1 0 0
+      shape Shape {
+        appearance Appearance {
+          material Material {
+	    emissiveColor 0 0 1 
+	  }
+	}
+	geometry Sphere {
+	  radius 0.2
+	}
+      }
+    }
+  ]
+}
+
+RigidBodyCollection {
+  bodies [ 
+    DEF BODY-1 RigidBody {
+      geometry [ USE SPHERE-GEOM-1 ] 
+    }
+    DEF BODY-2 RigidBody {
+      geometry [ USE SPHERE-GEOM-2 ] 
+    }
+  ]
+}

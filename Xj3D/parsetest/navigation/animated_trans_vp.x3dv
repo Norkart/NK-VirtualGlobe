@@ -1,0 +1,53 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+DEF VPTRANS Transform {
+   translation 0 0 10
+   children [
+      DEF VP Viewpoint {
+         position 0 0 0
+         description "Animated VP"
+      }
+   ]
+}
+
+DEF OBJTRANS Transform {
+   translation 0 0 7
+   children [
+      Shape {
+         appearance Appearance {
+            material Material {
+               diffuseColor 1 0 0
+            }
+         }
+         geometry Box { size 1 1 1}
+      }
+      
+      DEF TS TouchSensor {}
+   ]
+}
+
+DEF TIME TimeSensor {
+   cycleInterval 7
+   loop FALSE
+}
+
+ROUTE TS.touchTime TO TIME.startTime
+
+DEF VPINTERP PositionInterpolator {
+   key [0,1]
+   keyValue [0 0 10, 0 0 -10]
+}
+
+DEF OBJINTERP PositionInterpolator {
+   key [0,1]
+   keyValue [0 0 7, 0 0 -14]
+}
+
+ROUTE TIME.fraction_changed TO VPINTERP.set_fraction
+ROUTE TIME.fraction_changed TO OBJINTERP.set_fraction
+
+ROUTE VPINTERP.value_changed TO VPTRANS.set_translation
+#ROUTE VPINTERP.value_changed TO VP.set_position
+ROUTE OBJINTERP.value_changed TO OBJTRANS.set_translation

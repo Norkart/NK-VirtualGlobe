@@ -1,0 +1,41 @@
+#*********************************************************************
+#
+#  (C) 2001 - 2006 Web3d Consortium
+#    http://www.web3d.org/
+#
+# Package makefile producing xj3d-mobile.jar
+#
+# Author: Justin Couch
+# Version: $Revision: 1.5 $
+#
+#*********************************************************************
+
+# A version number we tack onto the JAR file name for eclipse versioning
+# purposes.
+JAR_VERSION=2.0.0
+
+# Describe every directory that you want included in the JAR file here.
+# This is not recursive, so if you want parent directory and the
+# sub-directory, say so. These directories should not have '/' appended.
+JAR_CONTENT=org/web3d/vrml/renderer/mobile \
+  org/web3d/vrml/renderer/mobile/browser \
+  org/web3d/vrml/renderer/mobile/input \
+  org/web3d/vrml/renderer/mobile/nodes \
+  org/web3d/vrml/renderer/mobile/nodes/core \
+  org/web3d/vrml/renderer/mobile/nodes/geom3d \
+  org/web3d/vrml/renderer/mobile/nodes/group \
+  org/web3d/vrml/renderer/mobile/nodes/interpolator \
+  org/web3d/vrml/renderer/mobile/nodes/navigation \
+  org/web3d/vrml/renderer/mobile/nodes/networking \
+  org/web3d/vrml/renderer/mobile/nodes/scripting \
+  org/web3d/vrml/renderer/mobile/nodes/sensor \
+  org/web3d/vrml/renderer/mobile/nodes/shape \
+  org/web3d/vrml/renderer/mobile/nodes/text \
+  org/web3d/vrml/renderer/mobile/nodes/texture \
+  org/web3d/vrml/renderer/mobile/nodes/time \
+  org/web3d/vrml/renderer/mobile/nodes/eventutils \
+
+# Manifest file name. Stored in the make/manifest directory
+MANIFEST=xj3d-mobile.mf
+
+include ${PROJECT_ROOT}/make/Makefile.jav

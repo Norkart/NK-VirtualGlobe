@@ -1,0 +1,5 @@
+MetadataDouble
+MetadataFloat
+MetadataInteger
+MetadataSet
+MetadataString

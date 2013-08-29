@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Universe>
+<Galaxy>
+   <Star position="0 0 0" class="G" />
+   <Planet position="-250 0 0" class="M" />
+</Galaxy>
+</Universe>

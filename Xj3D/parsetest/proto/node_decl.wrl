@@ -1,0 +1,35 @@
+#VRML V2.0 utf8
+
+PROTO MyShape [
+  exposedField SFNode geom Box {}
+] 
+{
+  Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0 
+      }
+    }
+    geometry IS geom
+  }
+}
+
+MyShape {}
+
+Transform {
+  translation 2 0 0 
+  children [
+    MyShape {
+      geom Cone {}
+    }
+  ]
+}
+
+Transform {
+  translation -2 0 0 
+  children [
+    MyShape {
+      geom Sphere {}
+    }
+  ]
+}

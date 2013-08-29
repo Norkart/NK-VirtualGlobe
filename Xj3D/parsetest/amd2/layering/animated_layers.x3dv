@@ -1,0 +1,83 @@
+#X3D V3.2 utf8
+
+PROFILE Immersive
+COMPONENT Layering:1
+COMPONENT EnvironmentalEffects:3
+
+# Tests two different layers with both viewpoints being animated.
+
+DEF LAYER_1_VP Viewpoint {
+  description "Layer 1 animated viewpoint"
+}
+
+# The content defined for the base layer
+DEF TG Transform {
+  children Shape {
+    geometry Box {}
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+  }
+}
+
+DEF LAYER_1_PI PositionInterpolator {
+  key [ 0 0.25 0.5 0.75 1 ]
+  keyValue [
+    -1 0 10
+    -1 1 10
+     0 1 10
+     0 0 10
+    -1 0 10
+  ]
+}
+
+# A second layer to show that we do have stuff on screen
+LayerSet {  
+  order [ 0 1 ]
+  layers [
+    Layer {
+      children [
+        DEF LAYER_2_VP Viewpoint {
+          description "Layer 2 animated viewpoint"
+        }
+        TextureBackground {
+            transparency 1
+        }
+        DEF LAYER_2_PI PositionInterpolator {
+          key [ 0 0.25 0.5 0.75 1 ]
+          keyValue [
+             0 0 10
+            -1 0 10
+            -1 1 10
+             0 1 10
+             0 0 10
+          ]
+        }
+        DEF TG_LAYER Transform {
+          translation 0.3 0.4 0
+          children Shape {
+            geometry Box {}
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 1 0
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+
+DEF TIME TimeSensor {
+  loop TRUE
+  cycleInterval 10
+}
+
+ROUTE TIME.fraction_changed TO LAYER_1_PI.set_fraction
+ROUTE TIME.fraction_changed TO LAYER_2_PI.set_fraction
+
+ROUTE LAYER_1_PI.value_changed TO LAYER_1_VP.set_position
+ROUTE LAYER_2_PI.value_changed TO LAYER_2_VP.set_position

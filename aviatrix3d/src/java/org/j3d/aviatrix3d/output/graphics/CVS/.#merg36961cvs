@@ -1,0 +1,765 @@
+/*****************************************************************************
+ *                     Yumetech, Inc Copyright (c) 2004 - 2006
+ *                               Java Source
+ *
+ * This source is licensed under the GNU LGPL v2.1
+ * Please read http://www.gnu.org/copyleft/lgpl.html for more information
+ *
+ * This software comes with the standard NO WARRANTY disclaimer for any
+ * purpose. Use it at your own risk. If there's a problem you get to fix it.
+ *
+ ****************************************************************************/
+
+package org.j3d.aviatrix3d.output.graphics;
+
+// External imports
+import javax.media.opengl.GL;
+import javax.media.opengl.GLContext;
+import javax.media.opengl.TraceGL;
+import javax.media.opengl.glu.GLU;
+
+// Local imports
+import org.j3d.aviatrix3d.rendering.*;
+
+import org.j3d.util.IntHashMap;
+import org.j3d.util.MatrixUtils;
+
+import org.j3d.aviatrix3d.pipeline.RenderOp;
+import org.j3d.aviatrix3d.pipeline.graphics.GraphicsEnvironmentData;
+
+/**
+ * Handles the rendering for a single output device - be it on-screen or off.
+ * <p>
+ * The code expects that everything is set up before each call of the display()
+ * callback. It does not handle any recursive rendering requests as that is
+ * assumed to have been sorted out before calling this renderer.
+ * <p>
+ *
+ * @author Justin Couch
+ * @version $Revision: 3.10 $
+ */
+public class DebugRenderingProcessor extends BaseRenderingProcessor
+{
+    /** Reusable debug GL context */
+    private TraceGL debugGL;
+
+    /** Trigger to dump the next frame using the TraceGL class */
+    private int dumpNextFrameCount;
+
+    /** The GLU instance needed for finding and printing error strings */
+    private GLU glu;
+
+    /**
+     * Construct handler for rendering objects to the main screen.
+     *
+     * @param context The context that this processor is working on
+     */
+    public DebugRenderingProcessor(GLContext context)
+    {
+        super(context);
+
+        dumpNextFrameCount = 0;
+        glu = new GLU();
+    }
+
+    //---------------------------------------------------------------
+    // Methods defined by BaseRenderingProcessor
+    //---------------------------------------------------------------
+
+    /**
+     * Called by the drawable to perform rendering by the client.
+     */
+    public void display()
+    {
+        GL gl = glContext.getGL();
+
+        // Process the deleted nodes
+        if(numDeletions != 0)
+        {
+            for(int i = 0; i < numDeletions; i++)
+            {
+                deleteQueue[i].cleanup(gl);
+                deleteQueue[i] = null;
+            }
+
+            numDeletions = 0;
+        }
+
+        // Process the shader init calls and then log requests
+        if(lastShaderInitIdx != 0)
+        {
+            for(int i = 0; i < lastShaderInitIdx; i++)
+            {
+                shaderInitList[i].initialize(gl);
+                shaderInitList[i] = null;
+            }
+
+            lastShaderInitIdx = 0;
+        }
+
+        if(lastShaderLogIdx != 0)
+        {
+            for(int i = 0; i < lastShaderLogIdx; i++)
+            {
+                shaderLogList[i].fetchLogInfo(gl);
+                shaderLogList[i] = null;
+            }
+
+            lastShaderLogIdx = 0;
+        }
+
+        if(terminate)
+            return;
+
+        boolean dumpNow = false;
+
+        if(dumpNextFrameCount != 0)
+        {
+            dumpNextFrameCount--;
+            dumpNow = true;
+        }
+
+        if(dumpNow)
+        {
+            System.out.println("*** Starting new frame dump***");
+            debugGL = new TraceGL(gl, System.out);
+
+            gl = debugGL;
+            // This is going to cause fun with the object deletion queue as it
+            // will result in a heap more IDs that will never get cleaned up.
+            // Ignore for now as it may not be an issue. The only time this
+            // should be called is during debugging, which means the extra
+            // wasted resources shouldn't be a problem, I hope!
+        }
+
+        if(terminate)
+            return;
+
+        if(alwaysLocalClear)
+        {
+            gl.glClearColor(clearColor[0],
+                            clearColor[1],
+                            clearColor[2],
+                            clearColor[3]);
+            gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+
+            if(dumpNow)
+            {
+                int err = gl.glGetError();
+                if(err != GL.GL_NO_ERROR)
+                {
+                    System.out.println("Error: after clearing local");
+                    System.out.println(glu.gluErrorString(err));
+                }
+            }
+        }
+
+        ObjectRenderable obj;
+        ComponentRenderable comp;
+        BufferStateRenderable buffer;
+        GraphicsEnvironmentData data = null;
+        int data_index = 0;
+        int layer_data_index = 0;
+        int mp_data_index = 0;
+        int clear_buffer_bits = 0;
+        boolean fog_active = false;
+        boolean first_layer = true;
+        ObjectRenderable current_fog = null;
+
+        for(int i = 0; i < numRenderables && !terminate; i++)
+        {
+            switch(operationList[i])
+            {
+                case RenderOp.START_MULTIPASS:
+                    if(dumpNow) {
+                        System.out.println("Start multipass. First layer? " +
+                                           first_layer);
+                    }
+
+                    clear_buffer_bits = 0;
+
+                    data = environmentList[data_index];
+                    mp_data_index = data_index;
+                    data_index++;
+
+                    // If this is not the first layer, render to one of the
+                    // auxillary buffers and have that copy back to the main
+                    // buffer when the layer is finished.
+                    if(!first_layer)
+                    {
+                        gl.glDrawBuffer(GL.GL_AUX0);
+                        gl.glReadBuffer(GL.GL_AUX0);
+
+                        setupMultipassViewport(gl, data);
+                    }
+                    break;
+
+                case RenderOp.STOP_MULTIPASS:
+                    if(dumpNow) {
+                        System.out.println("Stop multipass. First layer? " +
+                                           first_layer);
+                    }
+                    // If not the first layer, copy everything back and then
+                    // reset the drawing and read layers back to the normal
+                    // rendering setup.
+                    if(!first_layer)
+                    {
+                        gl.glDrawBuffer(GL.GL_BACK);
+                        gl.glRasterPos2i(data.viewport[GraphicsEnvironmentData.VIEW_X],
+                                         data.viewport[GraphicsEnvironmentData.VIEW_Y]);
+
+                        gl.glCopyPixels(0,
+                                        0,
+                                        data.viewport[GraphicsEnvironmentData.VIEW_WIDTH],
+                                        data.viewport[GraphicsEnvironmentData.VIEW_HEIGHT],
+                                        GL.GL_COLOR);
+                        gl.glReadBuffer(GL.GL_BACK);
+                    }
+                    break;
+
+                case RenderOp.START_MULTIPASS_PASS:
+                    if(dumpNow) {
+                        System.out.println("Start multipass pass. Clear Buffers 0x" +
+                                           Integer.toHexString(clear_buffer_bits));
+                    }
+
+                    if(clear_buffer_bits != 0)
+                        gl.glClear(clear_buffer_bits);
+
+                    data = environmentList[data_index];
+                    preMPPassEnvironmentDraw(gl, data);
+                    break;
+
+                case RenderOp.STOP_MULTIPASS_PASS:
+                    if(dumpNow) {
+                        System.out.println("Stop multipass pass.");
+                    }
+
+                    data = environmentList[data_index];
+                    data_index++;
+                    postMPPassEnvironmentDraw(gl, data);
+                    break;
+
+                case RenderOp.START_BUFFER_STATE:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Start buffer state " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+                    buffer = (BufferStateRenderable)renderableList[i].renderable;
+                    buffer.setBufferState(gl);
+
+                    if(buffer.checkClearBufferState())
+                        clear_buffer_bits |= buffer.getBufferBitMask();
+                    break;
+
+                case RenderOp.SET_BUFFER_CLEAR:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Set buffer clear bit " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+                    buffer = (BufferStateRenderable)renderableList[i].renderable;
+
+                    if(buffer.checkClearBufferState())
+                        clear_buffer_bits |= buffer.getBufferBitMask();
+                    else
+                        clear_buffer_bits &= ~buffer.getBufferBitMask();
+                    break;
+
+                case RenderOp.CHANGE_BUFFER_STATE:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Change buffer state " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+                    buffer = (BufferStateRenderable)renderableList[i].renderable;
+                    buffer.updateBufferState(gl);
+
+                    if(buffer.checkClearBufferState())
+                        clear_buffer_bits |= buffer.getBufferBitMask();
+                    else
+                        clear_buffer_bits &= ~buffer.getBufferBitMask();
+                    break;
+
+                case RenderOp.STOP_BUFFER_STATE:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Stop buffer state " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+                    buffer = (BufferStateRenderable)renderableList[i].renderable;
+                    buffer.clearBufferState(gl);
+                    clear_buffer_bits &= ~buffer.getBufferBitMask();
+                    break;
+
+                case RenderOp.START_LAYER:
+                    layer_data_index = data_index;
+                    data = environmentList[layer_data_index];
+
+                    if(dumpNow) {
+                        System.out.println("Start layer " + layer_data_index +
+                                            " 0x" +
+                                            Integer.toHexString(data.hashCode()));
+                    }
+                    gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
+
+                    fog_active = data.fog != null;
+                    current_fog = data.fog;
+
+                    preLayerEnvironmentDraw(gl, data);
+                    break;
+
+                case RenderOp.STOP_LAYER:
+                    data = environmentList[layer_data_index];
+
+                    if(dumpNow) {
+                        System.out.println("Stop Layer " + layer_data_index +
+                                            " 0x" +
+                                            Integer.toHexString(data.hashCode()));
+                    }
+
+                    postLayerEnvironmentDraw(gl, data);
+                    fog_active = false;
+                    data_index++;
+                    layer_data_index = data_index;
+                    break;
+
+                case RenderOp.START_VIEWPORT:
+                    data = environmentList[layer_data_index];
+
+                    if(dumpNow) {
+                        System.out.println("Start viewport " + layer_data_index +
+                                            " 0x" +
+                                            Integer.toHexString(data.hashCode()));
+                    }
+
+                    setupViewport(gl, data);
+                    break;
+
+                case RenderOp.STOP_VIEWPORT:
+                    if(dumpNow) {
+                        System.out.println("Stop viewport");
+                    }
+                    break;
+
+                case RenderOp.START_RENDER:
+                    // load the matrix to render
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Start render " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    gl.glPushMatrix();
+                    gl.glMultMatrixf(renderableList[i].transform, 0);
+                    obj = (ObjectRenderable)renderableList[i].renderable;
+                    obj.render(gl);
+                    break;
+
+                case RenderOp.STOP_RENDER:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Stop render " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    obj = (ObjectRenderable)renderableList[i].renderable;
+                    obj.postRender(gl);
+                    gl.glPopMatrix();
+                    break;
+
+                case RenderOp.START_RENDER_2D:
+                    // load the matrix to render
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Start 2D render " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    gl.glRasterPos2f(renderableList[i].transform[3],
+                                     renderableList[i].transform[7]);
+                    gl.glPixelZoom(renderableList[i].transform[0],
+                                   renderableList[i].transform[5]);
+                    obj = (ObjectRenderable)renderableList[i].renderable;
+                    obj.render(gl);
+                    break;
+
+                case RenderOp.STOP_RENDER_2D:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Stop 2D render " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    obj = (ObjectRenderable)renderableList[i].renderable;
+                    obj.postRender(gl);
+                    break;
+
+                case RenderOp.RENDER_GEOMETRY:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Render geometry " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    // load the matrix to render
+                    gl.glPushMatrix();
+                    gl.glMultMatrixf(renderableList[i].transform, 0);
+                    ((GeometryRenderable)renderableList[i].renderable).render(gl);
+                    gl.glPopMatrix();
+                    break;
+
+                case RenderOp.RENDER_GEOMETRY_2D:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Render 2D geometry " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    // load the matrix to render
+                    gl.glRasterPos2f(renderableList[i].transform[3],
+                                     renderableList[i].transform[7]);
+                    gl.glPixelZoom(renderableList[i].transform[0],
+                                   renderableList[i].transform[5]);
+                    ((GeometryRenderable)renderableList[i].renderable).render(gl);
+                    break;
+
+                case RenderOp.RENDER_CUSTOM:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Render custom " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    // load the matrix to render
+                    gl.glPushMatrix();
+                    gl.glMultMatrixf(renderableList[i].transform, 0);
+
+                    CustomRenderable cr =
+                        (CustomRenderable)renderableList[i].renderable;
+                    cr.render(gl, renderableList[i].instructions);
+                    gl.glPopMatrix();
+                    break;
+
+                case RenderOp.START_STATE:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Start state " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    obj = (ObjectRenderable)renderableList[i].renderable;
+                    obj.render(gl);
+                    break;
+
+                case RenderOp.STOP_STATE:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Stop state " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    obj = (ObjectRenderable)renderableList[i].renderable;
+                    obj.postRender(gl);
+                    break;
+
+                case RenderOp.START_LIGHT:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Start light " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    // Get the next available light ID
+
+// TODO:
+// Fix this so that if we run off the end we can still recover and not disable
+// Lighting/Clipping completely for the next frame.
+                    if(lastLightIdx >= availableLights.length)
+                        continue;
+
+                    Integer l_id = availableLights[lastLightIdx++];
+
+                    lightIdMap.put(renderableList[i].id, l_id);
+
+                    // load the matrix to render
+                    gl.glPushMatrix();
+                    gl.glMultMatrixf(renderableList[i].transform, 0);
+                    comp = (ComponentRenderable)renderableList[i].renderable;
+                    comp.render(gl, l_id);
+                    gl.glPopMatrix();
+                    break;
+
+                case RenderOp.STOP_LIGHT:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Stop light " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    if(lastLightIdx >= availableLights.length)
+                        continue;
+
+                    l_id = (Integer)lightIdMap.remove(renderableList[i].id);
+
+                    comp = (ComponentRenderable)renderableList[i].renderable;
+                    comp.postRender(gl, l_id);
+                    availableLights[--lastLightIdx] = l_id;
+                    break;
+
+                case RenderOp.START_CLIP_PLANE:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Start clip plane " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    // Get the next available clip plane ID
+
+// TODO:
+// Fix this so that if we run off the end we can still recover and not disable
+// Lighting/Clipping completely for the next frame.
+                    if(lastClipIdx >= availableClips.length)
+                        continue;
+
+                    Integer c_id = availableClips[lastClipIdx++];
+                    clipIdMap.put(renderableList[i].id, c_id);
+
+                    // load the matrix to render
+                    gl.glPushMatrix();
+                    gl.glMultMatrixf(renderableList[i].transform, 0);
+
+                    comp = (ComponentRenderable)renderableList[i].renderable;
+                    comp.render(gl, c_id);
+                    gl.glPopMatrix();
+                    break;
+
+                case RenderOp.STOP_CLIP_PLANE:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Stop clip plane " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    if(lastClipIdx >= availableClips.length)
+                        continue;
+
+                    c_id = (Integer)clipIdMap.remove(renderableList[i].id);
+
+                    comp = (ComponentRenderable)renderableList[i].renderable;
+                    comp.postRender(gl, c_id);
+
+                    availableClips[--lastClipIdx] = c_id;
+                    break;
+
+                case RenderOp.START_TRANSPARENT:
+                    if(dumpNow)
+                        System.out.println("Start transparency");
+
+                    gl.glDepthMask(false);
+                    gl.glEnable(GL.GL_BLEND);
+                    gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+                    break;
+
+                case RenderOp.STOP_TRANSPARENT:
+                    if(dumpNow)
+                        System.out.println("Stop transparency");
+
+                    gl.glDisable(GL.GL_BLEND);
+                    gl.glDepthMask(true);
+                    break;
+
+                case RenderOp.START_FOG:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Start fog " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    if(!fog_active)
+                    {
+                        gl.glEnable(GL.GL_FOG);
+                        fog_active = true;
+                    }
+
+                    obj = (ObjectRenderable)renderableList[i].renderable;
+                    obj.render(gl);
+                    break;
+
+                case RenderOp.STOP_FOG:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Stop fog " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    if(current_fog != null)
+                        current_fog.render(gl);
+                    else
+                    {
+                        obj = (ObjectRenderable)renderableList[i].renderable;
+                        obj.postRender(gl);
+                        fog_active = false;
+                        gl.glDisable(GL.GL_FOG);
+                    }
+                    break;
+
+                case RenderOp.START_SHADER_PROGRAM:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Start shader program " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    ShaderComponentRenderable prog =
+                        (ShaderComponentRenderable)renderableList[i].renderable;
+
+                    if(!prog.isValid(gl))
+                    {
+                        currentShaderProgramId = INVALID_SHADER;
+                        continue;
+                    }
+
+// TODO: Optimise this to avoid the allocation. Use IntHashMap for lookup.
+                    currentShaderProgramId = new Integer(prog.getProgramId(gl));
+                    prog.render(gl);
+                    break;
+
+                case RenderOp.STOP_SHADER_PROGRAM:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Stop shader program " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    if(currentShaderProgramId == INVALID_SHADER)
+                        continue;
+
+                    obj = (ObjectRenderable)renderableList[i].renderable;
+                    obj.postRender(gl);
+
+                    currentShaderProgramId = INVALID_SHADER;
+                    break;
+
+                case RenderOp.SET_SHADER_ARGS:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Set shader args " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    if(currentShaderProgramId == INVALID_SHADER)
+                        continue;
+
+                    comp = (ComponentRenderable)renderableList[i].renderable;
+                    comp.render(gl, currentShaderProgramId);
+                    break;
+
+                case RenderOp.START_TEXTURE:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Start texture " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    comp = (ComponentRenderable)renderableList[i].renderable;
+                    Integer id = (Integer)(renderableList[i].instructions);
+                    comp.render(gl, id);
+                    break;
+
+                case RenderOp.STOP_TEXTURE:
+                    if(dumpNow) {
+                        Renderable s = renderableList[i].renderable;
+                        System.out.println("Stop texture " +
+                                            s.getClass() +
+                                            " 0x" +
+                                            Integer.toHexString(s.hashCode()));
+                    }
+
+                    comp = (ComponentRenderable)renderableList[i].renderable;
+                    id = (Integer)(renderableList[i].instructions);
+                    comp.postRender(gl, id);
+                    break;
+            }
+
+            // Also check for GL errors being made
+            if(dumpNow)
+            {
+                int err = gl.glGetError();
+                if(err != GL.GL_NO_ERROR)
+                {
+                    System.out.println("Error: after " + renderableList[i].renderable);
+                    System.out.println(glu.gluErrorString(err));
+                }
+            }
+        }
+
+        if(terminate)
+            return;
+
+        gl.glFlush();
+    }
+
+    //---------------------------------------------------------------
+    // Local Methods
+    //---------------------------------------------------------------
+
+    /**
+     * For the next <i>count</count> rendered frames, output the GL state to
+     * the standard output. If it is currently dumping, the number will be
+     * reset to this value.
+     *
+     * @param count The number of frames to output the debug state.
+     */
+    public void traceNextFrames(int count)
+    {
+        dumpNextFrameCount = count;
+    }
+}

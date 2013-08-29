@@ -1,0 +1,35 @@
+#X3D V3.2 utf8
+PROFILE Immersive
+Viewpoint {
+}
+NavigationInfo {
+    headlight FALSE
+}
+Transform {
+	translation -10 0 0
+	children [
+		PointLight { 
+			global TRUE
+		}
+	]
+}
+Transform {
+	children [  
+		Shape {  
+			geometry Sphere { }  
+			appearance Appearance {  
+				material Material{ 
+                    diffuseColor 0 0 1
+				}
+			}  
+		}
+	]  
+}
+Transform {
+	translation 10 0 0
+	children [
+		PointLight { 
+			global TRUE
+		}
+	]
+}

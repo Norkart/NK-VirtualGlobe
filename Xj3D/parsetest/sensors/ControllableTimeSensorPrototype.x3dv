@@ -1,0 +1,54 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+PROTO ControllableTimeSensor [
+   inputOutput SFFloat speedMultiplier 1
+   inputOutput SFBool reverse FALSE
+   inputOnly SFFloat set_fraction
+   
+   inputOutput SFTime cycleInterval 1
+   inputOutput SFBool enabled TRUE
+   inputOutput SFBool loop FALSE
+   inputOutput SFNode metadata NULL
+   inputOutput SFTime pauseTime 0
+   inputOutput SFTime resumeTime 0
+   inputOutput SFTime startTime 0
+   inputOutput SFTime stopTime 0
+   outputOnly SFTime cycleTime
+   outputOnly SFTime elapsedTime
+   outputOnly SFFloat fraction_changed
+   outputOnly SFBool isActive
+   outputOnly SFBool isPaused
+   outputOnly SFTime time
+   
+] {
+    DEF TimeSensor TimeSensor {
+      cycleInterval IS cycleInterval
+      enabled IS enabled
+      loop IS loop
+      metadata IS metadata
+      pauseTime IS pauseTime
+      resumeTime IS resumeTime
+      startTime IS startTime
+      stopTime IS stopTime
+      cycleTime IS cycleTime
+      elapsedTime IS elapsedTime      
+      isActive IS isActive
+      isPaused IS isPaused
+      time IS time
+    }
+
+    DEF TSLogic Script {
+       directOutput TRUE
+       initializeOnly SFNode timer USE TimeSensor
+       inputOutput SFFloat speedMultiplier IS speedMultiplier
+       inputOnly SFFloat jump IS set_fraction
+       inputOutput SFBool reverse IS reverse
+       inputOnly SFFloat inFraction
+       outputOnly SFFloat outFraction IS fraction_changed
+       url ["TouchLogic.class"]
+    }
+    
+    ROUTE TimeSensor.fraction_changed TO TSLogic.inFraction
+}

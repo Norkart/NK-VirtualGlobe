@@ -1,0 +1,121 @@
+#
+# Bashrc file to setup the environment
+#
+
+# Set up Bash defaults for the environment
+export HISTCONTROL=ignoredups
+
+# Environment variables used to set up our working system
+
+CVS_RSH="ssh" ; export CVS_RSH
+
+# TODO: Change to your local install
+JAVA_HOME="c:/j2sdk1.4.2_07"
+
+PATH=$PATH:.
+export OS_ARCH=WINNT
+export JMFHOME="C:/Program Files/JMF2.1.1e"
+
+VECMATH_CLASSPATH="c:/javaapis/java3d/1.4/lib/vecmath.jar"
+
+JOGL_DEV_ROOT="/cygdrive/c/javaapis/jogl/jsr231"
+JOGL_DEV_DOS_ROOT="c:/javaapis/jogl/jsr231"
+JOGL_DEV_CLASSPATH="${JOGL_DEV_DOS_ROOT}/jogl.jar"
+JOGL_DEV_LIB_PATH="${JOGL_DEV_ROOT}/natives/windows"
+
+JOAL_DEV_ROOT="/cygdrive/c/javaapis/joal/joal-windows-1.1b01"
+JOAL_DEV_DOS_ROOT="c:/javaapis/joal/joal-windows-1.1b01"
+JOAL_DEV_CLASSPATH="${JOAL_DEV_DOS_ROOT}/joal.jar"
+JOAL_DEV_LIB_PATH="${JOAL_DEV_ROOT}"
+
+# TODO: Change this to your specific platform's version
+SWT_DEV_ROOT="/cygdrive/c/javaapis/swt/swt-win32-win32-x86"
+SWT_DEV_DOS_ROOT="c:/javaapis/swt/swt-win32-win32-x86"
+
+SWT_DEV_CLASSPATH="${SWT_DEV_DOS_ROOT}/swt.jar"
+SWT_DEV_LIB_PATH="${SWT_DEV_ROOT}"
+
+JINPUT_CLASSPATH="C:/javaapis/jinput"
+
+export JAVACC_HOME="/cygdrive/c/javaapis/javacc/javacc-3.2/bin"
+
+X3D_HOME="/cygdrive/c/projs/Xj3D"
+X3D_DOS_HOME="c:/projs/Xj3D"
+X3D_LIBS="${X3D_DOS_HOME}/lib"
+X3D_CVSROOT=":pserver:anonymous@cvs.xj3d.org:/cvs/xj3d/cvsroot"
+X3D_CLASSES="${X3D_DOS_HOME}/classes"
+X3D_CLASSPATH="${X3D_DOS_HOME}"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_CLASSES}"
+X3D_CLASSPATH="${X3D_CLASSPATH};${JOAL_DEV_CLASSPATH}"
+X3D_CLASSPATH="${X3D_CLASSPATH};${VECMATH_CLASSPATH}"
+X3D_CLASSPATH="${X3D_CLASSPATH};${JOGL_DEV_CLASSPATH}"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_LIBS}/j3d-org-all_0.9.0.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};${JMFHOME}/lib/jmf.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_LIBS}/aviatrix3d-all_2.0.0.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};${SWT_DEV_CLASSPATH}"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_LIBS}/js.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_LIBS}/vlc_uri.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_LIBS}/uri.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_LIBS}/dis.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_LIBS}/disxml.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_LIBS}/httpclient.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_LIBS}/jsr108-0.01.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_LIBS}/gt2-main-2.2.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_LIBS}/geoapi-2.0.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_LIBS}/gt2-referencing-2.2.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_LIBS}/odejava.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_DOS_HOME}/apps/browser/classes"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_DOS_HOME}/apps/browser"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_DOS_HOME}/apps/converter/classes"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_DOS_HOME}/apps/cadfilter/classes"
+X3D_CLASSPATH="${X3D_CLASSPATH};${JINPUT_CLASSPATH}/coreAPI/lib/jutils.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};${JINPUT_CLASSPATH}/plugins/DX8/lib/jinput.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};${JINPUT_CLASSPATH}/plugins/DX8/bin/dxinput.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};${X3D_LIBS}/FastInfoset.jar"
+X3D_CLASSPATH="${X3D_CLASSPATH};."
+
+X3D_PROJECT_CLASSPATH="${JOGL_DEV_CLASSPATH}";
+X3D_PROJECT_CLASSPATH="${X3D_PROJECT_CLASSPATH};${JOAL_DEV_CLASSPATH}"
+X3D_PROJECT_CLASSPATH="${X3D_PROJECT_CLASSPATH};${X3D_LIBS}/js.jar"
+X3D_PROJECT_CLASSPATH="${X3D_PROJECT_CLASSPATH};${SWT_DEV_CLASSPATH}"
+
+ELUMENS_LIB_PATH="${X3D_HOME}/apps/browser/lib"
+X3D_PATH="${JAVACC_HOME}"
+X3D_PATH="${X3D_PATH}:${JOGL_DEV_LIB_PATH}"
+X3D_PATH="${X3D_PATH}:${JOAL_DEV_LIB_PATH}"
+X3D_PATH="${X3D_PATH}:${ELUMENS_LIB_PATH}"
+X3D_PATH="${X3D_PATH}:${PATH}"
+
+home()
+{
+  export PROJECT_HOME=
+  export PROJECT_ROOT=
+  export AREA=home
+  export PS1="[$AREA \W] \$ "
+  export CVSROOT=
+  export PATH=$STD_PATH
+  export CLASSPATH=
+  cd
+}
+
+xj3d()
+{
+  export PROJECT_HOME="${X3D_HOME}"
+  export PROJECT_CLASSPATH="${X3D_PROJECT_CLASSPATH}"
+  export AREA=xj3d
+  export PS1="[$AREA \W] \$ "
+  export CVSROOT=$X3D_CVSROOT
+  export LD_LIBRARY_PATH="$ELUMENS_LIB_PATH;$X3D_LIB_PATH"
+  export PATH="$X3D_PATH"
+  export CLASSPATH="${X3D_CLASSPATH};${X3D_PROJECT_CLASSPATH}"
+  export PROJECT_ROOT="${X3D_DOS_HOME}"
+  alias co="cd ${PROJECT_HOME}/.. ; cvs update -d -P ${AREA} >& log"
+  cd $PROJECT_HOME $1
+}
+
+export JAVA_HOME
+
+alias browser="java -Dsun.java2d.noddraw=true -Xmx450M -XX:MaxDirectMemorySize=450M xj3d.browser.Xj3DBrowser -anisotropicDegree 2"
+alias convert="java -Xmx800M -Xms400M xj3d.converter.Xj3DConv"
+
+xj3d

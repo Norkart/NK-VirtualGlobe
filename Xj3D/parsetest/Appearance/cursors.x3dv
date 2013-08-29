@@ -1,0 +1,76 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+NavigationInfo {
+   type ["WALK" "FLY" "EXAMINE"]
+}
+
+Group {
+  children [
+    Shape {
+      geometry Box {}
+      appearance Appearance {
+        material DEF MAT Material {
+          diffuseColor 1 0 0
+        }
+      }
+    }
+    DEF TS TouchSensor {}
+  ]
+}
+
+Transform {
+   translation -3 0 0
+  children [
+    Shape {
+      geometry Cone {}
+      appearance Appearance {
+        material Material {
+          diffuseColor 0 1 0
+        }
+      }
+    }
+    DEF DS SphereSensor {}
+  ]
+}
+
+Anchor {
+   children [
+Transform {
+   translation 3 0 0
+  children [
+    Shape {
+      geometry Sphere {}
+      appearance Appearance {
+        material Material {
+          diffuseColor 0 0 1
+        }
+      }
+    }
+  ]
+}
+]}
+
+DEF SM ScalarInterpolator {
+  key [0,0.5,1]
+  keyValue [1 0.5 0]
+}
+
+DEF TIME TimeSensor {
+  cycleInterval 3
+}
+
+DEF SC Script {
+   inputOnly SFBool over
+   url ["ecmascript:
+      function over(val) {
+         Browser.println('over: ' + val);
+      }
+   "]
+}
+
+ROUTE TS.isOver TO SC.over
+ROUTE TS.touchTime TO TIME.startTime
+ROUTE TIME.fraction_changed TO SM.set_fraction
+ROUTE SM.value_changed TO MAT.transparency

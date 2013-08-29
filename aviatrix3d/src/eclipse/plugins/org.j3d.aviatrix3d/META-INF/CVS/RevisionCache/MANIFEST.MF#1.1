@@ -1,0 +1,46 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Bundle-SymbolicName: org.j3d.aviatrix3d; singleton:=true
+Bundle-Version: 2.0.0
+Eclipse-AutoStart: true
+Bundle-ClassPath: aviatrix3d-all.jar,
+ vecmath.jar,
+ j3d-org-util.jar,
+ j3d-org-loader-core.jar,
+ j3d-org-loader-dem.jar,
+ j3d-org-loader-stl.jar,
+ j3d-org-loader-vterrain.jar,
+ j3d-org-loader-3ds.jar,
+ j3d-org-geom-core.jar,
+ j3d-org-geom-hanim.jar,
+ j3d-org-geom-particle.jar,
+ j3d-org-geom-terrain.jar,
+ j3d-org-elumens.jar,
+ j3d-org-texture.jar,
+ j3d-org-navigation.jar
+Require-Bundle: org.j3d.opengl.swt, org.eclipse.swt
+Export-Package: org.j3d.aviatrix3d,
+ org.j3d.aviatrix3d.iutil; x-internal:=true,
+ org.j3d.aviatrix3d.output.audio,
+ org.j3d.aviatrix3d.output.graphics,
+ org.j3d.aviatrix3d.pipeline,
+ org.j3d.aviatrix3d.pipeline.audio,
+ org.j3d.aviatrix3d.pipeline.graphics,
+ org.j3d.aviatrix3d.rendering,
+ org.j3d.renderer.aviatrix3d.geom,
+ org.j3d.renderer.aviatrix3d.geom.hanim,
+ org.j3d.renderer.aviatrix3d.geom.particle,
+ org.j3d.renderer.aviatrix3d.geom.volume,
+ org.j3d.renderer.aviatrix3d.loader,
+ org.j3d.renderer.aviatrix3d.loader.dem,
+ org.j3d.renderer.aviatrix3d.loader.discreet,
+ org.j3d.renderer.aviatrix3d.loader.stl,
+ org.j3d.renderer.aviatrix3d.loader.vterrain,
+ org.j3d.renderer.aviatrix3d.navigation,
+ org.j3d.renderer.aviatrix3d.nodes,
+ org.j3d.renderer.aviatrix3d.texture,
+ org.j3d.renderer.aviatrix3d.util,
+ javax.vecmath

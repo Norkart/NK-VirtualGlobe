@@ -1,0 +1,39 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+NavigationInfo {
+   type ["EXAMINE"]
+}
+
+DEF TX Transform {
+  translation 2 0 0
+}
+
+DEF SC Script {
+  directOutput TRUE
+  inputOnly SFTime touchInput
+  initializeOnly SFNode target USE TX
+
+  url [ "CreateStringTest.class" ]
+}
+
+Transform {
+  translation -1 0 0
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 0 0
+        }
+  texture ImageTexture {
+           url ["x3d2-s.gif"]
+  }
+      }
+      geometry Box {}
+    }
+    DEF TS TouchSensor {}
+  ]
+}
+
+ROUTE TS.touchTime TO SC.touchInput

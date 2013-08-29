@@ -1,0 +1,11 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+# This test is supposed to cause a browser error. inputOutputs are not
+# permitted in script declarations in VRML97.
+Script {
+  mustEvaluate TRUE
+  directOutput FALSE
+  inputOutput SFInt32 myIntinitializeOnly 20
+}

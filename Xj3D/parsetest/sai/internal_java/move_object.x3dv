@@ -1,0 +1,35 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+DEF TS TimeSensor {
+  cycleInterval 2
+  loop TRUE
+}
+
+DEF TX Transform {
+  translation 0 0 0
+  rotation 0 0 0 0
+  children [
+    Shape {
+      geometry Box {}
+      appearance Appearance {
+        material Material{}
+      }
+    }
+  ]
+}
+
+DEF S Script {
+  mustEvaluate TRUE
+  directOutput FALSE
+  inputOnly SFTime pulse
+  outputOnly SFVec3f location
+  outputOnly SFRotation orientation
+
+  url [ "MoveObjectTest.class" ]
+}
+
+ROUTE TS.cycleTime TO S.pulse
+ROUTE S.location TO TX.set_translation
+ROUTE S.orientation TO TX.set_rotation

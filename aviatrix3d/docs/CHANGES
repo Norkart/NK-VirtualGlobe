@@ -1,0 +1,44 @@
+			      
+                      Aviatrix3D Changes
+
+Changes since 2.0 Beta 1
+
+- Reorganised the interfaces to the rendering pipeline to not use 
+  most of the user-facing classes. Now uses the separate Cullable/
+  Renderable-derived interfaces. Some small exceptions still
+  remaining but will be cleared by the next beta release
+
+- Addition of SWT lightweight rendering capabilities (Draw2D and GEF)
+
+- yUp handling on textures was back to front
+
+- Introduction of VBO capabilities
+
+- Make system now builds Eclipse plugins directly rather than needing to
+  hand-roll your own.
+
+- Several package changes to be more consistent. Most beta 1 code will
+  not compile without these package changes.
+
+- A simplified Billboard node (not quite complete) and LODGroup node in
+  the extensions area that will automatically apply this behaviour every
+  frame that they are visible.
+
+- Added a debugging pipeline set of stages to help end users debug strange
+  behaviour either in AV3D or their own code.
+
+- Partial fix of the texture/shader object deletion code when they get changed
+
+TBD:
+
+The Pipeline/RenderingManager setup will change with the introduction of 
+a new Window class. This will allow the system to have multiple separate
+windows looking onto a shared scene graph. 
+
+Complete the rest of the pipeline cleanup to remove references to 
+SceneGraphObject.
+
+Complete the audio pipeline implementation
+
+Find that dratted Culling bug that sometimes appears when an object is
+under a series of transforms with rotations. 

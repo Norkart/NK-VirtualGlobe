@@ -1,0 +1,56 @@
+#VRML V2.0 utf8
+
+PROTO CrossBox [] {
+  PROTO ColoredBox [
+    exposedField SFColor boxColor 0 0 0
+  ] {
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor IS boxColor
+        }
+      }
+      geometry Box { size 0.5 0.5 0.5 }
+    }
+  }
+
+  Group {
+    children [
+      ColoredBox { boxColor 1 1 1 }
+
+      Transform {
+        translation 0 1 0
+        children ColoredBox { boxColor 0 1 0 }
+      }
+
+      Transform {
+        translation 1 0 0
+        children ColoredBox { boxColor 1 0 0 }
+      }
+
+      Transform {
+        translation -1 0 0
+        children ColoredBox { boxColor 0 0 1 }
+      }
+
+      Transform {
+        translation 0 -1 0
+        children ColoredBox { boxColor 1 1 0 }
+      }
+    ]
+  }
+}
+
+CrossBox {}
+
+Transform {
+  translation 1.5 2 -1
+  rotation 0 1 0 0.7853
+  children CrossBox {}
+}
+
+Transform {
+  translation -1.5 2 -1
+  rotation 0 1 0 -0.7853
+  children CrossBox {}
+}

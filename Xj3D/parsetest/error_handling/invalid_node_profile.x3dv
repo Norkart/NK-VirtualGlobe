@@ -1,0 +1,18 @@
+#X3D V3.0 utf8
+
+# Should cause an error because the script node is not part of
+# the Interchange profile. The file should not load. The extra
+# geometry is to make sure that we terminate early. If you see 
+# the geometry, something's wrong.
+PROFILE Interchange
+
+Script {}
+
+Shape {
+  appearance Appearance {
+    material DEF Material {
+      emissiveColor 0 0 1
+    }
+  }
+  geometry Sphere { radius 0.25 }
+}

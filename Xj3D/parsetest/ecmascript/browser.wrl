@@ -1,0 +1,15 @@
+#VRML V2.0 utf8
+
+Script {
+  url [ "javascript:
+        function initialize() {
+          Browser.println('Name: ' + Browser.getName());
+          Browser.println('Version: ' + Browser.getVersion());
+          Browser.println('URL: ' + Browser.getWorldURL());
+        }
+      "]
+}
+
+Shape {
+   geometry Box {}
+}

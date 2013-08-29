@@ -1,0 +1,21 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Script {
+  mustEvaluate TRUE
+  directOutput FALSE
+  inputOutput SFInt32 myIntField 20
+  initializeOnly SFColorRGBA mySFColor 0 0.1 1.0 0.6
+  initializeOnly MFColorRGBA myMFColor [ 
+    0 0.1 1.0 0.6
+    0.2 1.0 0.3 0.4
+    0.5 1.0 0.6 0.7
+  ]
+  initializeOnly SFDouble mySFDouble 19834875.989933222222222
+  initializeOnly MFDouble myMFDouble [ 
+    0 0.1 1.0 0.6
+    0.2 1.0 0.3 0.4
+    0.5 1.0 0.6 0.7
+  ]
+}

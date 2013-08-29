@@ -1,0 +1,10 @@
+Class-Path: FastInfoset.jar aviatrix3d-all_2.0.0.jar \
+   gnu-regexp-1.0.8.jar j3d-org-all_0.9.0.jar \
+   jinput.jar joal.jar jogl.jar gluegen-rt.jar jutils.jar \
+   uri.jar vecmath.jar vlc_uri.jar 
+Extension-Name: xj3d
+Specification-Vendor: Web3d Consortium
+Specification-Version: 3.2
+Implementation-Vendor-Id: org.xj3d
+Implementation-Vendor: Yumetech, Inc
+Implementation-Version: 2.0

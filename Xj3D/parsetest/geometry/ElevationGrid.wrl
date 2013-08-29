@@ -1,0 +1,26 @@
+#VRML V2.0 utf8
+
+Transform {
+    children [
+        Shape {
+			appearance Appearance {
+				material Material {}
+			}
+			geometry DEF EG ElevationGrid {
+                xDimension 5
+                xSpacing 1
+                zDimension 4
+                zSpacing 1
+                height [
+                    0 .707 1 .707 0
+                    0 .47 .667 .47 0
+                    0 .236 .33 .236 0
+                    0 0 0 0 0
+                ]
+            }
+        }
+    ]
+}
+
+DirectionalLight { direction -0.80 -0.6 0 }
+Viewpoint { position 3 2 9 }

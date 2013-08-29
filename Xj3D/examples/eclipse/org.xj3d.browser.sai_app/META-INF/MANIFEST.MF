@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Xj3D SAI Application
+Bundle-SymbolicName: org.xj3d.browser.sai_app; singleton:=true
+Bundle-Version: 2.0.0
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.xj3d.browser
+Eclipse-LazyStart: true

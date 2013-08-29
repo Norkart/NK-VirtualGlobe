@@ -1,0 +1,78 @@
+#VRML V2.0 utf8
+
+PROTO simple1 [
+  field SFNode myAppearance Appearance {}
+]
+{
+  Group {}
+}
+
+PROTO simple1 [
+  field SFNode myAppearance Appearance {
+    material Material {}
+  }
+]
+{
+  Group {}
+}
+
+PROTO simple2 [
+  field MFNode myNodes Appearance {}
+]
+{
+  Group {}
+}
+
+PROTO simple3 [
+  field MFNode myNodes [
+    Shape {
+      appearance Appearance {}
+    }
+  ]
+]
+{
+  Group {}
+}
+
+PROTO simple4 [
+  field MFNode myNodes [
+    Shape {
+      appearance Appearance {}
+    }
+    Group {}
+  ]
+]
+{
+  Group {}
+}
+
+PROTO simple5 [
+  field MFNode myNodes [
+    Shape {
+      appearance Appearance {}
+    }
+    Shape {
+      appearance NULL
+    }
+  ]
+]
+{
+  Group {}
+}
+
+PROTO simple6 [
+  field MFNode myNodes [
+    Shape {
+      appearance Appearance {}
+    }
+    Group {
+      children [
+        Group{}
+        Group {}
+      ]
+    }
+  ]
+]
+{
+  Group {}
+}

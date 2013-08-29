@@ -1,0 +1,11 @@
+#VRML V2.0 utf8
+
+EXTERNPROTO Label [
+   exposedField MFString text
+] "Label_p2.wrl"
+
+Label { text ["Hello X3D"] }
+
+Viewpoint {}
+
+

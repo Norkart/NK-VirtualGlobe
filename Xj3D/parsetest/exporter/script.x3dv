@@ -1,0 +1,31 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Switch {
+   children [DEF SHAPE Shape {
+      geometry Box {
+      }
+
+   }
+   ]
+}
+DEF TRANSFORM Transform {
+   
+}
+DEF SC Script {
+   initializeOnly SFNode shape USE SHAPE
+   initializeOnly SFNode testSFNode NULL
+   initializeOnly SFNode transform USE TRANSFORM
+   inputOutput SFInt32 testInt 0
+   outputOnly MFNode children
+   outputOnly MFNode testMFNode
+   outputOnly SFNode testSFNodeEO 
+   
+      url ["ecmascript:
+     function initialize() {
+        children = new MFNode(shape);
+     }
+  "]   
+}
+ROUTE SC.children TO TRANSFORM.children

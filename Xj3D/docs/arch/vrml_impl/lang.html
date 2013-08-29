@@ -1,0 +1,206 @@
+<HTML>
+<HEAD>
+<TITLE>Xj3D VRML lang package</TITLE>
+</HEAD>
+<BODY>
+
+<H1 ALIGN="center">Xj3D VRML Core Language Implementation</H1>
+
+Author: <I>Justin Couch</I><BR>
+Last updated: <I>$Date: 2001/04/30 09:01:02 $</I><BR>
+Revision: <I>$Revision: 1.1 $</I>
+
+<A NAME="intro">
+<H2>Intro</H2>
+</A>
+
+The core package provides classes and interfaces that represent the common
+functionality used by all the VRML code. Currently this is mainly exceptions
+that pass error information about a caller providing invalid information for
+fields and nodes within a VRML file.
+
+
+<H3>Background</H3>
+
+Regardless of where we are in VRML, we need to represent the core concepts of
+what the <A HREF="../vrml/abstract_model.html">abstract data model</A> provides
+us. As we were developing the code, it became more and more clear that a
+separate package was needed to contain this very basic functionality that was
+used everywhere. By rights, it did not belong within any other package as we
+didn't want to have to pull in all the other functionality associated with that
+package. It made sense to extract this common information and represent it as
+a separate package.
+
+<H3>Motivation</H3>
+
+We have two classes of information that needs to be presented - file basic
+structural information and errors. Therefore we created a <CODE>lang</CODE>
+package to represent the absolute core of the VRML language and its underlying
+data model. In essence, this represents the realisation of the concepts
+presented within main abstract model (Figure 1 in the Abstract Data Model
+document).
+<P>
+
+We already had a bunch of common errors that could occur anywhere within the
+code. These errors could occur during parsing, during node creation and also
+during runtime. As such, these errors didn't belong in a specific area, for
+example, why should runtime code know or have to include the parsing
+structures just to use the exceptions. Ideally we should be able to extract
+runtime information and use it completely independently of the parser. Hence,
+all the common errors that could occur in a VRML context are here.
+
+
+<P>
+<HR>
+
+<A NAME="structure">
+<H2>Structural Overview</H2>
+</A>
+
+The lang package consists of a single package. There are no sub-packages.
+The main aim of these classes and exceptions are to be used by other packages.
+
+<H3>Code Layout</H3>
+
+Figure 1 shows that there are two major structures of the code: There are the
+classes that represent node structural information and the exceptions for
+error conditions. Although there is no direct relationship between the two
+parts, there is an implied one from the exceptions to the classes. If an
+class generates an error for a field, it would be nice to know what field
+was effected beyond more than just a simple text message.
+
+<P>
+<CENTER>
+<A HREF="lang_structure.png">
+<IMG SRC="lang_structure_small.png" WIDTH="314" HEIGHT="194"></A><BR>
+<B>Figure 1:</B> UML Structure diagram of the VRML Language Core package
+</CENTER>
+<P>
+
+<H3>Field Representation</H3>
+
+All the information about a given field is held in the
+<CODE>VRMLFieldDeclaration</CODE> class. This class represents the information
+that describes a field rather than the field itself. That is, it does not store
+the value of the field, just the description of it - the name, access type and
+data type it represents.
+<P>
+
+The design makes the distinction between a field type description and the field
+value for efficiency reasons. We find that it is rare that someone will need
+the full field declaration when interacting with a VRML scene. However, they
+need the field values very often. If we were to pass around the full set of
+declarations and values, we would be wasting a lot of memory. By separating
+the declaration information from the value, we need to maintain only one
+instance of the declaration in memory regardless of the number of instances
+of a given node. The node instance can then contain its own references to the
+data values.
+<P>
+
+Refering to a given field is done through an integer value. Again, this design
+decision is based on efficiency. Using an int primitive type allows fast
+lookups of values rather than expensive class instance comparisons or string
+compares for field names. It also allows us a lot of flexibility to handle
+different names for the same field. For example, VRML97 allows exposedFields
+to be known by 3 different names <I>fieldName</I>, <I>set_fieldName</I> and
+<I>fieldName_changed</I>. By using an integer identifier, all of these
+different names can be simply matched to a single field reference internally.
+Similarly, we may use different names over time. As the VRML 200x specification
+is evolving, names of fields may change even though the data remains the same.
+One instance is the changing of the level field of LOD in VRML97 to the
+children field of VRML200x. As our file reader and scenegraph may have to deal
+with mixed content, this allows us a single representation of the node and
+field contents regardless of the specification version.
+
+<H3>Node Representation</H3>
+
+Every node is represented by the basic <CODE>VRMLNode</CODE> interface. At
+this level, the representation is very simple - it allows the user to query
+the node for the index of a given field name, and then with the index to get
+declaration information if so desired. We do not offer any more functionality
+than this at such a low level as we never know what a user may want to do with
+that node. Therefore we opt for the minimum required interface to query for
+the node and its information. We don't even allow access to the scenegraph
+structure at this point (ie parent or child nodes) as that then implies too
+much about a particular representation of a node.
+<P>
+
+Node template representation is also provided at the lowest level. Templates
+allow for a node to be defined on the fly from other information. These are
+typically used to collect a group of functionality together and use it as a
+single node. In the VRML97 specification, this was often used to define whole
+collections of the specification such an humanoid or geographical information.
+We provide this low level template because with the VRML200x specification,
+these templates may translate to known internal nodes that are actually
+instances of <CODE>VRMLNode</CODE>.
+
+<P>
+<HR>
+
+<A NAME="runtime">
+<H2>Runtime Semantics</H2>
+</A>
+
+These classes define static structures and interfaces only. There is no
+runtime information associated with their use above the normal Java language
+semantics of exceptions. All exceptions defined here are standard
+<CODE>java.lang.Exception</CODE> instances.	We do not use
+<CODE>RuntimeException</CODE> anywhere in the codebase as we want to make
+sure error conditions are explicitly caught. Any time that an error occurs it
+could completely disrupt the runtime system. Allowing runtime exceptions
+allows for the possibility of an uncaught exception completely halting the
+rendering system - not a desirable trait. Therefore, we force on the programmer
+the requirement to explicitly catch all error conditions all the time so that
+any errors that stop the renderer are not our problem, but the implementor's.
+
+<P>
+<HR>
+
+<A NAME="extending">
+<H2>Extending the Code</H2>
+</A>
+
+Extending the package's functionality follows the same lines as the basic
+structural information. - the exceptions provided, and the node
+representations.
+
+<H3>Exceptions</H3>
+
+Exceptions may be extended to provide more precise information on the nature
+of the error. In general, it is recommended that the more derived exceptions
+be extended. However, for some cases, like parsing, a whole new classification
+of exceptions can be generated, and these should extend the base
+<CODE>VRMLException</CODE> class.
+
+<H3>Classes</H3>
+
+Here we have a mixed bag. Some classes are designed to be extended, others are
+not.
+<P>
+
+The <CODE>VRMLFieldDeclaration</CODE> class is not designed to be extended.
+Field representation information does not change and therefore the declaration
+of a field should not change. If you need to provide for new field types, then
+the place to look is the <CODE>FieldConstants</CODE> utility class. Here you
+can add new definitions of field types (eg SFMyFieldType).
+<P>
+
+On the other hand, <CODE>VRMLNode</CODE> and <CODE>VRMLNodeTemplate</CODE>
+cannot be used directly and must be extended to be used. However, we don't
+expect users to be extending these nodes directly. Already the majority of the
+required functionality is presented in the <A HREF="nodes.html">nodes</A>
+package and we expect you to extend those interfaces only.
+
+<P>
+<HR>
+
+<H2>References</H2>
+
+<UL>
+<LI><A HREF="http://www.web3d.org/Specifications/VRML97/">VRML97 Specification</A></LI>
+<LI><A HREF="http://www.web3d.org/TaskGroups/x3d/specification-2000july/part1/Part1Index.html">
+    VRML 2000x Draft Specification</A></LI>
+</UL>
+
+</BODY>
+</HTML>

@@ -1,0 +1,14 @@
+#VRML V2.0 utf8
+
+DEF TG Transform {
+    children [
+		Shape {
+		   geometry Box {}
+		}
+	]
+}
+
+DEF PI PositionInterpolator { }
+
+ROUTE PI.value_changed TO TG.translation
+

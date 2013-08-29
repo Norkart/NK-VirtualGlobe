@@ -1,0 +1,38 @@
+<HTML>
+<BODY>
+Classes needed to create a full VRML browser implementation based on the
+nodes and other structures available in the API.
+<P>
+
+This package is a relatively high level approach to the concepts needed to
+build a browser. It bases its work on the low level parsing and building
+used in the {@link org.web3d.vrml.renderer.j3d.nodes J3D Nodes} package to
+then assemble a full browser.
+<P>
+
+A browser may be accessible in one of a number of forms presented in this
+package. You may start with just a single, simple window and go all the
+way to a full browser package. It does not provide a full browser application
+as that expects that you want to create a custom code for that.
+
+<H3>System Properties</H3>
+
+The following system properties are used by classes in this package.
+
+<ul>
+<li><code>org.web3d.xj3d.scriptloader.class</code> The name of the class
+    that implements the {@link org.web3d.vrml.nodes.loader.ScriptLoader}
+    interface, which is used for loading scripts.
+</li>
+<li><code>org.web3d.xj3d.fileloader.class</code> The name of the class
+    that implements the {@link org.web3d.vrml.nodes.loader.ExternalLoadManager}
+    interface, which is used for loading scripts.
+</li>
+<li><code>org.web3d.xj3d.routerfactory.class</code> The name of the class
+    that implements the {@link org.web3d.vrml.nodes.runtime.RouterFactory}
+    interface, which is used for loading scripts.
+</li>
+</ul>
+
+</BODY>
+</HTML>

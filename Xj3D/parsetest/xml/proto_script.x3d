@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0 Immersive//EN"
+  "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile="Immersive">
+	<Scene>
+		<ProtoDeclare name="URLSensor">
+			<ProtoInterface>
+				<field accessType="initializeOnly" name="urlString" type="SFString"/>
+				<field accessType="outputOnly" name="activate_url" type="SFString"/>
+			</ProtoInterface>
+			<ProtoBody>
+				<TouchSensor DEF="TS"/>
+				<Script DEF="SC">
+					<field accessType="initializeOnly" name="urlString" type="SFString" IS="urlString"/>
+					<field accessType="inputOnly" name="touchTime" type="SFTime"/>
+					<field accessType="outputOnly" name="activate_url" type="SFString" IS="activate_url"/><![CDATA[
+		     ecmascript:
+			function touchTime(val) {
+			   Browser.println('touched me:' + urlString.toString());
+			   activate_url = urlString;
+			}
+		  ]]></Script>
+				<ROUTE fromNode="TS" fromField="touchTime" toNode="SC" toField="touchTime"/>
+			</ProtoBody>
+		</ProtoDeclare>
+		<Transform>
+			<Shape>
+				<Box/>
+			</Shape>
+			<ProtoInstance DEF="mySensor" name="URLSensor">
+				<fieldValue name="urlString" value="&quot;foo.wrl&quot;"/>
+			</ProtoInstance>
+		</Transform>
+		<Script DEF="Printer">
+			<field accessType="inputOnly" name="printVal" type="SFString"/><![CDATA[
+		     ecmascript:
+			function printVal(val) {
+			   Browser.println('val: ' + val);
+			}
+		  ]]></Script>
+		<ROUTE fromNode="mySensor" fromField="activate_url" toNode="Printer" toField="printVal"/>
+	</Scene>
+</X3D>

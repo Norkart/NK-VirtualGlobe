@@ -1,0 +1,236 @@
+Here are some thought experiments with the DTD. This 
+README.dtd may or may not be updated as the DTD is,
+but the net results should be the same. Also, for the
+time being, ignore the Group and Container type.
+
+
+Example 1. ByteCodes
+
+<TimeSensor def="myTime" />
+<ByteCodes url="foo.class" def="foo">
+  <EventIn id="inEvent" type="Bool"/>
+</ByteCodes>
+
+<Route from="myTime" 
+	to="foo" 
+	sourceEvent="isActive" 
+	destEvent="inEvent"/>
+
+
+Example 2. Proto definition
+
+<Proto name="boxything">
+     <Field name="mySize" type="vec">(1 2 3)</Field>
+     <Field name="myColor" type="color">(.01 .1 1)</Field>
+     <ProtoDef>
+            <Shape>
+                <Appearance>
+                    <Material diffuseColor="myColor"/>
+                </Appearance>
+                <Geometry> <Box size="mySize"/></Geometry>
+            </Shape>
+     </ProtoDef>
+</Proto>
+
+
+[...]
+
+<!-- note size and color fields are just PCDATA 
+     not really parsed by XML-->
+
+<Transform rotation="(0  0  1  .1234)">
+   <X3D type="boxything" def="myBox">
+           <!-- does PCDATA ignore double quotes? if so
+                     then they should be used
+           mySize="(3 2 1)"
+           myColor="(.2 .3 .4)"
+   </X3D>
+</Transform>
+
+
+<Route from="someInterpolator"
+   sourceEvent="value"
+   to="myBox"
+   destEvent="mySize"/>
+
+
+Example 3. Interesting DEF/USE proposal for subclassing and derived types
+
+< Transform translation="(-3  0  0)" >
+   <Shape> <Geometry>
+    < Cone def="someCone" height="10.0" bottom="FALSE" />
+   </Geometry> </Shape>
+</Transform>
+< Transform translation="(0  0  0)" >
+   <Shape> <Geometry>
+    < Cone use="someCone" def="someTallCone" height="20.0" />
+   </Geometry> </Shape>
+</Transform>
+< Transform translation="(3  0  0)" >
+   <Shape> <Geometry>
+    < Cone use="someTallCone" bottom="TRUE" />
+   </Geometry> </Shape>
+</Transform>
+
+
+This def's a "someCone" to have height 10, no bottom.
+The next Cone use's a someCone, and redefines the height 
+at the same time. Optionally it can redef this as "someTallCone".
+The last use takes a someTallCone, and sets the bottom value.
+
+Note this totally breaks the notion of USE being a reference, 
+but it looked interesting as something partway between a DEF
+and a Proto. 
+
+Example 4. Proposal for Processing Instruction for compiled sections
+
+<? xml version="1.0"?>
+<Scene>
+
+<? x3d_l2 compile="FALSE"?>
+
+    <Transform rotation="(1 1 1 0)">
+	<Shape> <Geometry>
+	  <Box/>
+	</Geometry> </Shape>
+
+	<? x3d_l2 compile="TRUE"?>
+
+	<Transform translation="(10 0 0)">
+	  <Shape> <Geometry>
+	   <Box/>
+	  </Geometry> </Shape>
+	</Transform>
+    </Transform>
+</Scene>
+
+
+Undocumented in the DTD are some more proposals:
+________________________________________________
+
+Example 5. Proposal for promotion of Geometry primitives to Shape type.
+
+Note this is not in the DTD. (yet).
+
+
+Old:
+
+	
+<Transform rotation="(0 0 1 0)">
+ <Shape> 
+   <Geometry>
+    <Box/>
+   </Geometry> 
+   <Appearance>
+    <Texture url="myTex.jpg"/>
+   </Appearance>
+ </Shape>
+</Transform>
+
+New:
+
+<Transform rotation="(0 0 1 0)">
+  <Box/>
+   <Appearance>
+     <Texture url="myTex.jpg"/>
+   </Appearance>
+  </Box>
+</Transform>
+
+
+Example 6. Compressed Geometry and Alternate Geometry
+
+<Transform translation="(-10 0 0)">
+   <Shape>
+	<Geometry url="foo.wrl.gz"/>
+   </Shape>
+</Transform>
+<Transform translation="(0 0 0)">
+   <Shape>
+	<Geometry url="foo.j3d"/>
+   </Shape>
+</Transform>
+<Transform translation="(10 0 0)">
+   <Shape>
+	<Geometry>
+	    <TriStrip>
+		<Coordinates>[0 0 0, 0 1 0, 1 0 0, 1 1 0, 2 0 0, 2 1 0]</Coordinates>
+		<Colors>[1 0 0, .5 .5 0, .0 .5 0, 0 .5 .5, 0 1 1, 0 0 1]</Colors>
+		<Normals>[0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1, 0 0 1]</Normals>
+	   </TriStrip>
+	</Geometry>   
+   </Shape>
+</Transform>
+
+
+That is, the Geometry DTD is proposed to look more like ( given the move of primitives above ):
+
+<!ELEMENT Geometry ( IndexedFaceSet | IndexedLineSet | PointSet | TriStrip )
+<!ATTLIST Geometry 
+	url CDATA #IMPLIED
+	def ID #IMPLIED
+	use IDREF #IMPLIED >
+
+where url can contain .wrl for a VRML 2.1 geometry, wrl.gz, .xml of x3d, 
+or compressed geometry.
+
+Further a TriStrip is proposed
+
+<!ELEMENT TriStrip ( Coordinates, Normals?, Colors?, TextureCoordinates?)>
+<!ATTLIST TriStrip
+	creaseAngle CDATA #IMPLIED
+	def ID #IMPLIED
+	use ID #IMPLIED >
+
+
+Example 7. Use of Entity declarations.
+
+<!DOCTYPE myDoc SYSTEM "x3d.dtd" [
+<!ENTITY shinyBlueSphere SYSTEM "shinyBlueSphere.xml">
+]>
+
+<myDoc><P>Here is a nice shiny blue sphere!&shinyBlueSphere;</P></myDoc>
+
+
+or if you wan't parameters to a sphere type use of Enititied Protos
+<!-- shinySphereProto.xml -->
+<!DOCTYPE sphereoid SYSTEM "x3d.dtd" >
+<sphereoid>
+   <Proto type="shinySphere" >
+     <Field id="myColor" type="color"/>
+     <ProtoDef>
+       <SCENE>
+        <SHAPE>
+            <APPEARANCE>
+                <MATERIAL
+                    diffuseColor="myColor"
+                    specularColor="(0.8 0.8 0.8)"
+                    shininess="0.6"
+                />
+            </APPEARANCE>
+            <SPHERE radius="0.3"/>
+        </SHAPE>
+      </SCENE> 
+    </ProtoDef>
+  </Proto>
+</sphereoid>
+
+then in your document
+
+<!DOCTYPE myDocument [
+<!ENTITY shinySphereProto SYSTEM "shinySphereProto.xml">
+]>
+
+<myDocument> 
+<!-- cause the proto definition to be available inside myDocument -->
+ &shinySphereProto;
+
+<!-- recall the name change from ProtoInstance to X3D -->
+ <P>Here is another blue sphere
+   <X3D type="shinySpere">myColor="(0.0 .01 1.0)"</X3D>
+ </P>
+</myDocument>
+
+
+
+

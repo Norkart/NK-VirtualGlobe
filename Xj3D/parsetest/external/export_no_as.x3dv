@@ -1,0 +1,20 @@
+#X3D V3.0 utf8
+
+# A test of the EXPORT keyword without the use of the following AS.
+# AS is optional as per the grammar.
+
+PROFILE Immersive
+
+DEF TG Transform {
+  rotation 0 1 0 0.78
+  children Shape {
+    geometry Box {}
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+  }
+}
+
+EXPORT TG 

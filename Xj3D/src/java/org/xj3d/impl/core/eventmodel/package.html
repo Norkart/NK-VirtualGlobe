@@ -1,0 +1,49 @@
+<html>
+<body>
+<p>
+Default implementations of the event model implementations defined in the
+package {@link org.xj3d.core.eventmodel}.
+</p>
+
+<p>
+These classes implement the event model as per the X3D and VRML specifications.
+Every attempt is made to be as conformant as possible to the wording of the
+specifications. As such, they may not be the most efficient, but they are the
+most correct. By default, these are the implementations used by the rest of the
+browser.
+</p>
+
+<h3>Properties</h3>
+
+The following properties are in use by classes in this package.
+
+<ul>
+<li><code>org.xj3d.script.loader.class</code> The name of the class
+    that implements the {@link org.vrml.nodes.loader.ScriptLoader}
+    interface, which is used for loading scripts.
+</li>
+<li><code>org.xj3d.script.manager.class</code> The name of the class
+    that implements the {@link org.vrml.nodes.runtime.ScriptManager}
+    interface, which is used for managing scripts.
+</li>
+<li><code>org.xj3d.file.loader.class</code> The name of the class
+    that implements the
+    {@link org.vrml.nodes.loader.ExternalLoadManager} interface,
+    which is used for loading content other than scripts.
+</li>
+<li><code>org.xj3d.router.manager.class</code> The name of the class
+    that implements the {@link org.vrml.nodes.runtime.RouteManager}
+    interface, which is used for managing routes.
+</li>
+<li><code>org.xj3d.router.factory.class</code> The name of the class
+    that implements the {@link org.vrml.nodes.runtime.RouterFactory}
+    interface, which is used for creating routers.
+</li>
+<li><code>org.xj3d.frame.state.class</code> The name of the class
+    that implements the {@link org.vrml.nodes.FrameStateManager}
+    interface, which is used for managing per-frame state.
+</li>
+</ul>
+
+</body>
+</html>

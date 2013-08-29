@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile='Immersive' version='3.0'>
+<head>
+</head>
+<Scene>
+      <Script DEF='sc'>
+         <field accessType='inputOnly' type='SFBool' name='activated' />
+         <field accessType='outputOnly' type='SFColor' name='output' />
+         <![CDATA[ecmascript:
+            function initialize() {
+               Browser.println('initialize called');
+            }
+            
+            function activated(value) {
+               if(value) {
+                  Browser.println('activated ' + value);
+                  output = new SFColor(0, 1, 0);
+               }
+            }
+         ]]>
+      </Script>
+         
+      <Script DEF='sc_out'>
+         <field accessType='inputOnly' type='SFColor' name='madeActive' />
+            <![CDATA[ecmascript:
+               function madeActive(value) {
+                  Browser.println('new colour is ' + value.toString());
+               }
+            ]]>
+      </Script>
+      
+      <Group>
+         <Shape>
+            <Appearance>
+               <Material DEF='MAT' diffuseColor='1.0 0.0 0.0'></Material>
+            </Appearance>
+            <Box />
+         </Shape>
+         <TouchSensor DEF='ts'></TouchSensor>
+      </Group>
+      <ROUTE fromNode='ts' fromField='isActive' toNode='sc' toField='activated'></ROUTE>
+      <ROUTE fromNode='sc' fromField='output' toNode='sc_out' toField='madeActive'></ROUTE>
+      <ROUTE fromNode='sc' fromField='output' toNode='MAT' toField='diffuseColor'></ROUTE>
+</Scene>
+</X3D>

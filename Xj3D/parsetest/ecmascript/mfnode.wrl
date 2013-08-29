@@ -1,0 +1,39 @@
+#VRML V2.0 utf8
+
+DEF sc Script {
+  eventIn SFBool activated
+  field MFNode singleItem Group {}
+  field MFNode multiItem [
+    Shape {
+      appearance Appearance{}
+    }
+    Group {}
+  ]
+
+  url [ "javascript:
+        function activated(value) {
+          if(value) {
+            Browser.println('Single field is ' + singleItem.toString());
+            Browser.println('multi field length ' + multiItem.length);
+            Browser.println('multi field value \n' + multiItem.toString());
+            Browser.println('first node is ' + multiItem[0].appearance.toString());
+            Browser.println('second node is ' + multiItem[1].toString());
+          }
+        }
+        "
+  ]
+}
+
+Group {
+  children [
+   Shape {
+      geometry Box {}
+      appearance Appearance {
+        material Material { diffuseColor  0 0 1 }
+      }
+    }
+    DEF ts TouchSensor {}
+  ]
+}
+
+ROUTE ts.isActive TO sc.activated

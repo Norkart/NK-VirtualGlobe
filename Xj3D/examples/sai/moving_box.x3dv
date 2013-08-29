@@ -1,0 +1,51 @@
+#X3D V3.0 utf8
+
+#   Web3d.org Copyright (c) 2001-2005
+#        X3D Source
+#
+# This source is licensed under the BSD license.
+# Please read docs/BSD.txt for the text of the license.
+#
+# This software comes with the standard NO WARRANTY disclaimer for any
+# purpose. Use it at your own risk. If there's a problem you get to fix it.
+
+PROFILE Interactive
+
+Viewpoint {
+   description "Near VP"
+}
+Viewpoint {
+   description "Far VP"
+   position 0 0 20
+}
+
+DEF TS TimeSensor {
+  cycleInterval 10
+  loop TRUE
+}
+
+DEF TG Transform {
+  rotation 0 1 0 0.78
+  children Shape {
+    geometry Box {}
+    appearance Appearance {
+      material DEF MAT Material {
+        diffuseColor 1 0 0
+      }
+    }
+  }
+}
+
+DEF PI PositionInterpolator {
+  key [ 0 0.25 0.5 0.75 1 ]
+  keyValue [
+     0 0 0
+    -1 0 0
+    -1 1 0
+     0 1 0
+     0 0 0
+  ]
+}
+
+ROUTE TS.fraction_changed TO PI.set_fraction
+ROUTE PI.value_changed TO TG.translation

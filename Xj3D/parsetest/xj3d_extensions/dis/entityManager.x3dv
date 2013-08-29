@@ -1,0 +1,28 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_DIS:1
+
+Viewpoint {
+   position 0 -100 310
+}
+
+DEF EntityManager DISEntityManager {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+}
+
+DEF EntityHolder Group {
+}
+
+DEF EntityProcessor Script {
+   directOutput TRUE
+   inputOutput MFNode addedEntities []
+   url ["EntityProcessor.class"]
+}
+
+ROUTE EntityManager.addedEntities TO EntityHolder.addChildren
+ROUTE EntityManager.removedEntities TO EntityHolder.removeChildren
+ROUTE EntityManager.addedEntities TO EntityProcessor.addedEntities

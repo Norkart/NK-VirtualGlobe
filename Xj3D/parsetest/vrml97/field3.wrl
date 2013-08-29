@@ -1,0 +1,12 @@
+#VRML V2.0 utf8
+
+DEF tg TransformGroup {
+   translation 0 1 0
+   rotation  1 0 0 1.57
+}
+
+DEF tx TransformGroup {
+}
+
+ROUTE tg.translation TO tx.translation
+

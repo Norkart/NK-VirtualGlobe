@@ -1,0 +1,33 @@
+#VRML V2.0 utf8
+
+DEF TS TimeSensor {
+	cycleInterval 2
+	loop TRUE
+}
+
+DEF	TX Transform {
+	translation	0 0 0
+	rotation 0 0 0 0
+	children [
+		Shape {
+			geometry Box {}
+			appearance Appearance {
+				material Material{}
+			}
+		}
+	]
+}
+
+DEF S Script {
+  mustEvaluate TRUE
+  directOutput FALSE
+  eventIn SFTime pulse 
+  eventOut SFVec3f location
+  eventOut SFRotation orientation
+  
+  url [ "MoveObjectTest.class" ]
+}
+
+ROUTE TS.cycleTime TO S.pulse
+ROUTE S.location TO	TX.set_translation
+ROUTE S.orientation TO TX.set_rotation

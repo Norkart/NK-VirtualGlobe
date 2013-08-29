@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.xj3d.browser.app.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Perspective"
+            class="org.xj3d.browser.app.Perspective"
+            id="org.xj3d.browser.app.perspective">
+      </perspective>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.xj3d.browser.app.application"
+            name="Xj3D Browser Application">
+         <property
+               name="windowImages"
+               value="icons/yumetech-16x16.gif"/>
+      </product>
+   </extension>
+
+</plugin>

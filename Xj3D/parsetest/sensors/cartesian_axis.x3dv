@@ -1,0 +1,116 @@
+#X3D V3.0 utf8
+PROFILE Immersive
+# Cartesian Axis
+#
+# a widget that highlights the axis of a cartesian coordinate system.
+# the positive (+) X, Y and Z axis are Red Green and Blue respectively.
+# the negative (-) X, Y and Z axis are White.
+
+Group {
+	children [
+		Shape {
+			geometry IndexedLineSet {
+				coord Coordinate {
+					point [
+						0 0 0,
+						1 0 0
+					]
+				}
+				coordIndex [
+					0 1 
+				]
+			}
+			appearance DEF Red Appearance {
+				material Material {
+					diffuseColor 1 0 0
+					emissiveColor 1 0 0
+				}
+			}
+		}
+		Shape {
+			geometry IndexedLineSet {
+				coord Coordinate {
+					point [
+						0 0 0,
+						0 1 0
+					]
+				}
+				coordIndex [
+					0 1 
+				]
+			}
+			appearance DEF Green Appearance {
+				material Material {
+					diffuseColor 0 1 0
+					emissiveColor 0 1 0
+				}
+			}
+		}
+		Shape {
+			geometry IndexedLineSet {
+				coord Coordinate {
+					point [
+						0 0 0,
+						0 0 1
+					]
+				}
+				coordIndex [
+					0 1 
+				]
+			}
+			appearance DEF Blue Appearance {
+				material Material {
+					diffuseColor 0 0 1
+					emissiveColor 0 0 1
+				}
+			}
+		}
+		Shape {
+			geometry IndexedLineSet {
+				coord Coordinate {
+					point [
+						0 0 0,
+						-1 0 0
+					]
+				}
+				coordIndex [
+					0 1 
+				]
+			}
+			appearance DEF White Appearance {
+				material Material {
+					diffuseColor 1 1 1
+					emissiveColor 1 1 1
+				}
+			}
+		}
+		Shape {
+			geometry IndexedLineSet {
+				coord Coordinate {
+					point [
+						0 0 0,
+						0 -1 0
+					]
+				}
+				coordIndex [
+					0 1 
+				]
+			}
+			appearance USE White
+		}
+		Shape {
+			geometry IndexedLineSet {
+				coord Coordinate {
+					point [
+						0 0 0,
+						0 0 -1
+					]
+				}
+				coordIndex [
+					0 1 
+				]
+			}
+			appearance USE White
+		}
+	]
+}

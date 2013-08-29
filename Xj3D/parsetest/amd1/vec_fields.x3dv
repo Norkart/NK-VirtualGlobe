@@ -1,0 +1,15 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Script {
+  inputOutput SFVec4f vector3f 0 1 0 2
+  inputOutput SFVec4d vector3d 0 1.0931 0 1
+
+  inputOutput MFVec4f vector4f [ 0 1 0 1  10 12 -1.2344 0.20144 ]
+  inputOutput MFVec4d vector4d [ 0 1.0931 0 121322 10 12 -1.2344 0.20144]
+}
+
+Shape {
+   geometry Box {}
+}

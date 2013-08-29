@@ -1,0 +1,8 @@
+#X3D V3.0 utf8 
+
+PROFILE Immersive
+
+EXTERNPROTO Boxes []
+ "proto_inline.x3dv" 
+
+Boxes {}

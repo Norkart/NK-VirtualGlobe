@@ -1,0 +1,28 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_3D-Texturing:1
+
+NavigationInfo {
+  type [ "EXAMINE", "FLY" ]
+}
+
+Shape {
+  appearance Appearance {
+    texture Composed3DTexture {
+      texture [
+        ImageTexture { url "3d_texture_1.gif" }
+        ImageTexture { url "3d_texture_2.gif" }
+      ]
+    }
+  }
+  geometry IndexedFaceSet {
+    coordIndex [ 0 1 2 ]
+    coord Coordinate {
+      point [ 0 0 0  1 0 0  0 1 0 ]
+    }
+    texCoord TextureCoordinate3D {
+      point [ 0 0 0  1 0 0  0 1 0 ]
+    }
+  }
+}

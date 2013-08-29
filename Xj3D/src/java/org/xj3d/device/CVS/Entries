@@ -1,0 +1,20 @@
+/ButtonModeConstants.java/1.1/Wed Nov  8 21:46:21 2006//
+/ControllerDevice.java/1.1/Wed Nov  8 21:46:21 2006//
+/DeviceListener.java/1.1/Wed Nov  8 21:46:21 2006//
+/DeviceManager.java/1.1/Wed Nov  8 21:46:21 2006//
+/DeviceState.java/1.1/Wed Nov  8 21:46:21 2006//
+/GamepadDevice.java/1.1/Wed Nov  8 21:46:21 2006//
+/GamepadState.java/1.1/Wed Nov  8 21:46:21 2006//
+/GenericHIDState.java/1.1/Wed Nov  8 21:46:21 2006//
+/InputDevice.java/1.1/Wed Nov  8 21:46:21 2006//
+/JoystickDevice.java/1.1/Wed Nov  8 21:46:21 2006//
+/JoystickState.java/1.1/Wed Nov  8 21:46:21 2006//
+/Makefile/1.1/Wed Nov  8 21:46:21 2006//
+/MidiDevice.java/1.1/Wed Nov  8 21:46:21 2006//
+/Tracker.java/1.1/Wed Nov  8 21:46:21 2006//
+/TrackerDevice.java/1.1/Wed Nov  8 21:46:21 2006//
+/WheelDevice.java/1.1/Wed Nov  8 21:46:21 2006//
+/WheelState.java/1.1/Wed Nov  8 21:46:21 2006//
+/package.html/1.1/Wed Nov  8 21:46:21 2006//
+D/jinput////
+/TrackerState.java/1.3/Mon Nov 19 08:52:11 2007//

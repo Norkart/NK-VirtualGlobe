@@ -1,0 +1,37 @@
+#X3D V3.0 utf8
+PROFILE Immersive
+
+Transform {
+  translation 0 1.2 0
+  children [
+    Shape {
+      geometry Box {size 1 1 1}
+    }
+    DEF TS TouchSensor {}
+
+  ]
+}
+
+DEF S Script {
+  inputOnly SFVec3f set_hitPoint_changed
+  inputOnly SFVec3f set_hitNormal_changed
+  inputOnly SFBool set_isOver
+  outputOnly SFColor color_changed
+  url "ecmascript:
+     function set_hitPoint_changed(value) {
+        Browser.println('HitPoint: ' + value.x + ' ' + value.y + ' ' + value.z);
+     }
+     function set_hitNormal_changed(value) {
+        Browser.println('HitNormal: ' + value.x + ' ' + value.y + ' ' + value.z);
+     }
+     function set_isOver(value) {
+        Browser.println('isOver: ' + value);
+     }
+  "
+}
+
+ROUTE TS.hitPoint_changed TO S.set_hitPoint_changed
+ROUTE TS.hitNormal_changed TO S.set_hitNormal_changed
+ROUTE TS.isOver TO S.set_isOver
+
+

@@ -1,0 +1,27 @@
+#VRML V2.0 utf8
+
+DEF TRANS Transform {
+  translation 0 0 0
+  children [
+    Shape {
+      geometry Sphere { radius 0.25 }
+    }
+  ]
+}
+
+DEF PS ProximitySensor  {
+  center 0 0 0
+  size 30 30 30
+}
+
+DEF PI PositionInterpolator {
+  key [0,1]
+  keyValue [0 0 0, 1 1 0]
+}
+
+DEF TS TimeSensor {
+}
+
+ROUTE PS.enterTime TO TS.startTime
+ROUTE TS.fraction_changed TO PI.set_fraction
+ROUTE PI.value_changed TO TRANS.set_translation

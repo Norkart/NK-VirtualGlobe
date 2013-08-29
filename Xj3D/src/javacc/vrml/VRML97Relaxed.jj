@@ -1,0 +1,1527 @@
+/*****************************************************************************
+ *                        Web3d Consortium Copyright (c) 2001
+ *                               JavaCC Grammar Source
+ *
+ * This source is licensed under the GNU LGPL v2.1
+ * Please read http://www.gnu.org/copyleft/lgpl.html for more information
+ *
+ * This software comes with the standard NO WARRANTY disclaimer for any
+ * purpose. Use it at your own risk. If there's a problem you get to fix it.
+ *
+ *****************************************************************************/
+
+options {
+    STATIC=false;
+    OTHER_AMBIGUITY_CHECK=2;
+    JAVA_UNICODE_ESCAPE = true;
+    OPTIMIZE_TOKEN_MANAGER=true;
+    DEBUG_PARSER=false;
+    DEBUG_TOKEN_MANAGER=false;
+    DEBUG_LOOKAHEAD=false;
+}
+
+PARSER_BEGIN(VRML97RelaxedParser)
+
+/*****************************************************************************
+ *                        Web3d Consortium Copyright (c) 2001
+ *                               Java Source
+ *
+ * This source is licensed under the GNU LGPL v2.1
+ * Please read http://www.gnu.org/copyleft/lgpl.html for more information
+ *
+ * This software comes with the standard NO WARRANTY disclaimer for any
+ * purpose. Use it at your own risk. If there's a problem you get to fix it.
+ *
+ *****************************************************************************/
+package org.web3d.parser.vrml97;
+
+// Standard imports
+import java.io.Reader;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
+// Application specific imports
+import org.web3d.vrml.lang.*;
+import org.web3d.vrml.sav.*;
+
+import org.web3d.util.ErrorReporter;
+import org.web3d.util.StringArray;
+
+/**
+ * A parser for VRML97 syntax that is not very strict about the incoming
+ * syntax.
+ * <p>
+ * Automatically generated from the JavaCC source grammar VRML97Relaxed.jj
+ * The grammar is not a strict interprestation of the VRML97 BNF from Appendix
+ * A. You can see what JavaCC thinks the grammar is
+ * <a href="doc-files/VRML97Relaxed.html">here</a>
+ *
+ * @author Justin Couch
+ * @version Grammar $Revision: 1.26 $
+ */
+public class VRML97RelaxedParser {
+
+    /** Message for parsing report prefixing */
+    private static final String PARSE_MSG = "Parsing error: ";
+
+    /** Default size for the string array buffer */
+    private static final int DEFAULT_ARRAY_SIZE = 4096;
+
+    /** Increment size for the string array buffer */
+    private static final int DEFAULT_ARRAY_INC = 1024;
+
+    /**
+     * Inner class implementation of the document locator so that we can use
+     * the JavaCC token information for line info
+     */
+    private class VRMLRelaxedLocator implements Locator {
+        /**
+         * Get the column number that the error occurred at. This is defined
+         * to be the starting column.
+         */
+        public int getColumnNumber() {
+            return token.beginColumn;
+        }
+
+        /**
+         * Get the line number that the error occurred at. This is defined
+         * to be the starting line.
+         */
+        public int getLineNumber() {
+            return token.beginLine;
+        }
+    }
+
+    // Variables for our general use during parsing
+
+    /** The url of the current document */
+    private String documentURL;
+
+    /** Reference to the registered content handler if we have one */
+    private StringContentHandler contentHandler;
+
+    /** Reference to the registered route handler if we have one */
+    private RouteHandler routeHandler;
+
+    /** Reference to the registered script handler if we have one */
+    private ScriptHandler scriptHandler;
+
+    /** Reference to the registered proto handler if we have one */
+    private ProtoHandler protoHandler;
+
+    /** Reference to the registered error handler if we have one */
+    private ErrorReporter errorHandler;
+
+    /** Reference to our Locator instance to hand to users */
+    private Locator locator;
+
+    /** Array for parsing strings */
+    private StringArray stringArray;
+
+    /**
+     * Create a new parser instance that has all of the handlers set to the
+     * given references. These can be overridden with the set methods below.
+     * It is safe to pass in null references here.
+     *
+     * @param is The stream to read characters from
+     * @param ch The content handler instance to use
+     * @param rh The route handler instance to use
+     * @param sh The script handler instance to use
+     * @param ph The proto handler instance to use
+     * @param eh The error handler instance to use
+     */
+    public VRML97RelaxedParser(InputStream is,
+                               ContentHandler ch,
+                               RouteHandler rh,
+                               ScriptHandler sh,
+                               ProtoHandler ph,
+                               ErrorHandler eh) {
+        this(is);
+
+        locator = new VRMLRelaxedLocator();
+	stringArray = new StringArray(DEFAULT_ARRAY_SIZE, DEFAULT_ARRAY_INC);
+
+        contentHandler = (StringContentHandler) ch;
+        routeHandler = rh;
+        scriptHandler = sh;
+        protoHandler = ph;
+        errorHandler = eh;
+    }
+
+    /**
+     * Create a new parser instance that has all of the handlers set to the
+     * given references. These can be overridden with the set methods below.
+     * It is safe to pass in null references here.
+     *
+     * @param rdr The reader to source characters from
+     * @param ch The content handler instance to use
+     * @param rh The route handler instance to use
+     * @param sh The script handler instance to use
+     * @param ph The proto handler instance to use
+     * @param eh The error handler instance to use
+     */
+    public VRML97RelaxedParser(Reader rdr,
+                               ContentHandler ch,
+                               RouteHandler rh,
+                               ScriptHandler sh,
+                               ProtoHandler ph,
+                               ErrorHandler eh) {
+        this(rdr);
+
+        locator = new VRMLRelaxedLocator();
+	stringArray = new StringArray(DEFAULT_ARRAY_SIZE, DEFAULT_ARRAY_INC);
+
+        contentHandler = (StringContentHandler) ch;
+        routeHandler = rh;
+        scriptHandler = sh;
+        protoHandler = ph;
+        errorHandler = eh;
+    }
+
+    /**
+     * Initialise the internals of the parser at start up. If you are not using
+     * the detailed constructors, this needs to be called to ensure that all
+     * internal state is correctly set up.
+     */
+    public void initialize() {
+        if(locator == null)
+            locator = new VRMLRelaxedLocator();
+
+	stringArray = new StringArray(DEFAULT_ARRAY_SIZE, DEFAULT_ARRAY_INC);
+    }
+
+    /**
+     * Set the base URL of the document that is about to be parsed. Users
+     * should always call this to make sure we have correct behaviour for the
+     * ContentHandler's <code>startDocument()</code> call.
+     * <p>
+     * The URL is cleared at the end of each document run. Therefore it is
+     * imperative that it get's called each time you use the parser.
+     *
+     * @param url The document url to set
+     */
+    public void setDocumentUrl(String url) {
+        documentURL = url;
+    }
+
+    /**
+     * Fetch the locator used by this parser. This is here so that the user of
+     * this parser can ask for it and set it before calling startDocument().
+     * Once the scene has started parsing in this class it is too late for the
+     * locator to be set. This parser does set it internally when asked for a
+     * {@link #Scene()} but there may be other times when it is not set.
+     *
+     * @return The locator used for syntax errors
+     */
+    public Locator getDocumentLocator() {
+
+        if(locator == null)
+            locator = new VRMLRelaxedLocator();
+
+        return locator;
+    }
+
+    /**
+     * Set the content handler instance.
+     *
+     * @param ch The content handler instance to use
+     */
+    public void setContentHandler(ContentHandler ch) {
+        contentHandler = (StringContentHandler) ch;
+    }
+
+    /**
+     * Set the route handler instance.
+     *
+     * @param rh The route handler instance to use
+     */
+    public void setRouteHandler(RouteHandler rh) {
+        routeHandler = rh;
+    }
+
+    /**
+     * Set the script handler instance.
+     *
+     * @param sh The script handler instance to use
+     */
+    public void setScriptHandler(ScriptHandler sh) {
+        scriptHandler = sh;
+    }
+
+    /**
+     * Set the proto handler instance.
+     *
+     * @param ph The proto handler instance to use
+     */
+    public void setProtoHandler(ProtoHandler ph) {
+        protoHandler = ph;
+    }
+
+    /**
+     * Set the error handler instance.
+     *
+     * @param eh The error handler instance to use
+     */
+    public void setErrorHandler(ErrorHandler eh) {
+        errorHandler = eh;
+
+        if(eh != null)
+            eh.setDocumentLocator(getDocumentLocator());
+    }
+
+    /**
+     * Set the error reporter instance. If this is also an ErrorHandler
+     * instance, the document locator will also be set.
+     *
+     * @param eh The error handler instance to use
+     */
+    public void setErrorReporter(ErrorReporter eh) {
+
+        if(eh instanceof ErrorHandler)
+            setErrorHandler((ErrorHandler)eh);
+        else
+            errorHandler = eh;
+    }
+
+    /**
+     * Convenience method to take a current exception and turns it into
+     * a parse exception so that it makes it out of the parser.
+     *
+     * @param se The SAV exception to be printed
+     * @throws The parse exception that matches this
+     */
+    private void convertException(VRMLException se) throws ParseException {
+
+        boolean handled = false;
+
+        if((se instanceof InvalidFieldException) ||
+           (se instanceof InvalidFieldValueException)) {
+            if(errorHandler != null) {
+                try {
+                    errorHandler.warningReport(PARSE_MSG, se);
+                    handled = true;
+                } catch(VRMLException se1) {
+                    se = se1;
+                }
+            }
+        } else {
+            if(errorHandler != null) {
+                try {
+                    errorHandler.errorReport(PARSE_MSG, se);
+                    handled = true;
+                } catch(VRMLException se1) {
+                    se = se1;
+                }
+            }
+        }
+
+        if(!handled) {
+            StringBuffer buf =
+                new StringBuffer("There's an error in the file:\n");
+
+            buf.append(documentURL);
+            buf.append('\n');
+
+            String txt = se.getMessage();
+            if(txt == null)
+                txt = se.getClass().getName();
+
+            buf.append(txt);
+            buf.append('\n');
+
+/*
+            buf.append("\nThe exception trace is:\n");
+
+            ByteArrayOutputStream bao = new ByteArrayOutputStream();
+            PrintStream printer = new PrintStream(bao);
+            se.printStackTrace(printer);
+
+            buf.append(bao.toString());
+*/
+            throw new ParseException(buf.toString());
+        }
+    }
+
+    /**
+     * Private convenience method to strip the string from the tokeniser of
+     * surrounding quotes.
+     *
+     * @return The current token string minus leading and trailing quotes
+     */
+    private String stripString() {
+        return token.image.substring(1, token.image.length()-1);
+    }
+}
+
+PARSER_END(VRML97RelaxedParser)
+
+// Grammar follows the structure in the ISO spec, except that TOKENS are
+// at the bottom. Where we have a rule of the form
+// statements ::= statement | statement statements
+// this is translated to a single (statement())* expression.
+// The empty declaration is handled implicitly by JavaCC
+
+//---------------------------------------------------------------------------
+//  Grammar from A.2 General
+//---------------------------------------------------------------------------
+
+
+/**
+ * Rule 0 - Parse the complete scene.
+ * <pre>
+ * vrmlScene ::=
+ *     statement* ;
+ * </pre>
+ * The scene assumes that the caller will make the startDocument() and
+ * endDocument() calls on the ContentHandler before and after this method.
+ */
+void Scene():
+{}
+{
+    try {
+        (Statement())*
+        <EOF>
+    } finally {
+
+        // Now clear the document URL so that next call doesn't accidently
+        // pick up the URL from the last one. Better to have it empty than
+        // invalid
+        documentURL = null;
+    }
+}
+
+/**
+ * Rule 1 - Parse a statement.
+ * <pre>
+ * statement ::=
+ *     nodeStatement |
+ *     protoStatement |
+ *     routeStatement ;
+ * </pre>
+ */
+void Statement():
+{}
+{
+    NodeStatement()
+|   ProtoStatement()
+|   RouteStatement()
+}
+
+/**
+ * Rule 2 - Parse a node statement.
+ * <pre>
+ * nodeStatement ::=
+ *     node |
+ *     DEF NodeNameId node |
+ *     USE NodeNameId ;
+ * </pre>
+ */
+void NodeStatement() :
+{
+    String def_name;
+}
+{
+    Node(null)
+
+|   <DEF>
+    def_name = NodeNameId()
+    Node(def_name)
+
+|   <USE>
+    def_name = NodeNameId() {
+        if(contentHandler != null) {
+            try {
+                contentHandler.useDecl(def_name);
+            } catch(VRMLException se) {
+                // This will be a warning rather than a full error. Basically
+                // ignore the node and keep moving.
+                if(errorHandler != null) {
+                    try {
+                        errorHandler.warningReport(PARSE_MSG, se);
+                    } catch(VRMLException se2) {
+                        // now we have a problem....
+                        convertException(se2);
+                    }
+                } else {
+                    convertException(se);
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Rule 3 - Parse a node statement.
+ * <pre>
+ * rootNodeStatement ::=
+ *      node |
+ *      DEF NodeNameId node ;
+ * </pre>
+ */
+void RootNodeStatement() :
+{
+    String def_name;
+}
+{
+    Node(null)
+
+|   <DEF>
+    def_name = NodeNameId()
+    Node(def_name)
+}
+
+/**
+ * Rule 2 - Parse a node statement.
+ * <pre>
+ * protoStatement ::=
+ *      proto |
+ *      externproto ;
+ * </pre>
+ */
+void ProtoStatement() :
+{}
+{
+    Proto()
+|   ExternProto()
+}
+
+/**
+ * Rule 4 - Parse a PROTO declaration.
+ * <pre>
+ * proto ::=
+ *      PROTO NodeTypeId [ interfaceDeclaration* ] { protoBody } ;
+ * </pre>
+ */
+void Proto() :
+{
+    String proto_name;
+}
+{
+    try {
+        <PROTO>
+        proto_name = NodeTypeId()
+        <LBRACKET> {
+            if(protoHandler != null)
+                    protoHandler.startProtoDecl(proto_name);
+        }
+        (InterfaceDecl())*
+        <RBRACKET> {
+            if(protoHandler != null)
+                protoHandler.endProtoDecl();
+        }
+        <LBRACE> {
+            if(protoHandler != null)
+                protoHandler.startProtoBody();
+        }
+        ProtoBody()
+        <RBRACE> {
+            if(protoHandler != null)
+                protoHandler.endProtoBody();
+        }
+    } catch(VRMLException se) {
+        convertException(se);
+        // try to find the end of the node and go to that....
+    }
+}
+
+/**
+ * Rule 5 - Parse a node statement.
+ * <pre>
+ * protoBody ::=
+ *      protoStatement* rootNodeStatement statement* ;
+ * </pre>
+ */
+void ProtoBody() :
+{}
+{
+    // The callbacks are handled in the ProtoDecl area as we want to make sure
+    // we end up with the right brackets etc.
+    (ProtoStatement())* RootNodeStatement() (Statement())*
+}
+
+/**
+ * Rule 6 - Parse an interface declaration that allows everything except
+ * exposedFields.
+ * <pre>
+ * restrictedInterfaceDeclaration ::=
+ *      eventIn fieldNameId eventId |
+ *      eventOut fieldNameId eventId |
+ *      field fieldNameId eventId fieldValue ;
+ * </pre>
+ *  Unfortunately we also need some context information here to know if we are in
+ *  A script or a proto to know which handler to call.
+ */
+void RestrictedInterfaceDecl() :
+{
+    int access_type;
+    String field_type;
+    String field_name;
+    Object field_value = null;
+    boolean node_field = false;
+}
+{
+    try {
+        <EVENTIN> {
+            access_type = FieldConstants.EVENTIN;
+        }
+        field_type = FieldId()
+        field_name = FieldNameId() {
+            if(protoHandler != null)
+                protoHandler.protoFieldDecl(access_type,
+                                            field_type,
+                                            field_name,
+                                            field_value);
+        }
+|       <EVENTOUT> {
+            access_type = FieldConstants.EVENTOUT;
+        }
+        field_type = FieldId()
+        field_name = FieldNameId() {
+            if(protoHandler != null)
+                protoHandler.protoFieldDecl(access_type,
+                                            field_type,
+                                            field_name,
+                                            field_value);
+        }
+|       <FIELD> {
+            access_type = FieldConstants.FIELD;
+        }
+        field_type = FieldId()
+        field_name = FieldNameId() {
+            // If the field type is MFNode or SFNode then we need to register
+            // with the callback the field declaration *before* we start
+            // reading the children node.
+            if(field_type.endsWith("FNode")) {
+                node_field = true;
+                if(protoHandler != null)
+                    protoHandler.protoFieldDecl(access_type,
+                                                field_type,
+                                                field_name,
+                                                null);
+            }
+        }
+        field_value = FieldValue(field_name) {
+            // field_value will be null if the field type is SFNode or MFNode
+            // Only call these if we have to. If they were of this type then
+            // the section above would have already taken care of this call.
+            if(!node_field && (protoHandler != null)) {
+                    protoHandler.protoFieldDecl(access_type,
+                                                field_type,
+                                                field_name,
+                                                field_value);
+            }
+        }
+    } catch(VRMLException se) {
+        convertException(se);
+        // try to find the end of the node and go to that....
+    }
+}
+
+/**
+ * Rule 7 - Parse a single field interface declaration.
+ * <pre>
+ * interfaceDeclaration ::=
+ *      restrictedInterfaceDeclaration |
+ *      exposedField fieldNameId eventId fieldValue ;
+ * </pre>
+ */
+void InterfaceDecl() :
+{
+    int access_type;
+    String field_type;
+    String field_name;
+    Object field_value = null;
+    boolean node_field = false;
+}
+{
+    try {
+        RestrictedInterfaceDecl()
+|       <EXPOSEDFIELD> {
+            access_type = FieldConstants.EXPOSEDFIELD;
+        }
+        field_type = FieldId()
+        field_name = FieldNameId() {
+            // If the field type is MFNode or SFNode then we need to register
+            // with the callback the field declaration *before* we start
+            // reading the children node.
+            if(field_type.endsWith("FNode")) {
+                node_field = true;
+                if(protoHandler != null)
+                    protoHandler.protoFieldDecl(access_type,
+                                                field_type,
+                                                field_name,
+                                                null);
+            }
+        }
+        field_value = FieldValue(field_name) {
+            // field_value will be null if the field type is SFNode or MFNode
+            // Only call these if we have to. If they were of this type then
+            // the section above would have already taken care of this call.
+            if(!node_field && (protoHandler != null))
+                protoHandler.protoFieldDecl(access_type,
+                                            field_type,
+                                            field_name,
+                                            field_value);
+        }
+    } catch(VRMLException se) {
+        convertException(se);
+        // try to find the end of the node and go to that....
+    }
+}
+
+/**
+ * Rule 9 - Parse a node statement.
+ * <pre>
+ * externproto ::=
+ *      EXTERNPROTO NodeTypeId [ externInterfaceDeclaration* ] URLList ;
+ * </pre>
+ */
+void ExternProto() :
+{
+    String proto_name;
+    String[] uri_list;
+}
+{
+    try {
+        <EXTERNPROTO>
+        proto_name = NodeTypeId()
+        <LBRACKET> {
+            if(protoHandler != null)
+                protoHandler.startExternProtoDecl(proto_name);
+        }
+        (ExternInterfaceDecl())*
+        <RBRACKET> {
+            if(protoHandler != null)
+                protoHandler.endExternProtoDecl();
+        }
+        uri_list = URIList() {
+            if(protoHandler != null)
+                protoHandler.externProtoURI(uri_list);
+        }
+    } catch(VRMLException se) {
+        convertException(se);
+        // try to find the end of the node and go to that....
+    }
+}
+
+/**
+ * Rule 10 - Parse a node statement.
+ * <pre>
+ * externInterfaceDeclaration ::=
+ *      accessType fieldNameId eventId
+ * </pre>
+ */
+void ExternInterfaceDecl() :
+{
+    int access_type;
+    String field_type;
+    String field_name;
+}
+{
+    access_type = AccessType()
+    field_type = FieldId()
+    field_name = FieldNameId() {
+        if(protoHandler != null) {
+            try {
+                protoHandler.protoFieldDecl(access_type,
+                                            field_type,
+                                            field_name,
+                                            null);
+            } catch(VRMLException se) {
+                convertException(se);
+                // try to find the end of the node and go to that....
+            }
+        }
+    }
+}
+
+/**
+ * Rule 2 - Parse a node statement.
+ * <pre>
+ * routeStatement ::=
+ *      ROUTE NodeNameId . eventOutId TO NodeNameId . eventInId ;
+ * </pre>
+ */
+void RouteStatement() :
+{
+    String src_node;
+    String src_field;
+    String dest_node;
+    String dest_field;
+}
+{
+    <ROUTE>
+    src_node = NodeNameId()
+    <DOT>
+    src_field = FieldNameId()
+    <TO>
+    dest_node = NodeNameId()
+    <DOT>
+    dest_field = FieldNameId() {
+        if(routeHandler != null) {
+            try {
+                routeHandler.routeDecl(src_node,
+                                       src_field,
+                                       dest_node,
+                                       dest_field);
+            } catch(VRMLException se) {
+                convertException(se);
+                // try to find the end of the node and go to that....
+            }
+        }
+    }
+}
+
+/**
+ * Rule 11 - Parse an MFField statement - principally a URIList on the
+ * EXTERNPROTO.
+ * <pre>
+ * URLList ::=
+ *    "[" STRING_LITERAL* "]" |
+ *    STRING_LITERAL ;
+ * </pre>
+ */
+String[] URIList() :
+{
+    ArrayList uri_list = new ArrayList();
+}
+{
+    <LBRACKET>
+    (
+        <STRING_LITERAL> {
+            uri_list.add(stripString());
+        }
+    )*
+    <RBRACKET> {
+        String[] ret_val = new String[uri_list.size()];
+        uri_list.toArray(ret_val);
+        return ret_val;
+    }
+|   <STRING_LITERAL> {
+        return new String[] { stripString() };
+    }
+}
+
+//---------------------------------------------------------------------------
+//  A.3 Node declarations
+//---------------------------------------------------------------------------
+
+/**
+ * Rule 12 - Parse a node statement.
+ * <pre>
+ * node ::=
+ *      nodeTypeId { nodeBody } |
+ *      "Script" { scriptBody } ;
+ *  We also handle the empty cases for both body and script here
+ * </pre>
+ */
+void Node(String defName) :
+{
+    String node_name;
+}
+{
+    try {
+        node_name = Id()
+        <LBRACE> {
+            if(contentHandler != null)
+                contentHandler.startNode(node_name, defName);
+        }
+        (NodeBody())?
+        <RBRACE> {
+            if(contentHandler != null)
+                contentHandler.endNode();
+        }
+|
+        <SCRIPT>
+        <LBRACE> {
+            if(contentHandler != null)
+                contentHandler.startNode("Script", defName);
+
+            if(scriptHandler != null)
+                scriptHandler.startScriptDecl();
+        }
+        (ScriptBody())?
+        <RBRACE> {
+            if(scriptHandler != null)
+                scriptHandler.endScriptDecl();
+
+            if(contentHandler != null)
+                contentHandler.endNode();
+        }
+    } catch(VRMLException se) {
+        convertException(se);
+        // try to find the end of the node and go to that....
+    }
+}
+
+/**
+ * Rule 13 - Parse a node statement.
+ * <pre>
+ * nodeBody ::=
+ *      nodeBodyElement |
+ *      nodeBodyElement nodeBody
+ * </pre>
+ *  The empty case is handled in the Node declaration
+ */
+void NodeBody() :
+{}
+{
+    (NodeBodyElement())+
+}
+
+/**
+ * Rule 14 - Parse a node statement.
+ * <pre>
+ * nodeBodyElement ::=
+ *      fieldNameId fieldValue |
+ *      fieldNameId IS fieldNameId |
+ *      routeStatement |
+ *      protoStatement ;
+ * </pre>
+ */
+void NodeBodyElement() :
+{
+    String field_name;
+    Object field_value;
+    boolean invalid_field = false;
+}
+{
+    // Need to use LOOKAHEAD here because the first two conflict as they both
+    // use <EVENTIN> et al without knowing whether the next bit contains an IS
+    try {
+        LOOKAHEAD(2)
+
+        // fieldID fieldValue
+        field_name = FieldNameId() {
+            if(contentHandler != null) {
+                try {
+                    contentHandler.startField(field_name);
+                    invalid_field = false;
+                } catch(VRMLException se) {
+                    invalid_field = true;
+                    convertException(se);
+                }
+            }
+        }
+
+        field_value = FieldValue(null) {
+
+            // field_value will be null if the field type is SFNode or MFNode
+            // Only call these if we have to. If they were of this type then
+            // the section above would have already taken care of this call.
+            if(!invalid_field && (field_value != null) &&
+               (contentHandler != null)) {
+                if(field_value instanceof String)
+                    contentHandler.fieldValue((String)field_value);
+                else
+                    contentHandler.fieldValue((String[])field_value);
+            }
+        }
+|
+        // fieldNameId IS fieldNameId
+        field_name = FieldNameId() {
+            if(contentHandler != null) {
+                try {
+                    contentHandler.startField(field_name);
+                    invalid_field = false;
+                } catch(VRMLException se) {
+                    invalid_field = true;
+                    convertException(se);
+                }
+            }
+        }
+        <IS>                      // This doesn't provide protection from
+        field_value = FieldNameId() {   // ExposedFields...
+            if((protoHandler != null) && !invalid_field) {
+                try {
+                    protoHandler.protoIsDecl((String)field_value);
+                } catch(FieldException fe) {
+                    convertException(fe);
+                }
+            }
+        }
+
+|       RouteStatement()
+|       ProtoStatement()
+    } catch(VRMLException se) {
+        convertException(se);
+        // try to find the end of the node and go to that....
+    }
+}
+
+/**
+ * Rule 15 - Parse a node statement.
+ * <pre>
+ * scriptBody ::=
+ *      scriptBodyElement |
+ *      scriptBodyElement scriptBody
+ * </pre>
+ * The empty case is handled in the Node declaration
+ */
+void ScriptBody() :
+{}
+{
+    (ScriptBodyElement())+
+}
+
+/**
+ * Rule 16 - Parse a node statement.
+ * <pre>
+ * scriptBodyElement ::=
+ *      nodeBodyElement |
+ *      restrictedInterfaceDeclaration |
+ *      eventIn fieldType eventInId IS eventInId |
+ *      eventOut fieldType eventOutId IS eventOutId |
+ *      field fieldType fieldNameId IS fieldNameId ;
+ * </pre>
+ */
+void ScriptBodyElement() :
+{
+    int access_type;
+    String field_type;
+    String field_name;
+    Object field_value;
+    String is_name;
+    boolean node_field = false;
+}
+{
+    // Use LOOKAHEAD here because they all end up using <EVENTIN> as one of
+    // the first structures. We could expand this differently, but I wanted to
+    // make the meaning clear to read.
+    try {
+        LOOKAHEAD(3)
+        NodeBodyElement()
+|       <EVENTIN> {
+            access_type = FieldConstants.EVENTIN;
+        }
+        field_type = FieldId()
+        field_name = FieldNameId() {
+            if(scriptHandler != null)
+                scriptHandler.scriptFieldDecl(access_type,
+                                              field_type,
+                                              field_name,
+                                              null);
+        }
+        (
+           <IS>
+            is_name = FieldNameId() {
+                if(protoHandler != null)
+                    protoHandler.protoIsDecl(is_name);
+            }
+        )?
+|       <EVENTOUT> {
+            access_type = FieldConstants.EVENTOUT;
+        }
+        field_type = FieldId()
+        field_name = FieldNameId() {
+            if(scriptHandler != null)
+                scriptHandler.scriptFieldDecl(access_type,
+                                              field_type,
+                                              field_name,
+                                              null);
+        }
+        (
+           <IS>
+            is_name = FieldNameId() {
+                if(protoHandler != null)
+                    protoHandler.protoIsDecl(is_name);
+            }
+        )?
+|       <FIELD> {
+            access_type = FieldConstants.FIELD;
+        }
+        field_type = FieldId()
+        field_name = FieldNameId() {
+            // If the field type is MFNode or SFNode then we need to register
+            // with the callback the field declaration *before* we start
+            // reading the children node.
+            if(field_type.endsWith("FNode")) {
+
+                node_field = true;
+                if(scriptHandler != null)
+                    scriptHandler.scriptFieldDecl(access_type,
+                                                  field_type,
+                                                  field_name,
+                                                  null);
+            }
+        }
+        (
+            <IS>
+            is_name = FieldNameId() {
+                if(scriptHandler != null && !node_field)
+                    scriptHandler.scriptFieldDecl(access_type,
+                                                  field_type,
+                                                  field_name,
+                                                  null);
+                if(protoHandler != null)
+                    protoHandler.protoIsDecl(is_name);
+            }
+|           field_value = FieldValue(field_name) {
+                // field_value will be null if the field type is SFNode or MFNode
+                // Only call these if we have to. If they were of this type then
+                // the section above would have already taken care of this call.
+                if(!node_field && (scriptHandler != null)) {
+                    scriptHandler.scriptFieldDecl(access_type,
+                                                  field_type,
+                                                  field_name,
+                                                  field_value);
+                }
+            }
+        )
+    } catch(VRMLException se) {
+        convertException(se);
+        // try to find the end of the node and go to that....
+    }
+}
+
+/**
+ * Rule 17 - Parse a node statement.
+ * <pre>
+ * nodeNameId ::= Id ;
+ * </pre>
+ */
+String NodeNameId() :
+{
+    String id;
+}
+{
+    id = Id() { return id; }
+}
+
+/**
+ * Rule 18 - Parse a NodeType identifier.
+ * <pre>
+ * nodeTypeId ::= Id ;
+ * </pre>
+ */
+String NodeTypeId() :
+{
+    String id;
+}
+{
+    id = Id() { return id; }
+}
+
+/**
+ * Rule 19 - Parse a field name string.
+ * <pre>
+ * fieldNameId ::= Id ;
+ * eventInId ::= Id ;
+ * eventOutId ::= Id ;
+ * exposedFieldId ::= Id ;
+ * </pre>
+ */
+String FieldNameId() :
+{
+    String id;
+}
+{
+    id = Id() { return id; }
+}
+
+/**
+ * Rule 20 - Turn a string into the {@link org.web3d.vrml.lang.FieldConstants}
+ * value.
+ * <pre>
+ *    "field" = FieldConstants.FIELD;
+ *    "eventIn" = FieldConstants.EVENTIN;
+ *    "eventOut" = FieldConstants.EVENTOUT;
+ *    "exposedField" = FieldConstants.EXPOSEDFIELD;
+ * </pre>
+ */
+int AccessType() :
+{}
+{
+    <FIELD> { return FieldConstants.FIELD; }
+  | <EVENTIN> { return FieldConstants.EVENTIN; }
+  | <EVENTOUT> { return FieldConstants.EVENTOUT; }
+  | <EXPOSEDFIELD> { return FieldConstants.EXPOSEDFIELD; }
+}
+
+/**
+ * Rule 21 - Turn a string into the {@link org.web3d.vrml.lang.FieldConstants}
+ * value.
+ * Restricted declaration of a field type of "field" "eventIn" and "eventOut"
+ * but does not allow "exposedField"
+ * <pre>
+ *    "field" = FieldConstants.FIELD;
+ *    "eventIn" = FieldConstants.EVENTIN;
+ *    "eventOut" = FieldConstants.EVENTOUT;
+ * </pre>
+ */
+int RestrictedFieldType() :
+{}
+{
+    <FIELD> { return FieldConstants.FIELD; }
+  | <EVENTIN> { return FieldConstants.EVENTIN; }
+  | <EVENTOUT> { return FieldConstants.EVENTOUT; }
+}
+
+/**
+ * Rule 22 - Parse a field identifier.
+ * <pre>
+ *   Id
+ * </pre>
+ *  Concatention of fieldType that we really only care about the ID if the
+ *  user wants to provided expanded types.
+ */
+String FieldId() :
+{
+    String id;
+}
+{
+    id = Id() { return id; }
+}
+
+/**
+ * Rule 23 - Parse a field value statement.
+ * <pre>
+ *  The value of a field. Just a literral string to pass back to the caller
+ *  FieldValue :: =
+ *     SingleFieldValue |
+ *     MultiFieldValue
+ * </pre>
+ *
+ */
+Object FieldValue(String fieldName) :
+{
+    Object id = null;
+}
+{
+    (
+        id = SingleFieldValue()
+|       id = MultiFieldValue(fieldName)
+    ) {
+        return id;
+    }
+}
+
+/**
+ * Rule 24 - Parse a single value of a field statement.
+ * <pre>
+ * SingleFieldValue ::=
+ *     NodeStatement |         # SFNode
+ *     "NULL" |                # empty SFNode or empty MFNode
+ *     LiteralValue
+ * </pre>
+ */
+String SingleFieldValue() :
+{
+    String id = null;
+}
+{
+    (
+       NodeStatement()
+|       <NULL> {
+            id = token.image; // give them the NULL string anyway
+        }
+|       id = LiteralValue()
+    ) {
+        return id;
+    }
+}
+
+/**
+ * Rule 25 - Parse a multi value field statement.
+ * <pre>
+ * MultiFieldValue ::=
+ *     "["(NodeStatment)+ "]" | # MFNode
+ *     "[ (SingleFieldvalue)* ]
+ * </pre>
+ */
+Object MultiFieldValue(String fieldName) :
+{
+    boolean is_nodes = false;
+    String[] multi_string = null;
+    ArrayList value_list = new ArrayList();
+}
+{
+    try {
+        <LBRACKET>
+        (
+            LOOKAHEAD(2)
+            (NodeStatement())+ {
+                is_nodes = true;
+            }
+|           multi_string = NumberArray()
+|           multi_string = StringArray()
+        )
+        <RBRACKET> {
+            if(contentHandler != null) {
+                if(is_nodes) {
+                    // Handler for an MFNode field
+                    contentHandler.endField();
+                } else {
+
+                    // If the multiple value string is empty then we assume
+                    // that we have a single value - even if it is not set
+                    // This works is for a zero length field - ie "[]"
+//                    if(multi_string == null || multi_string.length == 0)
+//                        return a_value;
+//                    else
+                        return multi_string;
+                }
+            }
+
+            // if all else fails...
+            return null;
+        }
+
+    } catch(VRMLException se) {
+        convertException(se);
+        // try to find the end of the node and go to that....
+    }
+}
+
+/**
+ * Rule 26 - Parse a literal value for a single field value.
+ * <pre>
+ * LiteralValue ::=
+ *    TRUE |
+ *    FALSE |
+ *    NumberArray |
+ *    STRING_LITERAL
+ * </pre>
+ * We do allow a full number array here - ie more than the max 4 values that
+ * an SFRotation contains. This makes our parsing faster, but less correct.
+ * Basically we assume the callback will deal with any extra numbers if they
+ * want to by either discarding them or throwing an error.
+ */
+String LiteralValue() :
+{
+    String id;
+}
+{
+    (
+        <TRUE> { id = token.image; }
+|       <FALSE> { id = token.image; }
+|       id = FixedNumberArray()
+|       <STRING_LITERAL> { id = token.image; }
+    ) {
+        return id;
+    }
+}
+
+/**
+ * Rule 27 - Parse an array of string literals.
+ * <pre>
+ * StringArray ::=
+ *   STRING_LITERAL+
+ * </pre>
+ */
+String[] StringArray() :
+{
+    stringArray.clear();
+}
+{
+    ( <STRING_LITERAL> {
+        stringArray.add(token.image);
+    }
+    )* {
+        return stringArray.toArray();
+    }
+}
+
+/**
+ * Rule 28 - Parse a number that may contain multiple whitespace values - such
+ * as an SFVec3f.
+ * <pre>
+ * NumberArray ::=
+ *    NUMBER_LITERAL+
+ * </pre>
+ */
+String[] NumberArray() :
+{
+    stringArray.clear();
+}
+{
+    (
+        LOOKAHEAD(2)
+        <NUMBER_LITERAL> {
+            // Must put the spaces back in so that the field parser can deal
+            // with the string properly.
+            stringArray.add(token.image);
+        }
+    )+ {
+        return stringArray.toArray();
+    }
+}
+
+/**
+ * Rule 29 - Parse a number that may contain multiple whitespace values - such
+ * as an SFVec3f.
+ * <pre>
+ * NumberArray ::=
+ *    NUMBER_LITERAL+
+ * </pre>
+ */
+String FixedNumberArray() :
+{
+    StringBuffer value = new StringBuffer();
+}
+{
+    (
+        LOOKAHEAD(2)
+        <NUMBER_LITERAL> {
+            // Must put the spaces back in so that the field parser can deal
+            // with the string properly.
+            value.append(' ');
+            value.append(token.image);
+        }
+    )+ {
+        return value.toString();
+    }
+}
+
+
+//---------------------------------------------------------------------------
+//  Miscellaneous methods to use
+//---------------------------------------------------------------------------
+
+/**
+ * Generate an identifier as a string from the parsed token.
+ */
+String Id(): {}
+{
+    <ID> { return token.image; }
+}
+
+//---------------------------------------------------------------------------
+//  TOKENS declaration
+//---------------------------------------------------------------------------
+
+<*> SKIP : // White space
+{
+    " "
+|   "\t"
+|   "\n"
+|   "\r"
+|   "\f"
+|   "," // comma is white space in VRML!
+}
+
+<*> SPECIAL_TOKEN : // Comments
+{
+    < COMMENT: "#" (~["\n","\r"])* ("\n"|"\r"|"\r\n") >
+}
+
+TOKEN : /* LITERALS (Simplified from literals in Java Grammar spec) */
+{
+  // This is will match things which are not legal numbers, but it is faster
+  // to let the string->number conversion detect the bad cases
+  < NUMBER_LITERAL:
+    (["-", "+"])? (".")? ["0"-"9"] (["0"-"9","a"-"f","A"-"F", "x", ".","+","-"])* >
+|
+  < STRING_LITERAL: // This is the Java def, may be more than VRML needs
+      "\""
+      (   (~["\"","\\"])
+        | ("\\"
+            ( ["n","t","b","r","f","\\","'","\""]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )*
+      "\""
+  >
+}
+
+TOKEN : /* SEPARATORS */
+{
+  < LBRACE: "{" >
+| < RBRACE: "}" >
+| < LBRACKET: "[" >
+| < RBRACKET: "]" >
+}
+
+TOKEN : // VRML keywords
+{
+    < DEF:  "DEF">
+|   < USE:  "USE">
+|   < NULL: "NULL" >
+|   < PROTO:    "PROTO">
+|   < EVENTIN:  "eventIn">
+|   < EVENTOUT:  "eventOut">
+|   < FIELD:    "field">
+|   < EXPOSEDFIELD: "exposedField">
+|   < EXTERNPROTO: "EXTERNPROTO">
+|   < ROUTE:    "ROUTE">
+|   < TO:   "TO">
+|   < IS:    "IS" >
+|   < DOT:  "." >
+}
+
+TOKEN : // Other keywords or string literals we really need
+{
+    < SCRIPT: "Script" >
+|   < TRUE: "TRUE" >
+|   < FALSE: "FALSE" >
+//|   < HEADER: "#VRML" "V2.0" "utf8" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
+}
+
+TOKEN : // Identifier
+{
+    // VRML is pretty loose about IDs, any char that is not used for somehting
+    // else is valid.  For example, "!^\%&|~" is a valid ID!
+    <ID: <ID_FIRST> ( <ID_REST> )* > : DEFAULT
+     // All chars that are not numbers or used in other parts of VRML
+|
+     < #ID_FIRST:
+        [
+        "\u0021",
+        "\u0024"-"\u0026",
+        "\u0028"-"\u002a",
+        "\u002f",
+        "\u003a"-"\u005a",
+        "\u005e"-"\u007a",
+        "\u0080"-"\ufaff"
+     ]>
+|
+     < #ID_REST: [
+        "\u0021",
+        "\u0024"-"\u0026",
+        "\u0028"-"\u002b",
+        "\u002d",
+        "\u002f"-"\u005a",
+        "\u005e"-"\u007a",
+        "\u007c",
+        "\u007e",
+        "\u0080"-"\ufaff"
+     ]>
+
+/*
+ * According to the VRML spec, these are the excluded character ranges
+|    <#ID_FIRST: ~[
+        "\u0000"-"\u0020",
+        "\u0022",
+        "\u0023",
+        "\u0027",
+        "\u002b"-"\u002e",
+        "\u0030"-"\u0039",
+        "\u005b",
+        "\u005c",
+        "\u005d",
+        "\u007b",
+        "\u007d",
+        "\u007f"
+     ]>
+|
+    <#ID_REST: ~[
+        "\u0000"-"\u0020",
+        "\u0022",
+        "\u0023",
+        "\u0027",
+        "\u002c",
+        "\u002e",
+        "\u005b",
+        "\u005c",
+        "\u005d",
+        "\u007b",
+        "\u007d",
+        "\u007f"
+    ]>
+*/
+}

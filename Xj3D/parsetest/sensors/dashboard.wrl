@@ -1,0 +1,35 @@
+#VRML V2.0 utf8
+
+Group {
+   children [
+	   DEF PS ProximitySensor {
+		   size 100 100 100
+		}
+
+		DEF	T Transform	{
+			children [
+				Transform {
+					translation	0.05 -0.05 -0.15
+					children [
+						Shape {
+						    appearance Appearance {
+						       material Material {
+						          diffuseColor 1 0 0
+						       }
+						    }
+							geometry Sphere { radius 0.005}
+						}
+				   ]
+			   }
+		   ]
+		}
+
+	]
+}
+
+ROUTE PS.position_changed TO T.set_translation
+ROUTE PS.orientation_changed TO	T.set_rotation
+
+Shape {
+	geometry Box {}
+}

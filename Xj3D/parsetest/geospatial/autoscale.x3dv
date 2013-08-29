@@ -1,0 +1,51 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+NavigationInfo {
+   speed 1000
+}
+
+DEF VP Viewpoint {
+   position 0 0 1000
+}
+
+Transform {
+   children [
+      Shape {
+         geometry Sphere { radius 500 }
+      }
+      DEF TOUCH TouchSensor {}
+   ]
+}
+
+DEF KS KeySensor {   
+}
+
+DEF SC Script {
+   inputOnly SFInt32 actionKeyPress
+   outputOnly SFTime startTime
+   url ["ecmascript:      
+      function actionKeyPress(val) {
+      	 Browser.println('Starting');
+         startTime = new Date().getTime() / 1000;
+      }
+   "]
+}
+
+#ROUTE KS.actionKeyPress TO SC.actionKeyPress
+
+DEF TIMER TimeSensor {
+   loop FALSE
+   cycleInterval 5
+}
+ROUTE TOUCH.touchTime TO TIMER.startTime
+ROUTE SC.startTime TO TIMER.startTime
+
+DEF PI PositionInterpolator {
+   key [0,0.5,1]
+   keyValue [0 0 1000, 0 0 8000, 0 0 12000]
+}
+
+ROUTE TIMER.fraction_changed TO PI.set_fraction
+ROUTE PI.value_changed TO VP.position

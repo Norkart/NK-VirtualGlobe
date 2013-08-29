@@ -1,0 +1,150 @@
+#*********************************************************************
+#
+#  (C) 2001 Web3d Consortium
+#    http://www.web3d.org/
+#
+# Makefile rules and useful functions for wide use for Java specific tasks
+#
+# Author: Justin Couch
+# Version: $Revision: 1.3 $
+#
+#*********************************************************************
+
+#
+# Directories for standard stuff
+#
+include $(PROJECT_ROOT)/make/Makefile.inc
+
+JAVACC_SRC_DIR = src/javacc
+JAVA_SRC_DIR  = src/java
+DESTINATION = $(JAVA_SRC_DIR)
+
+#
+# Built up tool information
+#
+JAVACC    = javacc
+JJDOC	  = jjdoc
+
+EMPTY         =
+SPACE         = $(EMPTY) $(EMPTY)
+#
+# Option listing for the various commands
+#
+JAVACC_OPTIONS=
+
+
+#
+# Build rules.
+#
+GRAMMAR_LOC	= $(subst .,/,$(GRAMMAR))
+PACKAGE_LOC     = $(subst .,/,$(OUTPUT_PACKAGE))
+PACKAGE_DIR     = $(DESTINATION)/$(PACKAGE_LOC)
+DOCUMENT_DIR    = $(PACKAGE_DIR)/doc-files
+GRAMMAR_FILES   = $(filter  %.jj,$(SOURCE))
+PARSER_FILES    = $(GRAMMAR_FILES:%.jj=$(PACKAGE_DIR)/%Parser.java)
+DOC_FILES       = $(GRAMMAR_FILES:%.jj=$(DOCUMENT_DIR)/%.html)
+
+# Make a list of all packages involved
+ifdef GRAMMAR
+  GRAMMAR_LIST    = $(subst .,/,$(GRAMMAR))
+else
+  GRAMMAR_LIST    = $(subst .,/,$(GRAMMARS))
+endif
+
+GLIST_CLEAN     = $(patsubst %,$(JAVACC_SRC_DIR)/%/.clean,$(GRAMMAR_LIST))
+GLIST_BUILD     = $(patsubst %,$(JAVACC_SRC_DIR)/%/.build,$(GRAMMAR_LIST))
+GLIST_DOCS      = $(patsubst %,$(JAVACC_SRC_DIR)/%/.docs,$(GRAMMAR_LIST))
+
+#
+# General build rules for source files
+#
+
+# Rule 0. Applied when make is called without targets.
+all: $(DESTINATION)/$(PACKAGE_LOC) $(PARSER_FILES)
+
+# Rule 1. Create the destination dir if it is missing. Hope not!
+$(DESTINATION)/$(PACKAGE_LOC) :
+	$(PRINT) Creating $(DESTINATION)/$(PACKAGE_LOC)
+	@ $(MAKEDIR) $(DESTINATION)/$(PACKAGE_LOC) 
+
+# Rule 2. Change ".build" tag to "Makefile", thus call the package makefile
+# which in turn recalls this makefile with target all (rule 0).
+%.build :
+	@ $(MAKE) -k -f $(subst .build,Makefile,$@) all
+
+# Rule 3. Call rule 2 for every package
+buildall : $(GLIST_BUILD)
+	$(PRINT) Done build.
+
+# Rule 4. Building a .java file from a .jj file
+$(PACKAGE_DIR)/%Parser.java : $(JAVACC_SRC_DIR)/$(GRAMMAR_LOC)/%.jj
+	$(PRINT) Building $*Parser.java
+	@ $(JAVACC) -OUTPUT_DIRECTORY=$(DESTINATION)/$(PACKAGE_LOC) $(JAVACC_OPTIONS) $<
+
+# Rule 5. Building a .java file from a .jj file. Invokes rule 5.
+%Parser.java : $(JAVACC_SRC_DIR)/$(GRAMMAR_LOC)/%.jj
+	@ $(MAKE) -k $(PACKAGE_DIR)/$@
+
+#
+# Document Generation
+#
+
+# Rule 6. Applied when make is called without targets.
+docs: $(DOCUMENT_DIR) $(DOC_FILES)
+
+$(DOCUMENT_DIR) :
+	$(PRINT) Creating $(DOCUMENT_DIR)
+	@ $(MAKEDIR) $(DOCUMENT_DIR) 
+	
+# Rule 7. Change ".doc" tag to "Makefile", thus call the package makefile
+# which in turn recalls this makefile with target docs (rule 6).
+%.docs :
+	@ $(MAKE) -k -f $(subst .docs,Makefile,$@) docs
+
+# Rule 8. Call rule 7 for every package
+docall : $(GLIST_DOCS)
+	$(PRINT) Done jjDoc.
+
+# Rule 9. Building a .html file from a .jj file
+$(DOCUMENT_DIR)/%.html : $(JAVACC_SRC_DIR)/$(GRAMMAR_LOC)/%.jj
+	$(PRINT) Building $*.html
+	@ $(JJDOC) -OUTPUT_FILE=$(DOCUMENT_DIR)/$*.html $(JJDOC_OPTIONS) $<
+
+# Rule 10. Building a .html file from a .jj file. Invokes rule 9.
+%.html : $(JAVACC_SRC_DIR)/$(GRAMMAR_LOC)/%.jj
+	@ $(MAKE) -k $(PACKAGE_DIR)/$@
+
+
+
+# Rule 11. Default behaviour within a package: Simply copy the object from src
+# to classes. Note that the location of this rule is important. It must be after
+# the package specifics.
+$(PACKAGE_DIR)/% : $(JAVACC_SRC_DIR)/$(GRAMMAR_LOC)/%
+	$(MAKEDIR)  $(PACKAGE_DIR)
+	$< $@
+	$(CHMOD) u+rw $@
+
+
+#
+# Cleanups
+#
+
+# Rule 12. Remove all produced files. Deletes all the java files
+cleanall :
+	$(DELETE) $(PACKAGE_DIR)/*.java
+
+
+# Rule 13. Change ".clean" tag to "Makefile", thus call the package makefile
+# which in turn recalls this makefile with target cleanall (rule 12).
+%.clean :
+	$(MAKE) -k -f $(subst .clean,Makefile,$@) cleanall
+
+
+# Rule 14: Call rule 13 for every package directory
+clean : $(GLIST_CLEAN)
+	$(PRINT) Done clean.
+
+
+# Rule 15. A combination of steps used for automatic building
+complete : clean buildall docall
+

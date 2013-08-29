@@ -1,0 +1,19 @@
+#VRML V2.0 utf8
+
+# Author: Robert Lipman (National Institute of Standards and Technology)
+# Contacts: robert.lipman@nist.gov, http://cic.nist.gov/lipman/
+
+PROTO Label [
+   exposedField MFString text ""
+] {
+
+Group {
+   children [
+	   Shape {
+		  geometry Text { string IS text }
+	   }
+   ]
+}
+
+
+}

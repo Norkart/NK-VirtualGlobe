@@ -1,0 +1,51 @@
+#X3D V3.2 utf8
+
+PROFILE Immersive
+COMPONENT Layering:2
+COMPONENT EnvironmentalEffects:3
+
+# Shows a proportional viewport that always occupies the lower left
+# corner of the screen
+
+# The content defined for the base layer
+DEF TG Transform {
+  children Shape {
+    geometry Box {}
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+  }
+}
+
+# A second layer to show that we do have stuff on screen
+LayerSet {  
+  order [ 0 1 ]
+  layers [
+    Layer {
+      viewport ProportionalViewport {
+        x -1
+        y -1
+        width 1.0
+        height 1.0
+      }
+      children [
+        TextureBackground {
+            transparency 1
+        }
+        DEF TG_LAYER Transform {
+          translation 0.3 0.4 0
+          children Shape {
+            geometry Box {}
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 1 0
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

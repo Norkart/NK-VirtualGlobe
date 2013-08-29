@@ -1,0 +1,16 @@
+#X3D V3.0 utf8
+
+PROFILE Core
+COMPONENT Geometry3D:1
+COMPONENT Grouping:1
+COMPONENT Rendering:1
+COMPONENT Shape:1
+
+Group {
+  children Shape {
+    geometry Box {}
+    appearance Appearance {
+      material Material { diffuseColor 1 0 0 }
+    }
+  }
+}

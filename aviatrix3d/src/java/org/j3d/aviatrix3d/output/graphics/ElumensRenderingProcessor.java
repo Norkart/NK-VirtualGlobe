@@ -1,0 +1,800 @@
+/*****************************************************************************
+ *                   Yumetech, Inc Copyright (c) 2004 - 2006
+ *                               Java Source
+ *
+ * This source is licensed under the GNU LGPL v2.1
+ * Please read http://www.gnu.org/copyleft/lgpl.html for more information
+ *
+ * This software comes with the standard NO WARRANTY disclaimer for any
+ * purpose. Use it at your own risk. If there's a problem you get to fix it.
+ *
+ ****************************************************************************/
+
+package org.j3d.aviatrix3d.output.graphics;
+
+// External imports
+import javax.media.opengl.*;
+
+import java.lang.ref.Reference;
+import java.lang.ref.ReferenceQueue;
+
+import javax.vecmath.Point3f;
+
+// Local imports
+import org.j3d.aviatrix3d.rendering.*;
+
+import org.j3d.device.output.elumens.SPI;
+
+import org.j3d.aviatrix3d.pipeline.RenderOp;
+import org.j3d.aviatrix3d.pipeline.graphics.GraphicsEnvironmentData;
+import org.j3d.aviatrix3d.pipeline.graphics.GraphicsResizeListener;
+import org.j3d.aviatrix3d.pipeline.graphics.GraphicsProfilingData;
+
+/**
+ * Handles the rendering for a single elumens dome-based output device.
+ * <p>
+ *
+ * The code expects that everything is set up before each call of the display()
+ * callback. It does not handle any recursive rendering requests as that is
+ * assumed to have been sorted out before calling this renderer.
+ * <p>
+ *
+ * In order to get resize feedback, the renderer implements our
+ * {@link GraphicsResizeListener} interface. It doesn't register though.
+ * It is up to the user class to make sure that it is registered with the
+ * underlying windowing-system specific component handler so that we do
+ * get the resize values here.
+ *
+ * @author Alan Hudson
+ * @version $Revision: 3.10 $
+ */
+public class ElumensRenderingProcessor extends BaseRenderingProcessor
+    implements GraphicsResizeListener
+{
+    /** The Java wrapper to the native SPI library */
+    private SPI spi;
+
+    /** Should we reinitialize SPI */
+    private boolean initSpi;
+
+    /** Flag to say that init has been called on the canvas */
+    private boolean initComplete;
+
+    /** The new number of channels at next SPI initialize */
+    private int newNumChannels;
+
+    /** The number of channels to render each frame. */
+    private int numChannels;
+
+    /** Format of the screen arrangements we want for SPI */
+    private int spiFormat;
+
+    /** The last near clip plane */
+    private double lastNear;
+
+    /** The last far clip plane */
+    private double lastFar;
+
+    /** Request that the current drawing terminate immediately. App closing */
+    private boolean terminate;
+
+    /** The eye position.  Null if not set */
+    private float[] eyePos;
+
+    /** The len position.  Null if not set */
+    private float[] lensPos;
+
+    /** The screen orientation.  Null if not set */
+    private double[] screenOrientation;
+
+    /** The channel size.  Defaults to 1024x1024 */
+    private int[] chanSize;
+
+    /** Local copy of the window width */
+    private int windowWidth;
+
+    /** Local copy of the window width */
+    private int windowHeight;
+
+    /** Flag indicating whether we need to resize the surface next frame */
+    private boolean resizeNeeded;
+
+    /**
+     * Construct handler for rendering objects to the main screen.
+     *
+     * @param context The context that this processor is working on
+     */
+    public ElumensRenderingProcessor(GLContext context)
+    {
+        super(context);
+
+        spi = new SPI();
+        newNumChannels = 3;
+        spiFormat = SPI.SPI_PF_3_CHAN | SPI.SPI_PF_BACKBUFFER;
+        initSpi = true;
+
+        resizeNeeded = false;
+
+        chanSize = new int[] {1024, 1024};
+    }
+
+    //---------------------------------------------------------------
+    // Methods defined by GraphicsResizeListener
+    //---------------------------------------------------------------
+
+    /**
+     * Called by the drawable when the surface resizes itself. Used to
+     * reset the viewport dimensions.
+     *
+     * @param x The x position of the drawable in the parent coordinate system
+     * @param y The y position of the drawable in the parent coordinate system
+     * @param width The width of the surface in pixels
+     * @param height The height of the surface in pixels
+     */
+    public void graphicsDeviceResized(int x, int y, int width, int height)
+    {
+        windowWidth = width;
+        windowHeight = height;
+        resizeNeeded = true;
+    }
+
+    //---------------------------------------------------------------
+    // Methods defined by BaseRenderingProcessor
+    //---------------------------------------------------------------
+
+    /**
+     * Called by the drawable immediately after the OpenGL context is
+     * initialized; the GLContext has already been made current when
+     * this method is called.
+     */
+    public void init()
+    {
+        super.init();
+
+        spi = new SPI();
+
+        initializeSPI();
+    }
+
+    /**
+     * Called by the drawable to perform rendering by the client.
+     *
+     * @param profilingData The timing and load data
+     */
+    public void display(GraphicsProfilingData profilingData)
+    {
+        if(resizeNeeded)
+        {
+            int w;
+            int h;
+
+            if(windowWidth > chanSize[0])
+                w = chanSize[0];
+            else
+                w = windowWidth;
+
+            if(windowHeight > chanSize[1])
+                h = chanSize[1];
+            else
+                h = windowHeight;
+
+            for(int i=0; i < numChannels; i++)
+                spi.setChanSize(getSpiToken(i), w, h);
+
+            resizeNeeded = false;
+        }
+
+        int token;
+
+        GL gl = glContext.getGL();
+
+        if(gl == null)
+            return;
+
+        processRequestData(gl);
+
+        if(terminate)
+            return;
+
+        if(initSpi)
+            initializeSPI();
+
+        if(terminate)
+            return;
+
+        if(alwaysLocalClear)
+        {
+            // Need to reset the viewport back to full window size when we
+            // clear because we never unset the viewport in the previous
+            // frame, resulting in everything other than this one not being
+            // cleared.
+            GLDrawable drawable = glContext.getGLDrawable();
+
+            int w = drawable.getWidth();
+            int h = drawable.getHeight();
+
+            gl.glViewport(0, 0, w, h);
+            gl.glScissor(0, 0, w, h);
+
+            gl.glClearColor(clearColor[0],
+                            clearColor[1],
+                            clearColor[2],
+                            clearColor[3]);
+            gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+        }
+
+        ObjectRenderable obj;
+        ComponentRenderable comp;
+        int data_index = 0;
+        boolean fog_active = false;
+        ObjectRenderable current_fog = null;
+
+        // JC: This is pretty dodgy. Not sure how we're supposed to deal with
+        // this for the moment.
+        renderViewpoint(gl, environmentList[0]);
+
+        if(terminate)
+            return;
+
+        spi.begin();
+
+        if(terminate)
+            return;
+
+        for(int wallCnt = 0; wallCnt < numChannels && !terminate; wallCnt++)
+        {
+            token = getSpiToken(wallCnt);
+
+            spi.preRender(token);
+
+            for(int i = 0; i < numRenderables && !terminate; i++)
+            {
+                switch(operationList[i])
+                {
+                    case RenderOp.START_LAYER:
+                        gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
+                        GraphicsEnvironmentData data = environmentList[data_index];
+
+                        fog_active = data.fog != null;
+                        current_fog = data.fog;
+
+                        preLayerEnvironmentDraw(gl, data);
+                        break;
+
+                    case RenderOp.STOP_LAYER:
+                        data = environmentList[data_index];
+
+                        postLayerEnvironmentDraw(gl, data, profilingData);
+                        fog_active = false;
+                        data_index++;
+                        break;
+
+                    case RenderOp.START_VIEWPORT:
+                        data = environmentList[data_index];
+                        setupViewport(gl, data);
+                        break;
+
+                    case RenderOp.STOP_VIEWPORT:
+                        break;
+
+                    case RenderOp.START_RENDER:
+                        // load the matrix to render
+                        gl.glPushMatrix();
+                        gl.glMultMatrixf(renderableList[i].transform, 0);
+                        obj = (ObjectRenderable)renderableList[i].renderable;
+                        obj.render(gl);
+                        break;
+
+                    case RenderOp.STOP_RENDER:
+                        obj = (ObjectRenderable)renderableList[i].renderable;
+                        obj.postRender(gl);
+                        gl.glPopMatrix();
+                        break;
+
+                    case RenderOp.RENDER_GEOMETRY:
+                        // load the matrix to render
+                        gl.glPushMatrix();
+                        gl.glMultMatrixf(renderableList[i].transform, 0);
+                        ((GeometryRenderable)renderableList[i].renderable).render(gl);
+                        gl.glPopMatrix();
+                        break;
+
+                    case RenderOp.RENDER_CUSTOM_GEOMETRY:
+                        // load the matrix to render
+                        gl.glPushMatrix();
+                        gl.glMultMatrixf(renderableList[i].transform, 0);
+                        CustomGeometryRenderable gr =
+                            (CustomGeometryRenderable)renderableList[i].renderable;
+                        gr.render(gl, renderableList[i].instructions);
+                        gl.glPopMatrix();
+                        break;
+
+                    case RenderOp.RENDER_CUSTOM:
+                        // load the matrix to render
+                        gl.glPushMatrix();
+                        gl.glMultMatrixf(renderableList[i].transform, 0);
+
+                        CustomRenderable cr =
+                            (CustomRenderable)renderableList[i].renderable;
+                        cr.render(gl, renderableList[i].instructions);
+                        gl.glPopMatrix();
+                        break;
+
+                    case RenderOp.START_STATE:
+                        obj = (ObjectRenderable)renderableList[i].renderable;
+                        obj.render(gl);
+                        break;
+
+                    case RenderOp.STOP_STATE:
+                        obj = (ObjectRenderable)renderableList[i].renderable;
+                        obj.postRender(gl);
+                        break;
+
+                    case RenderOp.START_LIGHT:
+                        // Get the next available light ID
+
+                        if(lastLightIdx >= availableLights.length)
+                            continue;
+
+                        Integer l_id = availableLights[lastLightIdx++];
+                        lightIdMap.put(renderableList[i].id, l_id);
+
+                        // load the matrix to render
+                        gl.glPushMatrix();
+                        gl.glMultMatrixf(renderableList[i].transform, 0);
+                        comp = (ComponentRenderable)renderableList[i].renderable;
+                        comp.render(gl, l_id);
+                        gl.glPopMatrix();
+                        break;
+
+                    case RenderOp.STOP_LIGHT:
+                        if(lastLightIdx >= availableLights.length)
+                            continue;
+
+                        l_id = (Integer)lightIdMap.remove(renderableList[i].id);
+
+                        comp = (ComponentRenderable)renderableList[i].renderable;
+                        comp.postRender(gl, l_id);
+                        availableLights[--lastLightIdx] = l_id;
+                        break;
+
+                    case RenderOp.START_CLIP_PLANE:
+                        // Get the next available clip plane ID
+                        if(lastClipIdx >= availableClips.length)
+                            continue;
+
+                        Integer c_id = availableClips[lastClipIdx++];
+                        clipIdMap.put(renderableList[i].id, c_id);
+
+                        // load the matrix to render
+                        gl.glPushMatrix();
+                        gl.glMultMatrixf(renderableList[i].transform, 0);
+
+                        comp = (ComponentRenderable)renderableList[i].renderable;
+                        comp.render(gl, c_id);
+                        gl.glPopMatrix();
+                        break;
+
+                    case RenderOp.STOP_CLIP_PLANE:
+                        if(lastClipIdx >= availableClips.length)
+                            continue;
+
+                        c_id = (Integer)clipIdMap.remove(renderableList[i].id);
+
+                        comp = (ComponentRenderable)renderableList[i].renderable;
+                        comp.postRender(gl, c_id);
+
+                        availableClips[--lastClipIdx] = c_id;
+                        break;
+
+                    case RenderOp.START_TRANSPARENT:
+                        gl.glDepthMask(false);
+                        gl.glEnable(GL.GL_BLEND);
+                        gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+                        break;
+
+                    case RenderOp.STOP_TRANSPARENT:
+                        gl.glDisable(GL.GL_BLEND);
+                        gl.glDepthMask(true);
+                        break;
+
+                    case RenderOp.START_ALPHATEST:
+                        gl.glEnable(GL.GL_ALPHA_TEST);
+                        gl.glAlphaFunc(GL.GL_GEQUAL, alphaCut);
+                        break;
+                    
+                    case RenderOp.STOP_ALPHATEST:
+                        gl.glDisable(GL.GL_ALPHA_TEST);
+                        break;
+
+                    case RenderOp.START_FOG:
+                        if(!fog_active)
+                        {
+                            gl.glEnable(GL.GL_FOG);
+                            fog_active = true;
+                        }
+
+                        obj = (ObjectRenderable)renderableList[i].renderable;
+                        obj.render(gl);
+                        break;
+
+                    case RenderOp.STOP_FOG:
+                        if(current_fog != null)
+                            current_fog.render(gl);
+                        else
+                        {
+                            obj = (ObjectRenderable)renderableList[i].renderable;
+                            obj.postRender(gl);
+                            fog_active = false;
+                            gl.glDisable(GL.GL_FOG);
+                        }
+                        break;
+
+                    case RenderOp.START_SHADER_PROGRAM:
+                        ShaderComponentRenderable prog =
+                            (ShaderComponentRenderable)renderableList[i].renderable;
+
+                        if(!prog.isValid(gl))
+                        {
+                            currentShaderProgramId = INVALID_SHADER;
+                            continue;
+                        }
+
+// TODO: Optimise this to avoid the allocation. Use IntHashMap for lookup.
+                        currentShaderProgramId = new Integer(prog.getProgramId(gl));
+                        prog.render(gl);
+                        break;
+
+                    case RenderOp.STOP_SHADER_PROGRAM:
+                        if(currentShaderProgramId == INVALID_SHADER)
+                            continue;
+
+                        obj = (ObjectRenderable)renderableList[i].renderable;
+                        obj.postRender(gl);
+
+                        currentShaderProgramId = INVALID_SHADER;
+                        break;
+
+                    case RenderOp.SET_SHADER_ARGS:
+                        if(currentShaderProgramId == INVALID_SHADER)
+                            continue;
+
+                        comp = (ComponentRenderable)renderableList[i].renderable;
+                        comp.render(gl, currentShaderProgramId);
+                        break;
+
+                    case RenderOp.START_TEXTURE:
+                        comp = (ComponentRenderable)renderableList[i].renderable;
+                        Integer id = (Integer)(renderableList[i].instructions);
+                        comp.render(gl, id);
+                        break;
+
+                    case RenderOp.STOP_TEXTURE:
+                        comp = (ComponentRenderable)renderableList[i].renderable;
+                        id = (Integer)(renderableList[i].instructions);
+                        comp.postRender(gl, id);
+                        break;
+               }
+            }
+
+            if(terminate)
+                return;
+
+            gl.glFlush();
+
+            if(terminate)
+                return;
+
+            spi.postRender(token);
+        }
+
+        // JC: Again, pretty dodgy assumption being made here.
+        environmentList[0].viewpoint.postRender(gl);
+
+        if(terminate)
+            return;
+
+        spi.end();
+
+        // JC: Why is this here?
+        gl.glClearColor( 0.0f, 0.0f, 0.4f, 1.0f);
+        gl.glClear (gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT);
+
+        switch(numChannels)
+        {
+            case 1:
+                spi.flush(SPI.SPI_1C_FRONT);
+                break;
+            case 2:
+                spi.flush(SPI.SPI_ALL_2_CHAN);
+                break;
+            case 3:
+                spi.flush(SPI.SPI_ALL_3_CHAN);
+                break;
+            case 4:
+                spi.flush(SPI.SPI_ALL_4_CHAN);
+                break;
+        }
+    }
+
+    //---------------------------------------------------------------
+    // Methods defined by Renderer
+    //---------------------------------------------------------------
+
+    /**
+     * Convert a pixel location to surface coordinates.
+     *
+     * @param x The X coordinate
+     * @param y The Y coordinate
+     * @param position The converted position.  It must be preallocated.
+     */
+    public void getPixelLocationInSurface(float x, float y, Point3f position)
+    {
+System.out.println("ElumensRenderingProcessor::getPixelLocationInSurface() not fixed yet");
+/*
+        if(windowWidth == 0) {
+            return;
+        }
+
+        position.x = (float) ((currentFrustum[1] - currentFrustum[0]) *
+                     (x / windowWidth - 0.5f));
+        position.y = (float) ((currentFrustum[3] - currentFrustum[2]) *
+                     ((windowHeight - y) / windowHeight - 0.5f));
+        position.z = (float) -currentFrustum[4];
+*/
+    }
+
+    /**
+     * Get the Center Eye position in surface coordinates.
+     *
+     * @param position The current eye position.  It must be preallocated.
+     */
+    public void getCenterEyeInSurface(Point3f position)
+    {
+        position.set(eyePoint);
+    }
+
+    //---------------------------------------------------------------
+    // Local Methods
+    //---------------------------------------------------------------
+
+    /**
+     * Set the channel lens position.
+     *
+     * @param wall The walls to affect.  Defined in org.j3d.device.output.elumens.SPI
+     * @param x The x position
+     * @param y The y position
+     * @param z The z position
+     */
+    void setChanLensPosition(int wall, float x, float y, float z)
+    {
+        lensPos = new float[] {x,y,z};
+
+        if(initComplete)
+            spi.setChanLensPosition(wall, lensPos[0], lensPos[1], lensPos[2]);
+    }
+
+    /**
+     * Set the channel eye position.
+     *
+     * @param wall The walls to affect.  Defined in org.j3d.device.output.elumens.SPI
+     * @param x The x position
+     * @param y The y position
+     * @param z The z position
+     */
+    void setChanEyePosition(int wall, float x, float y, float z)
+    {
+        eyePos = new float[] {x,y,z};
+
+        if(initComplete)
+            spi.setChanEyePosition(wall, eyePos[0], eyePos[1], eyePos[2]);
+    }
+
+    /**
+     * Set the screen orientation.  Allows the project to rotated in software
+     * for different hardware setups.
+     *
+     * @param r The roll
+     * @param p The pitch
+     * @param v The yaw
+     */
+    void setScreenOrientation(double r, double p, double v)
+    {
+        screenOrientation = new double[] {r,p,v};
+
+        if(initComplete)
+            spi.setScreenOrientation(screenOrientation[0],
+                                     screenOrientation[1],
+                                     screenOrientation[2]);
+    }
+
+    /**
+     * Set the channel size.
+     *
+     * @param wall The walls to affect.  Defined in org.j3d.device.output.elumens.SPI
+     * @param h The height
+     * @param w The width
+     */
+    void setChanSize(int wall, int height, int width)
+    {
+        chanSize = new int[] {height , width};
+
+        if(initComplete)
+            spi.setChanSize(wall,height, width);
+    }
+
+    /**
+     * Set the number of channels to display.  This will
+     * happen the next render loop.
+     */
+    void setNumberOfChannels(int num)
+    {
+        newNumChannels = num;
+        initSpi = true;
+    }
+
+    /**
+     * Get the spiToken based on the current wallCnt and number of channels.
+     *
+     * @return The token
+     */
+    private int getSpiToken(int wallCnt)
+    {
+        switch(numChannels)
+        {
+            case 1:
+                return SPI.SPI_1C_FRONT;
+            case 2:
+                switch(wallCnt)
+                {
+                    case 0: return SPI.SPI_2C_LEFT;
+                    case 1: return SPI.SPI_2C_RIGHT;
+                    default: System.out.println("Unknown wall: " + wallCnt);
+                }
+            case 3:
+                switch(wallCnt)
+                {
+                    case 0: return SPI.SPI_3C_LEFT;
+                    case 1: return SPI.SPI_3C_RIGHT;
+                    case 2: return SPI.SPI_3C_TOP;
+                    default: System.out.println("Unknown wall: " + wallCnt);
+                }
+            case 4:
+                switch(wallCnt)
+                {
+                    case 0: return SPI.SPI_4C_LEFT;
+                    case 1: return SPI.SPI_4C_RIGHT;
+                    case 2: return SPI.SPI_4C_TOP;
+                    case 3: return SPI.SPI_4C_BOTTOM;
+                    default: System.out.println("Unknown wall: " + wallCnt);
+                }
+            default:
+                System.out.println("Unsupported number of channels in: " + this);
+                return 0;
+        }
+    }
+
+    /**
+     * Get the SPI initialization format based on the
+     * number of channels.
+     *
+     * @return the format
+     */
+    private int getSpiFormat()
+    {
+        int bufferType = SPI.SPI_PF_BACKBUFFER;
+
+        switch(numChannels)
+        {
+            case 1:
+                return (SPI.SPI_PF_1_CHAN | bufferType);
+            case 2:
+                return (SPI.SPI_PF_2_CHAN | bufferType);
+            case 3:
+                return (SPI.SPI_PF_3_CHAN | bufferType);
+            case 4:
+                return (SPI.SPI_PF_4_CHAN | bufferType);
+            default:
+                System.out.println("Unsupported number of channels in: " + this);
+                return 0;
+        }
+    }
+
+    /**
+     * Initialize the SPI library
+     */
+    private void initializeSPI()
+    {
+        numChannels = newNumChannels;
+
+        spiFormat = getSpiFormat();
+        spi.initialize(spiFormat, numChannels);
+
+        float near = 0.1f;
+        float far = 3000;
+        lastNear = near;
+        lastFar = far;
+
+        spi.setNearFar(near,far);
+
+        int wall = 0;
+
+        switch(numChannels)
+        {
+            case 1:
+                wall = SPI.SPI_1C_FRONT;
+                break;
+            case 2:
+                wall = SPI.SPI_2C_LEFT | SPI.SPI_2C_RIGHT;
+                break;
+            case 3:
+                wall = SPI.SPI_3C_LEFT | SPI.SPI_3C_RIGHT | SPI.SPI_3C_TOP;
+                break;
+            case 4:
+                wall = SPI.SPI_4C_LEFT | SPI.SPI_4C_RIGHT | SPI.SPI_4C_TOP | SPI.SPI_4C_BOTTOM;
+                break;
+        }
+
+        if(initComplete)
+        {
+            int w = (windowWidth > chanSize[0]) ? chanSize[0] : windowWidth;
+            int h = (windowHeight > chanSize[1]) ? chanSize[1] : windowHeight;
+
+            switch(numChannels)
+            {
+                case 1:
+                    spi.setChanSize(SPI.SPI_1C_FRONT, w, h);
+                    break;
+                case 2:
+                    spi.setChanSize(SPI.SPI_ALL_2_CHAN, w, h);
+                    break;
+                case 3:
+                    spi.setChanSize(SPI.SPI_ALL_3_CHAN, w, h);
+                    break;
+                case 4:
+                    spi.setChanSize(SPI.SPI_ALL_4_CHAN, w, h);
+                    break;
+            }
+        }
+
+        if(lensPos != null)
+        {
+            System.out.println("Setting lensPosition: " + lensPos[0] +
+                               " " + lensPos[1] + " " + lensPos[2]);
+            spi.setChanLensPosition(wall, lensPos[0], lensPos[1], lensPos[2]);
+        }
+
+        if(eyePos != null)
+        {
+            System.out.println("Setting eyePosition: " + eyePos[0] +
+                               " " + eyePos[1] + " " + eyePos[2]);
+            spi.setChanEyePosition(wall, eyePos[0], eyePos[1], eyePos[2]);
+        }
+
+        if(screenOrientation != null)
+        {
+            System.out.println("Setting screenOrientation: " +
+                               screenOrientation[0] + " " +
+                               screenOrientation[1] + " " +
+                               screenOrientation[2]);
+            spi.setScreenOrientation(screenOrientation[0],
+                                     screenOrientation[1],
+                                     screenOrientation[2]);
+        }
+
+        initSpi = false;
+    }
+
+    /**
+     * Update the projection matrix.
+     *
+     * @param gl The gl context to draw with
+     * @param data The view environment information to setup
+     */
+    protected void updateProjectionMatrix(GL gl, GraphicsEnvironmentData data)
+    {
+        super.updateProjectionMatrix(gl, data);
+
+        spi.setNearFar((float) data.viewFrustum[4],(float)data.viewFrustum[5]);
+    }
+}

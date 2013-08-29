@@ -1,0 +1,21 @@
+#VRML V2.0 utf8
+
+EXTERNPROTO simple [
+  eventIn SFInt32 setter
+  eventOut SFInt32 getter
+]
+[]
+
+EXTERNPROTO simple [
+  eventIn SFInt32 setter
+  eventOut SFInt32 getter
+]
+  "http://www.blah.com/"
+
+EXTERNPROTO simple [
+  eventIn SFInt32 setter
+  eventOut SFInt32 getter
+]
+[
+  "http://www.blah.com/"
+]

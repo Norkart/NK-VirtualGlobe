@@ -1,0 +1,60 @@
+#X3D V3.1 utf8
+
+PROFILE Immersive
+COMPONENT CADGeometry:2
+
+DEF LAYER CADLayer {
+   name "Test"
+   visible [TRUE,TRUE,TRUE]
+   children [
+      Transform {
+         translation -2.5 0 0
+         children [
+              Shape {
+                 geometry Sphere {}
+              }
+         ]
+      }
+      Shape {
+         geometry Box {}
+      }
+      Transform {
+         translation 2.5 0 0
+         children [
+              Shape {
+                 geometry Cone {}
+              }
+         ]
+      }
+   ]
+}
+
+DEF KEYS KeySensor {
+}
+
+DEF SC Script {
+  inputOnly SFInt32 actionKeyPress
+  outputOnly MFBool mask
+
+  url ["ecmascript:
+    var mask;
+
+    function initialize() {
+        mask[0] = true;
+        mask[1] = true;
+        mask[2] = true;
+    }
+
+    function actionKeyPress(val) {
+       idx = val -1;
+       if (mask[idx])
+           mask[idx] = false;
+       else
+          mask[idx] = true;
+    }
+
+  "]
+}
+
+ROUTE KEYS.actionKeyPress TO SC.actionKeyPress
+ROUTE SC.mask TO LAYER.set_visible

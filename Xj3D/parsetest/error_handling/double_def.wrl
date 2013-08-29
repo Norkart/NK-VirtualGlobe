@@ -1,0 +1,8 @@
+#VRML V2.0 utf8
+
+# Def names are required to be unique in X3D (not in VRML). This
+# tests to make sure we can ignore the double declaration in VRML. 
+
+DEF GRP Group {}
+
+DEF GRP Transform {}

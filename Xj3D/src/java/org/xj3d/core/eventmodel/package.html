@@ -1,0 +1,69 @@
+<html>
+<body>
+Interface definitions that provide abstract representations of the
+runtime processing of the X3D/VRML scenegraph (The event model).
+<p>
+
+Interfaces in this package are used to define abstract capabilities of the
+runtime capabilities. It does not contain the implementations of any of the
+interfaces. This allows for a pluggable interface for an end user to customise
+the behaviour of the browser. In addition, the interfaces are designed to work
+with the abstract node representations in the {@link org.xj3d.core.nodes}
+package. In each case we can implement these without needing
+to know about a specific rendering implementation of the nodes. The idea is
+that you can take these and plug them in with the nodes interfaces and create
+a complete working event model.
+<p>
+
+<h3>Route Management</h3>
+
+Route management exists as an abstract system with different implementations.
+All routes management implementations are based on the
+{@link org.web3d.vrml.nodes.runtime.RouteManager}
+interface. This interface serves to allow the rest of a browser implementation
+to work regardless of the actual implementation while allowing your code to
+experiment with differemt capabilites and optimisation routines. For example, you
+could change the route handling from breadth first to depth first without
+modifying any other code.
+
+<h3>Bindables Management</h3>
+
+There are a lot of uses for bindable nodes in the VRML scene graph. These all
+follow the same behaviour, just the visual output is different. There is a lot of
+behaviour that gets repeated over and over so this cleans up all of this into a
+single neat package.
+
+<h3>Properties</h3>
+
+The following properties are in use by classes in this package.
+
+<ul>
+<li><code>org.xj3d.script.loader.class</code> The name of the class
+    that implements the {@link org.vrml.nodes.loader.ScriptLoader}
+    interface, which is used for loading scripts.
+</li>
+<li><code>org.xj3d.script.manager.class</code> The name of the class
+    that implements the {@link org.vrml.nodes.runtime.ScriptManager}
+    interface, which is used for managing scripts.
+</li>
+<li><code>org.xj3d.file.loader.class</code> The name of the class
+    that implements the
+    {@link org.vrml.nodes.loader.ExternalLoadManager} interface,
+    which is used for loading content other than scripts.
+</li>
+<li><code>org.xj3d.router.manager.class</code> The name of the class
+    that implements the {@link org.vrml.nodes.runtime.RouteManager}
+    interface, which is used for managing routes.
+</li>
+<li><code>org.xj3d.router.factory.class</code> The name of the class
+    that implements the {@link org.vrml.nodes.runtime.RouterFactory}
+    interface, which is used for creating routers.
+</li>
+<li><code>org.xj3d.frame.state.class</code> The name of the class
+    that implements the {@link org.vrml.nodes.FrameStateManager}
+    interface, which is used for managing per-frame state.
+</li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+<title>How To Install and Compile Xj3D</title>
+</head>
+<body>
+
+<center>
+<table border="0" cellspacing="0" cellpadding="0" summary="">
+<tr align="center">
+<td><pre>   </pre></td>
+<td><h1>How To Install and Compile Xj3D</h1></td>
+</table>
+<font size="-.5">
+<a href="#Libs">Required Libs</a> |
+<a href="#PATH_CLASSPATH">PATH/CLASSPATH</a> |
+<a href="#Build">Building Xj3D</a> |
+</font>
+</center>
+
+
+<P />
+<hr width="100%" />
+<P />
+
+<h2><a name="Xj3D">What is Xj3D?</a></h2>
+
+<p>
+<b>Xj3D</b> is an example Open Source implementation for the
+<a href="http://www.web3D.org/x3d.html">X3D and VRML97 specifications</a>.
+</P>
+
+<p>
+This page is intended to help software developers examine and contribute to the
+source code. This code is under active development,  if you are just
+interested in using the codebase you do not need this document! We have a user
+install available <a href="http://www.web3d.org/TaskGroups/source/xj3d.html#use">here</a>.
+This install includes everything you need to use Xj3D as a Java3D loader and
+includes a sample VRML97/X3D Browser.
+</p>
+
+
+<P />
+<hr width="100%" />
+<P />
+
+
+<h2>Setting up your Windows PC to compile the Xj3D Source</h2>
+
+This section will take you through the steps needed to setup your system to
+compile Xj3D.  It will help you locate all the required utilities/libraries
+and detail which versions have been tested to work.  This version will provide
+a checklist view.
+<p>
+Install the packages to whatever directories you like, but record their locations.  We recommend a directory location that will be used in example paths.
+You will use these locations later to setup your CLASSPATH and PATH environment
+variables.  If a package is mentioned as residing in the lib directory then we
+suggest you use that version.  Some of these are hard to find, tracking at a
+different version or we have modified them.
+<ol>
+
+<p>
+<a name="Libs"></a>
+<li>
+    <b>Cygwin</b>: Obtain a UNIX box, or turn your PC into a UNIX box via:
+    GNU Utilities for PCs are available at <A HREF="http://sourceware.cygnus.com/cygwin" target="_cygwin"><i>sourceware.cygnus.com/cygwin</i></A>
+    <br>
+    Provides Unix command line and utilities on Windows 95/98/NT/2000/XP.
+    <p>
+    Notes:
+    <ul>
+        <li><B>During the install you must select UNIX as the default file type.</B></li>
+        <li>You will need to select at least the following Categories/Packages:</li>
+        <ul>
+            <li>Devel/cvs</li>
+            <li>Devel/make</li>
+        </ul>
+    </ul>
+</li>
+<li>
+<b>CVS</b> is the Concurrent Versioning System, which is widely
+used for software management projects shared among multiple individuals.
+
+<p>
+
+<p>
+CVS is included in the Cygwin distribution.  The next steps will take you through
+downloading the Xj3D code.  At this point you have a decision to make.  You can
+either download the latest stable release or jump into the raw development stream.
+I'd recommend going for the latest stable release, you've got enough to do for now
+without worring about our untested changes!
+<p>
+<b>Checking out the Code:</b>
+<ul>
+<li>Create a Project directory(Examples use c:/projs).  CD to that directory.</li>
+<li>Type: <pre>export CVSROOT=:pserver:anonymous@cvs.xj3d.org:/cvs/xj3d/cvsroot </pre>
+<li>Type: <pre>cvs login</pre>  Hit enter for the password.
+<li>Type: cvs checkout -P -r V-1-0-0 Xj3D for the stable version</li>
+<li>or: cvs checkout -P Xj3D for the latest version</li>
+</ul>
+
+<p>Troubleshooting CVS:</p>
+
+<ul>
+<li>It is possible that you are behind a firewall that is blocking CVS queries.
+    If you are not getting replies from the CVS server, that is probably the case.
+<P />
+</li>
+
+<li>To lift firewall port restrictions, ask your campus/corporate firewall administrator to open
+	<b>Port 2401 on cvs.xj3d.org</b>
+<P />
+</li>
+
+<li>To read more about default CVS port 2401, see
+	<a href="http://www.loria.fr/~molli/cvs/doc/cvsclient_3.html#SEC3" target="_CVS">http://www.loria.fr/~molli/cvs/doc/cvsclient_3.html#SEC3</a>
+</li>
+</ul>
+
+</li>
+
+<p>
+<li><b>Java2 SDK</b> is
+available at <A HREF = "http://java.sun.com/j2se/"><i>http://java.sun.com/j2se/</i></A>.
+<P>
+We have successfully used the latest 1.5.x series as well. We develop against
+the latest version of the JDK but maintain compatibility against the previous
+version as well as the current one. So, for example, when JDK 1.6 comes out, we
+will drop 1.4 support and require a minimum of 1.5.
+
+<P />
+
+<li>
+<P />
+<b>JavaCC</b> has had many homes over the years. It now appears
+to be a project under the Java.Net community process. You can
+download the latest version from
+<A HREF="http://javacc.dev.java.net/"><i>http://javacc.dev.java.net/</i></A>.
+We compile against 4.0 release, but it is known to work with 3.2 and 2.0.
+
+<P>
+Note:   When installing make sure you select the UNIX shell scripts version of scripts
+
+</li>
+
+<li>
+<b>JInput</b> - Java Input library for USB devices<p>
+<font color="red">The 2.0 codebase has not been updated to support the latest Jinput.  Its been removed from the compile list for now.</font>
+You can download it here: <a href="https://games-binaries.dev.java.net/build/index.html">https://games-binaries.dev.java.net/build/index.html</a>
+<p>
+These instructions assume you've installed this in c:/javaapis/jinput
+</li>
+<p>
+
+<li>
+<b>JOAL</b> - Java Open AL Bindings
+You can download it here: <a href="https://joal.dev.java.net/servlets/ProjectDocumentList">https://joal.dev.java.net/servlets/ProjectDocumentList</a>
+<p>
+make a directory c:/javaapis/joal
+download platform specific JOAL(Windows would be: joal-windows-1.1b01.zip) to this directory
+unzip zip.
+These instructions assume you've installed this in c:/javaapis/joal
+</li>
+<p>
+
+<li>
+
+<b>JMF</b> - Java Media Framework provides video libraries.
+You can download it here: <a href="http://java.sun.com/products/java-media/jmf/2.1.1/download.html">http://java.sun.com/products/java-media/jmf/2.1.1/download.html</a>
+<p>
+The JMF installer will place the files where they are needed.
+</li>
+<p>
+
+<li>
+
+<b>SWT</b> - Standard Widget Toolkit<P>
+You'll need a 3.2 version of SWT.
+<p>
+You can download it here: <a href="http://www.eclipse.org/swt/">http://www.eclipse.org/swt/</a>
+<p>
+Assuming you downloaded swt-3.2RC7-win32-win32-x86.zip
+<ul>
+<li>make directory: c:/javaapis/swt</li>
+<li>unzip the downloaded file</li>
+<li>remove the build info in the directory name(I20060602-1317)</li>
+   <ul><li>mv swt-I20060602-1317-win32-win32-x86 swt-win32-win32-x86</li></ul>
+</ul>
+</li>
+<p>
+
+<li>
+
+<b>Vecmath</b> - Vector Math<P>
+This comes in the Java3D distribution.  I can't find a seperate download of the jar file.
+<br>
+Its also available in Xj3D's CVS from src/eclipse/plugins/javax.vecmath_1.5.0.jar<br>
+If you use this version you'll need to change VECMATH_CLASSPATH in the sample bashrc to point to this.
+</li>
+<p>
+
+</ol>
+
+Xj3D currently supports three renderers.  Each one uses a different underlying rendering library.  You will
+need to install at least one of these renderers.
+
+<ul>
+<li>
+<b>JOGL</b> - The default renderer is an OpenGL based renderer.  You must use the JSR-231 based builds.<BR>  Beta 05 is the lastest tested release for Xj3D.
+Download here: <a href="https://jogl.dev.java.net/servlets/ProjectDocumentList">JOGL</A>
+<p>
+Setup your system like this:
+<ul>
+<li>Make a c:/javaapis/jsr231 directory</li>
+<li>copy the download jogl.jar to that directory</li>
+<li>Make a c:/javaapis/jsr231/natives</li>
+<li>Make a directory for your platform(like windows)</li>
+<li>Copy the platform specific jars into this directory</li>
+<li>un jar that file(jar xvf jogl-natives-windows-i586.jar</li>
+</ul>
+<p>
+In prior releases we suggested you install these libraries in your lib/ext.  We do not recommend that now.
+
+
+</li>
+<p>
+
+<li>
+<b>Java 3D</b> (version 1.3.1) is available at
+<A HREF="http://java.sun.com/products/java-media/3D/" target="_java3D">
+<i>http://java.sun.com/products/java-media/3D</i></A>
+<br>
+Select the SDK for the JDK format. Usually the OpenGL-based version of Java3D
+is much preferred.
+<P>
+There are some issues with the new Java3D 1.3.2 source versions that we haven't worked through yet.
+</li>
+
+<li>
+<b>GL4Java</b> - The mobile renderer is implemented using GL4Java.  It will be moving to JOGL soon.
+Download here: <a href="http://www.jausoft.com/gl4java.html">GL4Java</a>
+</li>
+<p>
+</ul>
+
+
+
+<hr width="100%" />
+<P />
+
+<H3>Environment Variable Setup</H3>
+
+<a name="PATH_CLASSPATH"><b>PATH</b> and <b>CLASSPATH</b></a> settings are always
+a bit tricky. The easiest way to setup the system environment variables is to
+modify the .bashrc file located in <code>c:/cygwin/home/$userid</code>.
+Where <code>$userid is your system userid.
+<p>
+All the examples here assume you have installed the Xj3D codebase into "c:/xj3d".
+Modify these as needed for your local setup.
+</p>
+We've created a sample bashrc for you.  This includes all the setup information
+as specified in the above installs.
+
+<a href="docs/setup/sample_bashrc">Sample Bash rc</A>
+You can either make this your .bashrc or "source sample_bashrc" in cygwin to use it.
+<p>
+Make sure the X3D_HOME and X3D_DOS_HOME are correct for your install.  Non windows
+users will need to make some path changes for native libraries.
+<p>
+You will also need to change the JAVA_HOME environment variable.  This should
+point to the location you installed java.  So for JDK1.4.2_07 you would use:
+<PRE>
+export JAVA_HOME=c:/jdk1.4.2_07
+</PRE>
+<font color="red">Currently our build scripts do not support spaces in the JAVA_HOME.  The
+default install for JDK5 is in C:/Program Files.  You will have to move your JDK
+location to something like c:/jdk1.5 to use these build scripts.</font>
+<P />
+<hr width="100%" />
+<P />
+
+<a name="Build"><H3>Building the Xj3D source</H3></a>
+
+Copy the file <code>Makefile</code> from the <code>make</code> directory
+into this directory.
+
+<pre>
+    cp make/Makefile .
+</pre>
+
+Now, to compile the code, simply change to this xj3d directory and type:
+<pre>
+    make parsers
+    make config
+    make properties
+    make images
+</pre>
+This will build all of the parser source code using javacc
+<p>
+If you are using the default JOGL renderer type:
+<pre>
+    make ogl
+</pre>
+<p>
+If you are using the Java3D renderer type:
+<pre>
+    make j3d
+</pre>
+<p>
+If you are using the Mobile renderer type:
+<pre>
+    make mobile
+</pre>
+
+The make system provides a number of other options. These are listed below:
+<ul>
+<li><code>class</code>: Build just the class files, no JARs</li>
+<li><code>all</code>:   Do everything - JARS and javadoc</li>
+<li><code>javadoc</code>: Generate all of the Javadoc</li>
+<li><code>examples</code>: Compile the example applications</li>
+<li><code>clean</code>: Remove all the compiled library files</li>
+<li><code>nuke</code>: Remove all the binaries and JAR files for both library and examples</li>
+</ul>
+<p>
+
+Typing just
+<pre>
+    make
+</pre>
+
+Will provide a complete list of options available, including those for
+compiling a code for only a specific renderer.
+<p>
+
+To test that you have the codebase compiling correctly try the following:
+<pre>
+    cd examples/browser
+    javac OGLBrowser.java
+    java OGLBrowser
+    in location append "..\..\parsetest\events\moving_box.wrl"
+    hit the Go! button
+    see box, rejoice!
+</pre>
+
+<hr width="100%" />
+<p>
+Last Revised: <i>$Date: 2006/06/13 23:46:03 $</i>
+</p>
+</body>
+</html>

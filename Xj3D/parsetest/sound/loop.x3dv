@@ -1,0 +1,13 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+DEF countSound Sound {
+   spatialize FALSE
+   maxBack 10000
+   maxFront 10000
+   source DEF countClip AudioClip {
+      loop TRUE
+      url ["count.wav"]
+   }
+}

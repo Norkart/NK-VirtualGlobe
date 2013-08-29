@@ -1,0 +1,14 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Script {
+  mustEvaluate TRUE
+  directOutput FALSE
+  initializeOnly SFInt32 testIntField 20
+  inputOnly SFNode testNodeInput
+  outputOnly MFVec3f testVecOutput
+  inputOutput MFColor testColorInputOutput [ 1 0 0 ]
+
+  url [ "FieldLoadTest.class" ]
+}

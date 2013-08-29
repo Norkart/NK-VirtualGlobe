@@ -1,0 +1,74 @@
+#X3D V3.0 utf8
+
+PROFILE Interactive
+COMPONENT xj3d_ParticleSystem:1
+
+Viewpoint {
+  position 0 0 4
+}
+
+ParticleSystem {
+  geometryType "POINT"
+  maxParticles 1000
+  emitter DEF EMITTER PolylineEmitter {
+    speed 0.1
+    coords DEF EMITTER-COORDS Coordinate { 
+      point [ 0.5 0 0 -0.5 0 0 ]
+    }
+    coordIndex [0 1]
+  }
+  appearance Appearance {
+    material Material { emissiveColor 1 0 0 }
+  }
+}
+
+# A Line to show where our emitter is
+Shape {
+  appearance Appearance {
+    material Material { emissiveColor 0 1 0 }
+  }
+  geometry IndexedLineSet {
+    coord USE EMITTER-COORDS
+    coordIndex [ 0 1 ]
+  }
+}
+  
+DEF TS TimeSensor {
+  cycleInterval 21
+  loop TRUE
+}
+
+DEF LINE_NORMALS PositionInterpolator {
+  key [ 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 ]
+  keyValue [
+     0  1 0
+     0  1 0
+    -1  0 0
+    -1  0 0
+    -1  0 0
+     0 -1 0
+     1  0 0
+     0  1 0
+     0  1 0
+  ]
+}
+
+DEF LINE_COORDS CoordinateInterpolator {
+  key [ 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 ]
+  keyValue [
+     0.5  0   0  -0.5  0   0
+     0.5 -0.5 0  -0.5 -0.5 0
+     0.5 -0.5 0   0.5 -1   0
+     0.5 -1   0   0.5 -1.5 0
+     1    0.5 0   1   -0.5 0
+     0.5  0   0   1.5  0   0
+     1   -0.5 0   1    0.5 0
+     1.5  0   0   0.5  0   0
+     0.5  0   0  -0.5  0   0
+  ]
+}
+
+ROUTE TS.fraction_changed TO LINE_COORDS.set_fraction
+ROUTE TS.fraction_changed TO LINE_NORMALS.set_fraction
+ROUTE LINE_COORDS.value_changed TO EMITTER-COORDS.set_point
+ROUTE LINE_NORMALS.value_changed TO EMITTER.set_direction

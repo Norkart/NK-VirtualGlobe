@@ -1,0 +1,29 @@
+#X3D V3.1 utf8
+
+PROFILE CADInterchange
+
+DEF LAYER CADLayer {
+   name "Test"
+   visible [TRUE,FALSE]
+   children [
+      Transform {
+         translation -2.5 0 0
+         children [
+              Shape {
+                 geometry Sphere {}
+              }
+         ]
+      }
+      Shape {
+         geometry Box {}
+      }
+      Transform {
+         translation 2.5 0 0
+         children [
+              Shape {
+                 geometry Cone {}
+              }
+         ]
+      }
+   ]
+}

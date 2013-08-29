@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+
+<X3D profile="Immersive">
+  <Scene>
+    <ProtoDeclare name="test">
+	  <ProtoInterface>
+	    <field accessType="initializeOnly" name="color" type="SFColor" value="1 0 1"/>
+	    <field accessType="initializeOnly" name="kids" type="SFNode">
+	      <Group containerField="kids"/>
+	    </field>
+      </ProtoInterface>
+	  <ProtoBody>
+	    <Group>
+		   <Shape>
+		    <Appearance>
+		      <Material>
+			    <IS>
+			      <connect nodeField="diffuseColor" protoField="color"/>
+			    </IS>
+			  </Material>
+		    </Appearance>
+		    <Box />
+		  </Shape>
+	    </Group>
+	  </ProtoBody>
+	</ProtoDeclare>
+	
+	<Transform>
+		<ProtoInstance name="test">
+		  <fieldValue name="color" value="1 1 0"/>
+		</ProtoInstance>	
+	</Transform>
+  </Scene>
+</X3D>

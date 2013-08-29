@@ -1,0 +1,31 @@
+#VRML V2.0 utf8
+
+TransformGroup {
+   translation 0 1 0
+   rotation  1 0 0 1.57
+}
+
+Viewpoint {
+  fieldOfView 0.767435
+  jump FALSE
+}
+
+TimeSensor {
+  cycleInterval 1
+  enabled TRUE
+}
+
+TextureTransform {
+  scale 0.5 0.3
+  rotation 0.67
+}
+
+WorldInfo {
+  info [ "hello world" "This is a string " ]
+  title "Test worlds"
+}
+
+PositionInterpolator {
+  key [ 0 0.5 1 ]
+  keyValue [ 0 0 0, 1 1 1, 0 6 7 ]
+}

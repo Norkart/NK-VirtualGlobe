@@ -1,0 +1,78 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Viewpoint {
+   description "Forward"
+}
+
+DEF TOP_DOWN_VP Viewpoint {
+    position 0 15 0
+    orientation 1 0 0 -1.57075
+    description "Top Down"
+}
+DEF SIDE_VP Viewpoint {
+    position 15 0 0
+    orientation 0 1 0 1.57075
+    description "Side"
+}
+
+Transform {
+    translation 0 1 0
+    children [
+       Shape {
+           geometry Text { string "No Billboard" }
+       }
+    ]
+}
+Billboard {
+    axisOfRotation 0 0 0
+    children [
+       Shape {
+           geometry Text { string "Screen Aligned" }
+       }
+    ]
+}
+
+
+Transform {
+    translation 0 -1.25 -2
+    children [
+    Billboard {
+        axisOfRotation 0 1 0
+        children [
+           Shape {
+               geometry Text { string "Y Axis" }
+           }
+        ]
+    }
+    ]
+}
+
+Transform {
+    translation 0 -2.5 -3
+    children [
+    Billboard {
+        axisOfRotation 1 0 0
+        children [
+           Shape {
+               geometry Text { string "X Axis" }
+           }
+        ]
+    }
+    ]
+}
+
+Transform {
+    translation 0 -3.5 -4
+    children [
+    Billboard {
+        axisOfRotation 0 0 1
+        children [
+           Shape {
+               geometry Text { string "Z Axis" }
+           }
+        ]
+    }
+    ]
+}

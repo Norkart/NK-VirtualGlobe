@@ -1,0 +1,33 @@
+#X3D V3.0 utf8
+
+PROFILE Interactive
+COMPONENT xj3d_overlay
+
+Overlay {
+  layout [
+    BorderLayout {
+      horizontalAlign "CENTER"
+      horizontalFraction 0.5
+      children [
+        GridLayout {
+          gridSize 2 1
+          children [
+            Text2D {
+              bboxSize 128 32
+              string "First row"
+              textColor 0 1 1
+              backgroundColor 1 0 0
+              transparency 0.9
+            }
+            Text2D {
+              bboxSize 128 32
+              string "second row"
+              textColor 1 1 1
+              backgroundColor 0 0 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

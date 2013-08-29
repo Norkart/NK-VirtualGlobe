@@ -1,0 +1,27 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Group {
+    children [
+        Shape {
+            appearance Appearance {
+                material DEF MAT Material {
+                    diffuseColor 0 0 1
+                }
+            }
+            geometry Box {}
+        }
+        DEF TS TouchSensor {}
+    ]
+}
+
+DEF SC Script {
+    inputOnly SFBool isOver
+    outputOnly SFColor diffuseColor_changed
+
+    url ["SAIExample1.class"]
+}
+
+ROUTE TS.isOver TO SC.isOver
+ROUTE SC.diffuseColor_changed TO MAT.set_diffuseColor

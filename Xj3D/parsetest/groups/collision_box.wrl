@@ -1,0 +1,48 @@
+#X3D V3.0 utf8
+
+PROFILE Interactive
+COMPONENT Grouping:3
+
+# Two boxes. Colour indicates state. Red you can't walk through, but green you
+# can.
+
+Transform {
+  translation -3 0 0
+  children [
+    Collision {
+      children [
+        Shape {
+          appearance Appearance {
+            material Material {
+              diffuseColor 1 0 0
+            }
+          }
+          geometry Box {
+            size 1 4 1
+          }
+        }
+      ]
+    }
+  ]
+}
+
+Transform {
+  translation 3 0 0
+  children [
+    Collision {
+      collide FALSE
+      children [
+        Shape {
+          appearance Appearance {
+            material Material {
+              diffuseColor 0 1 0
+            }
+          }
+          geometry Box {
+            size 1 4 1
+          }
+        }
+      ]
+    }
+  ]
+}

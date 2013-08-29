@@ -1,0 +1,233 @@
+<html>
+<head>
+<title>Xj3D Overview</title>
+</head>
+
+<body>
+
+Xj3D is a series of libraries that form a toolkit that can be used to
+load and render VRML97 and X3D files.
+<p>
+
+The aim of the codebase is to provide a series of easily separable components
+to enable VRML and X3D content either as a full browser, static geometry or
+even as a component of a bigger application. The major goal of the code is to
+provide a highly flexible <i>set</i> of libraries that you may take and use
+to generate renderable content. If you combine them all together you could
+create a complete browser that we intend to be spec-conformant. The codebase
+itself is <i>not</i> a VRML/X3D browser, although you can create one from
+this code (see some of the example directories along with this distribution
+for an idea how).
+<p>
+
+The code is broken into 4 major sections:
+<ol>
+<li>Low level VRML lexical parser with a callback based API</li>
+<li>Definitions of VRML content, structure and generators</li>
+<li>A Java 3D implementation of the VRML scenegraph</li>
+<li>A DOM/XML parser representation of the VRML Scenegraph</li>
+</ol>
+
+<h2>Using the Code</h2>
+
+When you start to use the code in an application, it will not automatically
+allow you to do everything. For example, standard Java 3D loaders do not
+support the idea of scripting or of Inline content. To deal with this, you
+must also perform some auxillary support work so that everything works as
+expected.
+<p>
+
+<h3>Loading External Content</h3>
+
+To make life easier for our implementation, we have made use of quite a number
+of 3RD party libraries to build a fully capable browser. The major reason for
+this is that the inbuilt Java libraries are pretty terrible for the
+requirements of a VRML browser. Firstly we need full URI support - Java does
+not handle URNs that are used by the Universal Media libraries. Next, the
+image loading of standard Java is very bloated, consuming way too much
+memory. Then, to transport them across to the texture mapping used we have
+to make several copies of the image each time, so we bring in a library for
+more efficient image handling.
+<p>
+
+The next step is to use local libraries for specific areas such as Java 3D
+support. These libraries make a lot of things simpler by allowing us to not
+have to code them again. There are many similarities between VRML and the
+3D graphics scenegraph APIs and these libraries act as the translator between
+the two systems.
+<p>
+
+<h3>Preparation Work</h3>
+
+Internally the code does not connect a lot of the parts together. For example,
+Inlines are not automatically loaded as there are cases where you don't want
+the code to handle them. You may also want to specifically handle different
+content. Therefore, the Inlines are only loaded once you register the
+appropriate handlers with the URI system. We won't detail that here, but
+refer you to the applicable packages - {@link org.web3d.net.content} and
+{@link org.web3d.vrml.nodes.loader}. There are a collection of properties
+and factories that need to be set if you want loading of external files
+like textures, scripts and Inlines to work correctly.
+
+<h2>System Properties</h2>
+
+There are two ways of controlling the runtime configuration of Xj3D. Apart
+from providing your own implementation of the various toolkits, the standard
+Java mechanisms of properties files and system properties also apply.
+
+<h3>Property Files</h3>
+
+Property files are used to control large collections of properties. The
+following properties files are used by the system (path information is
+relative to the CLASSPATH as per System.getProperty()):
+
+<dl>
+<dt><code>vrml.properties</code></dt>
+<dd>Defined by the EAI to control various
+    items of configuration. Principally used to set the default factory class
+    to use for {@link vrml.eai.BrowserFactory}
+</dd>
+<dt><code>xj3d.properties</code></dt>
+<dd>System setup properties for the Xj3D project.
+    File is currently only used for the definition of profiles and components
+    and where to find further definition files.
+</dd>
+<dt><code><i>profile_name</i>.properties</code></dt>
+<dd>Definition of a particular
+    profile. The name of the file must be all lower case. The contents define
+    each component and level used by that profile.
+</dd>
+<dt><code>org/web3d/x3d/jaxp/dom/x3d.props</code></dt>
+<dd>Mapping of profile names
+    to their DTD classes. (This has not yet been updated for the latest
+    draft specification system)
+</dd>
+<dt><code>org/web3d/vrml/renderer/<i>component_name</i>.props</code></dt>
+<dd>Definiton of a particular component. Includes information about the
+    packages for each renderer and the nodes used at each level.
+</dd>
+</dl>
+
+<h3>System Properties</h3>
+
+The codebase makes reasonable use of system properties to allow the
+modification of its behaviour. These properties are sprinkled liberally about
+the code, making them sometimes hard to find. This is a summary of all those
+properties. Please be aware that these will need to be set before you run any
+code from this library because most of them will be used during the
+construction phase of any class.
+
+<dl>
+<dt><code>org.web3d.vrml.nodes.loader.threads</code></dt>
+<dd>The number of concurrent threads to be started to do loading. There are
+    two areas which use this - script loading and all other files. Each loader
+    creates this number of threads in the pool.
+</dd>
+<dt><code>org.web3d.vrml.parser.factory</code></dt>
+<dd>The fully qualified class name
+    of the parser factory implementation to be loaded. Allows the ability to
+    control the parser in use independently of the scenegraph building process.
+</dd>
+<dt><code>org.web3d.xj3d.script.loader.class</code></dt>
+<dd>The name of the class
+    that implements the {@link org.web3d.vrml.nodes.loader.ScriptLoader}
+    interface, which is used for loading scripts.
+</dd>
+<dt><code>org.web3d.xj3d.script.manager.class</code></dt>
+<dd>The name of the class
+    that implements the {@link org.web3d.vrml.nodes.runtime.ScriptManager}
+    interface, which is used for managing scripts.
+</dd>
+<dt><code>org.web3d.xj3d.file.loader.class</code></dt>
+<dd>the name of the class that implements the
+    {@link org.web3d.vrml.nodes.loader.ExternalLoadManager} interface,
+    which is used for loading content other than scripts.
+</dd>
+<dt><code>org.web3d.xj3d.router.manager.class</code></dt>
+<dd>The name of the class
+    that implements the {@link org.web3d.vrml.nodes.runtime.RouteManager}
+    interface, which is used for managing routes.
+</dd>
+<dt><code>org.web3d.xj3d.router.factory.class</code></dt>
+<dd>The name of the class that implements the
+    {@link org.web3d.vrml.nodes.runtime.RouterFactory}
+    interface, which is used for creating routers.
+</dd>
+<dt><code>org.web3d.xj3d.frame.state.class</code></dt>
+<dd>The name of the class that implements the
+    {@link org.web3d.vrml.nodes.FrameStateManager}
+    interface, which is used for managing per-frame state.
+</dd>
+<dt><code>org.web3d.xj3d.sensor.manager.class</code></dt>
+<dd>The name of the class that implements the
+    {@link org.web3d.vrml.renderer.j3d.input.J3DSensorManager} interface, which
+    is used for managing sensors. There are renderer-specific sub-interfaces
+    of this interface which the implementing class must also adhere to.
+</dd>
+<dt><code>org.web3d.xj3d.eventmodel.evaluator.class</code></dt>
+<dd>The name of the class that implements the
+    {@link org.web3d.vrml.nodes.runtime.EventModelEvaluator} interface,
+    which is used for runing the event model.
+</dd>
+<dt><code>org.web3d.vrml.nodes.staticgroup.dispose</code></dt>
+<dd>Boolean value describing whether the static group should dispose of the
+    VRML node children. This is an efficiency measure that will allow an
+    implementation to remove unneeded memory. However, it also means
+    that they can no longer be traversed, so if your application is
+    trying to traverse the scene graph, it will not be able to use the
+    nodes later on. Useful for a runtime optimisation, no good if you are
+    writing an editor. Defaults to false.
+</dd>
+<dt><code>org.web3d.vrml.nodes.staticgroup.compact</code></dt>
+<dd>Boolean value describing whether the static group should compact the VRML
+    scenegraph below this node or leave it in an expanded state. This is
+    an efficiency measure that will allow an implementation to flatten
+    the scene graph if desired. Useful for debugging but also means the
+    runtime scene graph will probably be different from the original
+    loaded from file. Defaults to false.
+</dd>
+<dt><code>org.web3d.vrml.nodes.fontstyle.font.size</code></dt>
+<dd>The font size in points. The default value is 36 point font.
+</dd>
+</dl>
+
+<h2>Further Reading</h2>
+
+<ul>
+<li>The <a href="http://www.xj3d.org/">Xj3D Homepage</a></li>
+<li>The <a href="http://www.web3d.org/technicalinfo/specifications/vrml97/index.htm">VRML97 ISO Specification</a>
+    International Standard ISO/IEC 14772-1:1997 - Part 1.
+</li>
+<li><a href="http://www.web3d.org/technicalinfo/specifications/eai/index.html">VRML97 EAI Specification</a>
+    ISO/IEC 14772-2:2002.
+</li>
+<li>Sun's <a href="http://java.sun.com/products/java-media/3D">Java 3D homepage</a>
+</li>
+<li><a href="http://www.j3d.org/">j3d.org</a> The Java 3D Community Site
+</li>
+<li>J3D.org's <a href="http://code.j3d.org/">Code Library</a> for
+    Java 3D specific code features.
+</li>
+<li><a href="http://www.mozilla.org/rhino/">Rhino ECMAScript Engine</a> for
+    providing VRML97 Annex C ECMAscript support. Rhino is a product of the
+    Mozilla project licensed under the NPL/GPL dual license.
+</li>
+
+<li>For details on URIs see the IETF working group:
+    <a href="http://www.ietf.org/html.charters/urn-charter.html">URN</a>
+</li>
+<li>Justin Couch's <a href="http://www.vlc.com.au/urilib/">URI Library</a> home page:
+</li>
+<li>For better image format support than the defaults provided by Java 3D,
+    try Justin Couch's <a href="http://www.vlc.com.au/imageloader/">ImageLoader library</a>.
+    The codebase does not use this directly, but it fits with the URI handling
+    code to expand and produce much, much more efficient texture loading
+    support (also uses native code!)
+</li>
+<li>This softare is released under the
+    <a href="http://www.gnu.org/copyleft/lgpl.html">GNU LGPL</a>
+</li>
+</ul>
+
+</body>
+</html>

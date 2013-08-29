@@ -1,0 +1,15 @@
+#VRML V2.0 utf8
+
+Script {
+   field SFNode anchor Anchor { url "hello.jpg" }
+   field SFInt32 num 42
+   url ["javascript:
+      function initialize() {
+        Browser.println('Initialize Script Done');
+      }
+   "]
+}
+
+Shape {
+   geometry Sphere {}
+}

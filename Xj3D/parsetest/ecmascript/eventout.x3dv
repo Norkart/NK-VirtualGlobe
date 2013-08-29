@@ -1,0 +1,47 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+DEF sc Script {
+      inputOnly SFBool activated
+      outputOnly SFColor output
+   url ["ecmascript:
+        function initialize() {
+          Browser.println('initialize called');
+        }
+        function activated(value) {
+          if(value) {
+            Browser.println('activated ' + value);
+            output = new SFColor(0, 1, 0);
+          }
+        }
+        "]
+}
+DEF sc_out Script {
+      inputOnly SFColor madeActive
+   url ["ecmascript:
+        function madeActive(value) {
+            Browser.println('new colour is ' + value.toString());
+        }
+        "]
+}
+Group {
+   children [Shape {
+      appearance Appearance {
+         material DEF MAT Material {
+               diffuseColor 1.0 0.0 0.0
+         }
+
+      }
+
+      geometry Box {
+      }
+
+   }
+DEF ts TouchSensor {
+   }
+   ]
+}
+ROUTE ts.isActive TO sc.activated
+ROUTE sc.output TO sc_out.madeActive
+ROUTE sc.output TO MAT.diffuseColor

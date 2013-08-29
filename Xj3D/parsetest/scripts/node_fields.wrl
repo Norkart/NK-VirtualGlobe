@@ -1,0 +1,7 @@
+#VRML V2.0 utf8
+
+Script {
+  mustEvaluate TRUE
+  directOutput FALSE
+  field SFNode myField Group {}
+}

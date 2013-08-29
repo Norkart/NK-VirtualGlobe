@@ -1,0 +1,48 @@
+#X3D V3.2 utf8
+
+PROFILE Immersive
+COMPONENT Navigation:3
+COMPONENT Geospatial:1
+COMPONENT Layering:2
+COMPONENT EnvironmentalEffects:3
+
+NavigationInfo {
+   type ["FLY", "ANY"]
+}
+
+DEF MAIN_VP Viewpoint {
+   description "Main VP"
+}
+
+DEF WORLD Inline {
+   url ["world.x3dv"]
+}
+
+LayerSet {
+   order [0 1]
+   layers [
+      Layer {   
+		  viewport CustomViewport {
+			fixedX FALSE
+			fixedY FALSE
+		  
+			x 0.5
+			y 0.5
+			width -256
+			height -256
+		  }
+
+         children [
+			DEF MAP_VP OrthoViewpoint {
+			   description "Ortho Viewpoint"
+			   fieldOfView -10 -10 10 10
+			   position 0 10 0
+			   orientation 1.0 0.0 0.0 -1.5708
+			}
+		
+  		    USE WORLD		
+      ]
+   }
+]}
+
+

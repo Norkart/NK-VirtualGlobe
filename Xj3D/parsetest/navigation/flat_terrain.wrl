@@ -1,0 +1,70 @@
+#VRML V2.0 utf8
+
+Shape {
+  geometry Box { size 1000 0.1 1000 }
+  appearance Appearance {
+    material Material {
+      emissiveColor 0 1 0
+    }
+  }
+}
+
+Transform {
+  translation 0 20 0
+  children DirectionalLight {
+    direction 0 -1 0
+  }
+}
+
+Viewpoint {
+  description "Default location"
+  position 0 0.5 0
+}
+
+Transform {
+  translation 8 1 0
+  children Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 0
+      }
+    }
+    geometry DEF point_box Box { size 1 1 1 }
+  }
+}
+
+Transform {
+  translation 0 1 -8
+  children Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 1 0 1
+      }
+    }
+    geometry USE point_box 
+  }
+}
+
+Transform {
+  translation -8 1 0
+  children Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 0 0 1
+      }
+    }
+    geometry USE point_box 
+  }
+}
+
+Transform {
+  translation 0 1 8
+  children Shape {
+    appearance Appearance {
+      material Material {
+        diffuseColor 0 1 1
+      }
+    }
+    geometry USE point_box 
+  }
+}

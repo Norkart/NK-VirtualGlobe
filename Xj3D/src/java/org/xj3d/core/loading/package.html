@@ -1,0 +1,115 @@
+<html>
+<body>
+Implementation of a load manager interfaces for externally referenced file
+within a scene.
+<p>
+
+The load manager runs as a standalone handler for dealing with nodes in a
+VRML/X3D scene that define their contents outside of the current file. Standard
+implementation examples of this are Scripts, ImageTextures and Inlines.
+<p>
+
+The loader will produce a full cache and asynchronous loading mechanism for
+content. The loader may be interrupted to remove all the currently loading
+content of the scene. Caching is performed on the local machine if allowed.
+Most of the behaviour can be controlled to optimise it for a given machine
+and network connection.
+<p>
+
+To load all files, the handler makes use of Justin Couch's
+<a href="http://www.vlc.com.au/urilib">URIlib</a> Java library for loading
+URNs and URLs. The standard <code>java.net</code> library is not used as it
+does not provide support for URNs that the universal media library needs. This
+package contains a number of system properties so make sure that you check
+and set these as well in order for this to function correctly.
+<p>
+
+This package uses the following system properties to modify its behaviour.
+<ul>
+<li><code>org.xj3d.core.loading.threads</code> the number of concurrent
+    threads to be started to do loading.
+</li>
+
+<li><code>org.xj3d.core.loading.sort.order</code> a comma separated list
+    containing one or more of the words <code>scripts</code>,
+    <code>inlines</code>, <code>textures</code>, <code>externprotos</code>,
+    <code>audio</code>, <code>movies</code>, <code>shaders</code>
+    <code>create</code> and <code>others</code>. The values are case-sensitive.
+    The declaration order is the sort order for values to be fetched within a
+    given scene. Any values not declared are placed at the end of the list in
+    any arbitrary order.
+</li>
+</ul>
+
+<p>
+The default sort order is defined to be:
+</p>
+
+<ol>
+<li><code>loadURL</code> (any loadURL() call from the SAI/EAI)</li>
+<li><code>textures</code> All texture types and Background nodes, except
+  for MovieTexture.</li>
+<li><code>externprotos</code> Externproto loading</li>
+<li><code>scripts</code> All scripts, regardless of whether they are locally
+  defined or external</li>
+<li><code>inlines</code> Any Inline node type</li>
+<li><code>create</code> Any of the createX3DFromX or createVRMLFromURL()
+  calls</li>
+<li><code>audio</code> AudioClip nodes, but not MovieTexture</li>
+<li><code>movies</code> MovieTexture node.</li>
+<li><code>shaders</code> Any shader source.</li>
+<li><code>others</code> Anything else not covered by one of the fixed types</li>
+</ol>
+
+<p>
+In keeping with the extensible nature of Xj3D, other types may be defined as
+part of the sort order definition. The loadURL type is always the highest
+priority and cannot be changed. Specifying this in the sort order list will be
+ignored.
+</p>
+
+<h3>Configuring the Loader</h3>
+
+The loader's behaviour can also be adjusted for different styles of work
+depending on the needs of the application. All code is designed to allow
+changing of the implementation so that experimentation may be performed.
+
+<h4>Setting the loader type</h4>
+
+<h4>URI resolution setup</h4>
+
+The URI resolver library requires a few properties to work as required. We
+do not set these internally as you may wish to override the defaults or
+use factories rather than the properties.
+<p>
+
+Properties are used to configure the URI library about where to find handlers
+for different networking protocols and interpretation of content into Java
+objects. These allow you to turn raw bytes into something that the application
+understands. Sun includes a number of default implementations of these, but
+they are not particularly efficient or easy to use. We therefore allow you
+to provide your own, or use the ones that come with the URI library.
+<p>
+
+There are two properties to set:
+<code>uri.content.handler.pkgs</code> and
+<code>uri.protocol.handler.pkgs</code>. The first property defines the list
+of packages that are used to locate content handlers for things like images
+and HTML files. The second property locates the packages to look for when
+dealing with network protocol handlers. The value of these are a list of
+package names separated by the pipe character '|' and point to the root
+package name rather than the acutual packages. See the java.net package
+documentation or URIlib documentation for more details.
+<p>
+
+If you are lazy, then this is all you need to set.
+
+<pre>
+  System.setProperty("uri.content.handler.pkgs", "vlc.net.content");
+  System.setProperty("uri.protocol.handler.pkgs", "vlc.net.protocol");
+</pre>
+
+Note that if you need to handle Inline nodes, you will probably also want to
+use the various factories in the {@link org.web3d.net.content} package too.
+</body>
+</html>

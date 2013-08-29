@@ -1,0 +1,34 @@
+#X3D V3.2 utf8
+
+PROFILE Interactive
+COMPONENT ParticleSystems:1
+
+Viewpoint {
+  position 0 0 4
+}
+
+ParticleSystem {
+  geometryType "POINT"
+  maxParticles 200
+  emitter PointEmitter {
+    speed 0.1
+	surfaceArea 100
+	mass .01
+  }
+  colorRamp ColorRGBA {
+    color [
+      1 1 1 1
+      .5 .5 .5 1
+      .3 .3 .3 1
+      1 1 1 1
+    ]
+  }
+  colorKey [ 0 3 4 5 ]
+
+physics WindPhysicsModel {
+	  direction -1 0 0
+	  gustiness 1
+	  speed 100
+	  turbulence .2
+  }
+}

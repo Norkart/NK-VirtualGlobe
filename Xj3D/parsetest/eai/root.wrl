@@ -1,0 +1,11 @@
+#VRML V2.0 utf8
+
+#The basic, ever popular world with a DEF'd Transform node.
+
+DEF ROOT Transform {}
+
+Viewpoint{}
+
+Background {
+   skyColor [0 0 1]
+}

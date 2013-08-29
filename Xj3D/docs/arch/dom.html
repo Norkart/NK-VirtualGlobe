@@ -1,0 +1,583 @@
+<HTML>
+<HEAD>
+<TITLE>Xj3D DOM Implementation</TITLE>
+</HEAD>
+<BODY>
+
+<H1 ALIGN="center">Xj3D DOM Implementation</H1>
+
+Author: <I>Justin Couch</I><BR>
+Last updated: <I>$Date: 2001/03/14 11:45:35 $</I><BR>
+Revision: <I>$Revision: 1.3 $</I>
+
+<A NAME="intro">
+<H2>Intro</H2>
+</A>
+
+Part of the VRML 3.0 specification is an XML encoding of the VRML core
+behaviours. The Document Object Model (DOM) is a view of this XML information
+once it has been loaded into the browser. If there is XML then the users will
+usually expect to see a DOM representation of this structure so they can
+access it as they need from external code. This component provides an
+implementation of the DOM.
+
+<H3>Background</H3>
+
+The DOM representation is specificied by a number of W3C recommendations that
+exist as seperately implementable modules. For each module, there is a set of
+levels that provide an increasingly large set of capabilities. The current
+capability levels are
+<TABLE>
+<TR><TD>0</TD><TD>Original Javascript style access - HTML only</TD></TR>
+<TR><TD>1</TD><TD>Static structure representation of a document</TD></TR>
+<TR><TD>2</TD><TD>Introduced namespace aware capabilities</TD></TR>
+<TR><TD>3</TD><TD>(In progress)Ability to get exact structure as defined in the file</TD></TR>
+</TABLE>
+
+<P>
+
+As DOM Level 3 is still experimental, the codebase has decided to pursue the
+more stable and widely supported Level 2 interfaces.
+<P>
+
+Until mid 2000 there was no real generic way of building a DOM tree in Java
+code. You could make use of a given library, but that also assumed that you
+would have to install that on every machine. Along comes the XML folks and
+they have defined a specification call the Java API for XML Processing - JAXP.
+This allows you to fetch a parser without needing to know a specific
+implementation class. The XML parsing code was now portable.
+
+<H3>Motivation</H3>
+
+Although the parsing code was portable, all of the implementations didn't
+provide all of the specifications that we wanted. It would provide Level 2 Core
+representation, but for X3D that was not sufficient. One of the ideas of the
+DOM was to provide EAI type capabilities such as listening for event
+information on any given scenegraph node. This information is supported by the
+DOM Level 2 Events capabilities. So, to provide what we needed, we had to make
+our own implementation that provided DOM event mechanisms.
+<P>
+
+A separate reason for needing to implement the DOM was for experimental
+reasons. The new SAI specification was also providing a combination of DOM and
+SAI interfaces merged together. Although we could test a certain level of
+compatibility, it was not until we provided a complete implementation that we
+would know for certain that the merging would work. None of the existing
+parser implementations allowed us enough flexibility to get in and do this
+customisation and testing to the extent needed.
+<P>
+
+The design of the code used in our DOM implementation is designed to be
+extensible within the goals of the X3D system. That is, the implementation
+itself should not be inherently coupled to X3D. An example of this is that we
+might want to use MathML as a script to drive the X3D content. We may need to
+have an external engine or representation of MathML and thus would like to use
+out DOM implementation to represent that in a legal way too.
+<P>
+
+<HR>
+
+<A NAME="structure">
+<H2>Structural Overview</H2>
+</A>
+
+To implement a full DOM tree within Java, we looked to the JAXP specification
+for influence. This provides a factory class to bootstrap our parser into
+existance and then just returns instances of either the SAX or DOM interfaces.
+At the same time, we wanted to allow for extension, but provide the core set
+of capabilities such as events without the need to implement it by the
+extenders. Our implementation is focused around doing this in as seemless a
+way as possible.
+<P>
+
+In order to provide this seemless interaction, we needed to place all of the
+classes in a single Java package. This package is called
+<CODE>org.web3d.x3d.jaxp.dom</CODE> and is the central item in Figure 1.
+Although it was possible to implement it in multiple packages, we wanted to
+use the data hiding capabilities to reduce the amount of access that the
+extenders could get to the implementation. We didn't want them to know or be
+able to access things like changing the owner document for example. We've
+only exposed the pieces needed to provide extensions to the node types.
+
+<P>
+<CENTER>
+<A HREF="dom_structure.png">
+<IMG SRC="dom_structure_small.png" WIDTH="376" HEIGHT="206"></A><BR>
+<B>Figure 1:</B> UML Structure diagram of the DOM implementation
+</CENTER>
+<P>
+
+The complete implementation of the DOM structure is not shown in Figure 1.
+What you have here is a listing of the pertinent classes for any person wishing
+to extend the current capabilities. It doesn't really matter what the name of
+the class is that implements the <CODE>DocumentType</CODE> interface.
+
+<H3>Code Layout</H3>
+
+As you can see from Figure 1, there are a number of packages that are provided
+by external entities. The only two provided by this implementation is the
+<CODE>jaxp</CODE> and <CODE>jaxp.dom</CODE>. The rest of the packages come from
+external sources.
+<P>
+
+The package <CODE>org.w3c.dom</CODE> contains the interfaces
+that specify the DOM Core capabilities. For the event handling we extend the
+interfaces in <CODE>org.w3c.dom.events</CODE>. In the current implementation,
+our code only provides <CODE>MutationEvents</CODE> as capabilities. This is
+the basic modification of the scenegraph event. Other event types are not
+supported in the default implementation because it does not make sense to do
+so. If the tree is a static structure in memory on a server, is it worth
+providing UI events?
+<P>
+
+Within the package code is broken into two functional groups - Parts providing
+DOM structure support and event handling support. Classes providing structure
+support start with the name <CODE><I>X3D</I></CODE> where classes providing
+event support start with <CODE><I>DOM</I></CODE>.
+
+<H3>Core Implementation</H3>
+
+Reading through the DOM Core specification, the majority of the functionality
+is based around two classes - <CODE>Node</CODE> and <CODE>Element</CODE>.
+Correspondingly, the majority of the work and implementation code can be found
+in our two implementation classes of <CODE>X3DNode</CODE> and
+<CODE>X3DElement</CODE>.
+<P>
+
+<CODE>X3DNode</CODE> is responsible for the basic management of a given node
+and all it's sub children. The implementation is fairly straight forward. It
+has a number of data structures that keep lists of children and basic
+attribute information. At the base class level it enforces all of the
+requirements of the <CODE>Node</CODE> interface. If a derived class needs to
+provide a different implementation then they are required to override the
+appropriate method.
+<P>
+The need to override a method to provide different behaviour is a deliberate
+design decision. This forces extenders to understand exactly what behaviour
+they need to provide and check the specification for the right actions.
+<P>
+
+Event handling is also an important issue. The DOM Level 2 Events specification
+recommends that the class that implements <CODE>Node</CODE> should also
+implement the <CODE>EventTarget</CODE> interface. As our implementation does
+provide event handling, we have followed this recommendation. All of the
+management code for the child node handling also includes the necessary
+functionality to deal with events. The details of how that works is not covered
+here, but is in the Event Implementation section later.
+
+<CODE>X3DElement</CODE> is the other class with a lot of functionality in it.
+Here you will find all the handling for attributes.	The code is fairly
+straight-forward here. All of the attribute handling is delegated off to the
+<CODE>X3DNamedNodeMap</CODE> (an implementation of the DOM
+<CODE>NamedNodeMap</CODE>). All the code is left to do is handle the right
+event processing and keep local variables correctly set.
+<P>
+
+A requirement of the DOM is that if there is a default value for an attribute
+and that attribute is not specified in the file, the DOM implementation must
+make sure that it is available as a real value instance. In order to provide
+this behaviour, we make use of the <CODE>ProfileInfo</CODE> class. This class
+gives us a map of all the default attributes for a given node instance. (
+how this is done is covered in the DOM Building section). Inside our element
+implementation, we keep track of the adds and removes of attributes and
+ensure that we stay consistent with the spec. This is the one area that we
+do not delegate attribute handling to the NamedNodeMap and do it ourselves.
+
+<H3>Event Implementation</H3>
+
+DOM Events are quite a complex idea to implement. Unlike a standard listener
+pattern, events within the DOM also travel outside of the object that generated
+them. Events at a given level may travel up the tree to the parent nodes of
+"this" node (bubbling) and also may filter down to the children (cancelable).
+At any level, any node or listener may prevent the event from going any
+further. From a pure performance perspective, this can have a real impact.
+While the ideas are fine for slow time systems like a web page, the idea of a
+clock running at a couple of hundred hertz with one event for every tick can
+be quite a nightmare.
+<P>
+
+The current event implementation attempts to make a first pass at efficient
+handling. There are many ways of making this run faster, but we first needed
+to prove that we could implement it. The classes involved in DOM event handling
+and propogation are described in Figure 2. This figure also makes reference to
+the DOM interfaces that are required to be supported for the event module.
+
+<P>
+<CENTER>
+<A HREF="dom_event_structure.png">
+<IMG SRC="dom_event_structure_small.png" WIDTH="316" HEIGHT="152"></A><BR>
+<B>Figure 2:</B> UML Structure classes involved in the implementation of
+   DOM Events.
+</CENTER>
+<P>
+
+At the centre of the system is the <CODE>X3DNode</CODE> class. This acts as
+the hub for event management. It Has a reference to the class that generates
+event instances (<CODE>X3DDOMEventGenerator</CODE>), a class that handles
+events propogation (<CODE>DOMEventHandler</CODE>) and a class that holds meta
+information for event propogation (<CODE>NodePath</CODE>).
+<P>
+
+As was stated earlier, <CODE>X3DNode</CODE> is responsible for managing all
+the children nodes and delegates all of the event propogation information to
+other classes. This keeps the implementation of each class relatively small
+and allows us to swap various parts without effecting the overall codebase.
+<P>
+
+For events that are required to bubble, implementing them is relatively simple.
+For each node, dispatch events at that level, then ask for the parent and
+dispatch events on the parent etc until we reach the top of the tree. For
+capture events, we have a different problem. The spec says that when an event
+enters the tree, it must follow the direct path to the target node. We can't
+just do a breadth first propogation of all child nodes until we find the
+desired node. This means we need some prior knowledge of where the event is
+meant to go and the path to get there. A second interesting problem that we
+must also deal with is that if the tree changes on us while we are propogating
+the event, the event must propogate through the original path at the time it
+was first dispatched. Therefore we must capture the tree's exact path at the
+time the event was propogated and not dynamically discover it as we are doing
+the propogation.
+<P>
+
+To solve both of these problems, we use the <CODE>NodePath</CODE> class to
+capture all path information to the node. This class captures the path
+information at the time it was created and cannot be changed. There are a
+number of advantages of this approach:
+<UL>
+<LI>All path information captured in a single place that doesn't change, as
+    per the event spec
+<LI>A one time hit for path discovery at the time the node is added/removed
+    from the DOM tree rather than each time that an event is dispatched.
+<LI>Ability to provide path optimisation to eliminate dead nodes that don't
+    need to dispatch events because there are no listeners attached.
+<LI>Segregation of event path information from the node handling allowing
+    efficient construction capabilities.
+</UL>
+
+<H3>DOM Building</H3>
+
+To build a DOM Tree we need to parse an XML file, or construct one from
+scratch in memory using our application (See the various items of demo code
+that will be good examples of this). While we have decided to build our own
+DOM, we really don't want to get involved in the low level XML file parsing.
+An application building its own structures in memory uses a completely
+separate code path and we won't approach that topic here.
+<P>
+
+When parsing an XML file, we make use of the inbuilt SAX parser provided by
+JAXP. This provides us with a serial stream of events as parts of the document
+file are encountered. Using this information we can then build our own DOM
+structures.
+<P>
+
+Building our own DOM starts in the <CODE>DocumentBuilder</CODE> class. This
+provides all of the startup routine to kick the production of a DOM into gear.
+Getting events back from the SAX parser requires a collection of interfaces
+depending on what information is needed. These interfaces are presented on the
+left side of Figure 3. For our implementation, we use all of the available
+interfaces. The reason for this is that we also want to grab as much of the
+DTD information as well as the raw XML structure. This will help us later on
+create a better validated document, particularly if it starts getting
+dynamically changed by an application.
+
+<P>
+<CENTER>
+<A HREF="dom_builder_structure.png">
+<IMG SRC="dom_builder_structure_small.png" WIDTH="246" HEIGHT="134"></A><BR>
+<B>Figure 3:</B> UML Structure classes involved in the construction of a DOM
+   tree from an XML file.
+</CENTER>
+<P>
+
+With the information from the DTD, we use this to populate our
+<CODE>ProfileInfo</CODE> class. As was mentioned earlier, this is our
+repository of all our default attribute information. We start with an empty
+document and then register each attribute definition from the DTD as SAX sends
+it to us. If we don't have something registered here, then we assume that
+there are no default attributes for that element.
+<P>
+
+If we are starting with a clean document, we want to pass to the ProfileInfo
+class the list of profile names that we want supported. We then use that to
+dynamically load a DTD and register the type information.
+<P>
+
+As we are parsing through the XML, we need to create elements and attributes
+according to the data passed to us. For extensibility, we ask the factories to
+produce these for us. If the factory cannot create an instance, we ignore the
+element and keep working on the rest of the document. Also, in order to work
+correctly, we also pass factory instances to the elements and document as
+needed.
+
+<H3>XML ID/IDREF Handling</H3>
+
+An important part of a DOM representation is the ID attributes. These allow us
+to uniquely identify a given element instance. The ID is produced as we are
+parsing the document, but it is also possible that at runtime the code will
+dynamically have an ID attribute set on a given node. Because it will be
+directly set on a node, we need some way of feeding the information back to
+the owner document about these identifiers.
+<P>
+
+One goal of the code is to maintain decoupling between classes. That is, we
+can have a direct reference one way, but we don't want a class being completely
+dependent on another. This gets really nasty to compile. Therefore, to allow
+registration of ID information with the parent document, we have created the
+interface and methods that can be seen in Figure 4.
+
+<P>
+<CENTER>
+<A HREF="dom_id_structure.png">
+<IMG SRC="dom_id_structure_small.png" WIDTH="168" HEIGHT="118"></A><BR>
+<B>Figure 4:</B> UML Structure classes involved in the handling of ID
+   attribute types.
+</CENTER>
+<P>
+
+When an attribute is set in the element, it is checked for being an ID type.
+If it is, then it will call the interface to register the element itself as an
+object that can be fetched. Similarly, when that attribute is removed from the
+element it will be automatically unregistered.
+<P>
+<HR>
+
+<A NAME="runtime">
+<H2>Runtime Semantics</H2>
+</A>
+
+While the static structures seem fairly simple, there is quite a degree of
+underlying complexity hidden. In the process of building a DOM and then
+allowing users to interact with it, a fairly formal and strictly defined set
+of interactions must take place internally in order to give the right outwards
+appearance.
+<P>
+
+<H3>Conflicting Requirements</H3>
+
+It is unfortunate that the current design is so rigid in the order that tasks
+must be performed. The problem arises from the intersection of a number of
+competeing requirements from different parts of XML and the DOM specifications
+that has lead us to this situation. Ideally there is alternative implementation
+paths, but at this point we haven't managed to discover any that would lead to
+a more flexible environment.
+<P>
+
+To get a little more detailed, the problem mainly exists with the following
+combination of requirements:
+
+<UL>
+<LI>The need to inform the parent document of the element's existance, (
+    <CODE>getElementsByTagName()</CODE>)
+<LI>Know and understand ID/IDREFs (need to inform parent document for
+    <CODE>getElementsById()</CODE>)
+<LI>DOM's requirements for default attributes to be always present in the
+    DOM tree.
+<LI>Path information for the node from this point to it's parent document for
+    event propogation.
+</UL>
+
+Each of these require a separate set of data and only once we have everything
+can we assume behaviour is correct. For example, if we remove the node ID
+without knowing whether this is a default attribute, will we generate some
+problem elsewhere when we later come along and set the default attribute
+information.
+<P>
+
+In order to make sure that everything happens in the correct fashion, we have
+hidden most of this behaviour in package private methods. If we let the user
+supply lower level implementation items, then we just can't guarantee the
+results, hence the requirements for the factories to return our classes in a
+minimal state.
+
+<H3>Building a document from XML</H3>
+
+Building a DOM tree from an XML document takes several steps. The basic process
+is based around the SAX parser feeding us events about what it has encountered
+in a document. It is not in our interests to fully document the SAX handling,
+but we will show here the effects of particular SAX events of interest.
+<P>
+
+Out basic building process is based on a stack. As you will notice, the DOM is
+a tree structure. Each branch leads to a leaf or further branch and there is
+no connected-ness between branches (ID/IDREFs do not count as connections
+between branches in a DOM representation). Therefore, once we reach a leaf we
+can back out one level to the parent branch and investigate the next branch.
+What this makes for is a nice stack routine to build a DOM representation from
+the current working branch and it's parent. The main working structure you will
+find in the code is an array called <CODE>elementStack</CODE>. This is an array
+rather than using the java provided <CODE>Stack</CODE>. The java class is a
+hangover from the Java 1.0 days and is fully synchronised and therefore very
+slow. For a fast parsing of a document, using our own array structure will be
+much, much faster.
+<P>
+
+<H4>Initialising a document parser</H4>
+
+The document parser initialisation starts in the JAXP code where it creates
+a new <CODE>DocumentBuilderFactoryImpl</CODE>. This is the first class and
+is responsible for collecting the properties and initialising the class
+responsible for new documents and parser manager
+<CODE>DocumentBuilderImpl</CODE>. With the builder created, we then have
+multiple paths depending on what is required. Each of these is described in
+the following series of diagrams.
+
+<P>
+<CENTER>
+<A HREF="dom_create_sequence.png">
+<IMG SRC="dom_create_sequence_small.png" WIDTH="322" HEIGHT="242"></A><BR>
+<B>Figure 5:</B> Sequence of instructions to create a builder for parsing X3D
+   documents.
+</CENTER>
+<P>
+
+To create a document builder, we use the inbuilt SAX parser. To use this, we
+use the JAXP provided default parser with the <CODE>SAXParserFactory</CODE>.
+XML parsing does not actually occur until we have an <CODE>XMLReader</CODE>
+instance so we go through a number of steps until we have an instance.
+After this, we go through a setup process to configure the parser with the
+information we need. <CODE>XMLReader</CODE> is the working class that does the
+low level job of reading the text characters and then calling the SAX events.
+In order for us to receive these events we need to register the right handlers.
+Two of the methods are available directly on the <CODE>XMLReader</CODE> with
+<CODE>setContentHandler()</CODE> and <CODE>setDTDHandler()</CODE>. The other
+two interfaces we must set using the <CODE>setPropertyMethod()</CODE> with a
+string indicating the property name.
+<P>
+
+At some later stage the user will want to parse a document. The process that
+the code goes through is illustrated in Figure 6. The main point of note here
+is that we set the entity resolver and error handler only once we attempt to
+parse the document. This saves us potential problems of accidently setting
+either of these while we are part way through the document.
+<P>
+
+Creating an actual <CODE>Document</CODE> instance is handled by the combination
+of <CODE>XMLReader</CODE> and <CODE>X3DSAXDocumentBuilder</CODE>. The events
+come from the parser into the builder and that holds our information about
+the document. The <CODE>parse()</CODE> method does not return until the
+document is finished. Once this is finished, we then ask the builder for the
+document information that it has built from the SAX events. If there has been
+a parsing error then we never get to this point as we let the exception
+propogate back out through the method call.
+
+<P>
+<CENTER>
+<A HREF="dom_parse_sequence.png">
+<IMG SRC="dom_parse_sequence_small.png" WIDTH="146" HEIGHT="120"></A><BR>
+<B>Figure 6:</B> Sequence of instructions to create a builder for parsing X3D
+   documents.
+</CENTER>
+<P>
+
+
+<H3>Sending an event</H3>
+
+To send an event within the DOM we need something to happen. We may either
+have the userland code request an event to be dispatched or the event is
+created by our internal code when the user does something to the document
+structure. To illustrate the event sending sequence illustrated in Figure 7,
+we use the example of the user adding a new child node.
+<P>
+
+<P>
+<CENTER>
+<A HREF="dom_event_sequence.png">
+<IMG SRC="dom_event_sequence_small.png" WIDTH="208" HEIGHT="282"></A><BR>
+<B>Figure 7:</B> Sequence of instructions to send an example event (adding a
+   node to a node).
+</CENTER>
+<P>
+
+After some basic processing internally within <CODE>X3DNode</CODE>, we then
+need to do the event sending steps. This takes place within a special internal
+method called <CODE>sendInsertedEvent()</CODE>. Here we ask the event generator
+class to create us a new event of the right type, and initialise it with the
+appropriate values. For the diagramming purposes, we don't specify a particular
+event type, rather we just talk about generics as the same process takes place
+regardless of the event type or originator.
+<P>
+
+With an initialised event, we then ask the event dispatcher to take care of it.
+Internally to the event dispatcher, it then determines whether the event is a
+new one, or one that is arriving here because a propogation sequence has
+already started. For new events, we now mark them as dispatched and start
+calling methods according to the DOM Event specification for the event
+propogation. Firstly we must send capture events, then send the event to the
+target itself and finally bubble the event to the parents. It is not able to
+be represented on the sequence diagram, but after each of these stages, if the
+event has been stopped then we do no further processing and return to the
+node to complete its work of adding the child node.
+
+<P>
+<HR>
+
+<A NAME="components">
+<H2>Extending the code</H2>
+</A>
+
+The basic code provides a simple DOM builder. As this project is aimed at
+providing an X3D capability, the need to provided extended options is high.
+This section documents how we extended the code to provide X3D specific
+functionality and how you might want to extend it with new node types etc.
+
+<H3>Adding new Element and Attributes</H3>
+
+The most common requirement is the need to add new elements and attributes.
+To do this, we use the two factory interfaces <CODE>ElementFactory</CODE>
+<CODE>AttributeFactory</CODE> respectively.
+<P>
+
+<CODE>ElementFactory</CODE> provides us new element instances. During
+parsing of the XML document or when the user calls
+<CODE>Document.createElement()</CODE> the code delegates to this factory
+instance. The factory is provided with the tag name of the element and profile
+information. In return it expects an instance of <CODE>X3DElement</CODE>. This
+instance should not be initialised in any way other than setting the tag name
+value.
+<P>
+
+To create new attributes you provide an instance of
+<CODE>AttributeFactory</CODE>. Under the same circumstances as elements,
+attributes are created with an attribute name and value. As different elements
+may have the same attribute names we also provide an X3DElement instance. This
+is treated as an indicative element. The created attribute should not be set on
+this element. It is to serve as an identifier for the parent element type for
+the attribute to be created.
+<P>
+
+When we want to tell the implementation of the factory, we use the
+<CODE>setAttribute()</CODE> method of <CODE>DocumentBuilderFactory</CODE>. The
+string is the property name and the value is an instance of the appropriate
+factory.
+
+<H3>Sending New Event types</H3>
+
+To send new event types, we need to create them ourselves. The inbuilt factory
+is only capable of sending standard DOM event types. If the application that
+is using the DOM wishes to send it's own custom event types then it must be
+responsible for creating and initialising it with the right information. The
+event class should extend the <CODE>DOMEvent</CODE> class of our
+implementation. The event dispatch mechanism expects this class as it needs
+some of the private methods for controlling the dispatching of the event.
+<P>
+
+Once the event has been created it is injected into the DOM Tree through the
+<CODE>dispatchEvent()</CODE> method. Typically this is done at the top of the
+document, but it may be inserted at the node depending on the requirements of
+the application. By default events based on <CODE>DOMEvent</CODE> will not
+bubble or be captured. From this point onwards the handling of the event
+dispatch is handled by our internal mechanisms illustrated earlier.
+
+<P>
+<HR>
+
+<H2>References</H2>
+
+<UL>
+<LI><A HREF="http://www.w3.org/TR/DOM-Level-2-Core">W3C Document Object Model Level 2 Core Recommendation</A>
+<LI><A HREF="http://www.w3.org/TR/DOM-Level-2-Events">W3C Document Object Model Level 2 Events Recommendation</A>
+<LI><A HREF="http://www.w3.org/TR/DOM-Level-2-Views">W3C Document Object Model Level 2 Views Recommendation</A>
+</UL>
+
+</BODY>
+</HTML>

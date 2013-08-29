@@ -1,0 +1,63 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Viewpoint {
+	description "cylinder - side"
+	position 0 0 100
+}
+
+Viewpoint {
+	description "disk - top"
+	position 0 200 0
+	orientation -1 0 0 1.5707963
+}
+
+Group {
+	children [
+		DEF CS CylinderSensor { 
+			maxAngle -3.14159265 
+			minAngle 3.14159265 
+		}
+		Shape {
+			geometry Cylinder {
+				height 100
+				radius 10
+			}
+			appearance Appearance {
+				material Material {
+					diffuseColor 0 0 1
+					emissiveColor 0 0 1
+					transparency 0.7
+				}
+			}
+		}
+		Transform {
+			scale 1000 1000 1000
+			children [
+				Inline { url [ "cartesian_axis.x3dv" ] }
+			]
+		}
+		DEF T Transform {
+			children [
+				Transform {
+					translation 20 0 0
+					children [
+						Shape {
+							geometry Box {
+								size 10 10 10
+							}
+							appearance Appearance {
+								material Material {
+									diffuseColor 0 0 1
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}
+
+ROUTE CS.rotation_changed TO T.set_rotation 

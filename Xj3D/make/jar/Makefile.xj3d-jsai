@@ -1,0 +1,28 @@
+#*********************************************************************
+#
+#  (C) 2001 - 2006 Web3d Consortium
+#    http://www.web3d.org/
+# 
+# Package makefile producing xj3d-jsai.jar
+#
+# Author: Justin Couch
+# Version: $Revision: 1.3 $
+#
+#*********************************************************************
+
+# A version number we tack onto the JAR file name for eclipse versioning
+# purposes.
+JAR_VERSION=2.0.0
+
+# Describe every directory that you want included in the JAR file here.
+# This is not recursive, so if you want parent directory and the 
+# sub-directory, say so. These directories should not have '/' appended.
+JAR_CONTENT=vrml \
+  vrml/node \
+  vrml/field \
+  org/web3d/vrml/scripting/jsai \
+
+# Manifest file name. Stored in the make/manifest directory
+MANIFEST=xj3d-jsai.mf
+
+include ${PROJECT_ROOT}/make/Makefile.jav

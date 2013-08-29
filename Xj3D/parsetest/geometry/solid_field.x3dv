@@ -1,0 +1,54 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive 
+
+Collision {
+  collide FALSE
+  children [
+    Transform {
+      translation -4 0 0
+      children Shape {
+        appearance DEF app Appearance {
+          material Material {
+            diffuseColor 1 0 0
+          }
+        }
+        geometry Cone {
+        solid FALSE
+        height 2
+        bottomRadius 2
+        }
+      }
+    }
+
+    Transform {
+      translation -2 0 0
+      children Shape {
+        appearance USE app 
+        geometry Box {
+          solid FALSE
+        }
+      }
+    }
+
+    Transform {
+      translation 2 0 0
+      children Shape {
+        appearance USE app 
+        geometry Cylinder {
+          solid FALSE
+        }
+      }
+    }
+
+    Transform {
+      translation 4 0 0
+      children Shape {
+        appearance USE app 
+        geometry Sphere {
+          solid FALSE
+        }
+      }
+    }
+  ]
+}

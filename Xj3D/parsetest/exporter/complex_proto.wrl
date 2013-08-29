@@ -1,0 +1,40 @@
+#VRML V2.0 utf8
+
+PROTO myproto [
+	eventIn SFFloat	in
+	field SFColor color 0 1 0
+	eventOut SFInt32 out
+] {
+	DEF Trans Transform {
+		scale 1 1 1
+		children [
+			Shape {
+				geometry Box { size	1 1 1 }
+				appearance Appearance {
+					material DEF MAT Material {
+						diffuseColor IS color
+						transparency IS in
+
+		    		}
+				}
+			}
+		]
+	}
+
+	DEF	Timer TimeSensor {
+		loop TRUE
+		cycleInterval 5
+	}
+
+	DEF	Sizer PositionInterpolator {
+		key	[0, 1]
+		keyValue [1,1,1,2,2,2]
+	}
+
+	ROUTE Timer.fraction_changed TO	Sizer.set_fraction
+	ROUTE Sizer.value_changed TO Trans.set_scale
+
+
+}
+
+myproto {}

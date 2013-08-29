@@ -1,0 +1,51 @@
+<HTML>
+<BODY>
+The classes in this package provide the implementations for the networked
+version of the EAI 2.0 
+classes.
+<P>
+The networked EAI code is designed to implement synchronous remote service
+requests without using Java RMI for the following reasons
+ <UL>
+   <LI>The author does not care for the overhead in Java serialization.</LI>
+   <LI>Callbacks using Java RMI require polling in the real world situation
+       of personal computers having firewalls.</LI>
+   <LI>Java RMI is language specific.</LI>
+   <LI>The author wanted to see how much work it was.</LI>
+ </UL>
+<P>
+Instead the author has chosen to implement a simple packet scheme using
+packet type indentifiers.  The packet format is described the documentation for 
+NetworkProtocolConstants class.
+<P>
+On the client side a master processing thread is created which exists only
+to perform the initial connection handshake, to wake up client requests
+when their data arrives, and trigger event broadcasts.
+<P>
+When a client service request occurs, a SuspendedTaskData object is created, 
+assigned an ID, and stored in a blocking task table.  After that the user thread is allowed
+to transmit and then calls wait() until the data arrives.
+<P>
+When the data arrives the processing thread checks the packet's task ID, locates
+and resumes the client thread and then blocks on the read lock until the client
+thread finishes.
+<P>
+Requests for notification of events are handled by registering the listeners with the
+non-rendering browser.  The non-rendering browser asks the rendering browser for the
+appropriate updates and repeats the data to the appropriate listeners.
+<P>
+The important server side classes are NetworkBrowserServer, ServerProcess, 
+ServerProcessingTask, and ServerBrowser.  ServerBrowserFactory is used simply
+to avoid a compilation loop between ServerBrowser and the other classes.  The important
+client side classes are NetworkBrowserFactoryImpl, NetworkBrowserClient, NetEAINode,
+and ClientProcessingTask.  NetworkStartupListener is used to ensure that the constructor
+for NetworkBrowserClient does not return until the network handshaking has completed and
+the ClientProcessingTask is ready for user tasks.
+<P>
+For end user code, NetworkBrowserFactoryImpl is a BrowserFactoryImpl which implements
+getBrowser(InetAddr,port) and performs the correct tasks to connect to a serving browser.
+Serving browsers construct an instance of NetworkBrowserServer and end user code should
+consult the documentation for the other BrowserFactoryImpl's for the parameters which
+are needed to trigger that construction.
+</BODY>
+</HTML>

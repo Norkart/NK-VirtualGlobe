@@ -1,0 +1,37 @@
+#X3D V3.0 utf8
+
+# This test is for sending events from the parent world into the inlined world
+# through an import statement, where the import statement is embedded in a 
+# PROTO. The interpolator here should move the box in the inlined world when 
+# it is loaded.
+
+PROFILE Immersive
+
+PROTO ProtoMover [] {
+  DEF MVB_INLINE Inline {
+    url "moving_box_export1.x3dv"
+  }
+  
+  DEF TS TimeSensor { 
+    cycleInterval 10
+    loop TRUE
+  }  
+
+  DEF PI PositionInterpolator {
+    key [ 0 0.25 0.5 0.75 1 ]
+    keyValue [
+       0 0 0
+      -1 0 0
+      -1 1 0
+       0 1 0
+       0 0 0
+    ]
+  }
+
+  IMPORT MVB_INLINE.BOX_TRANSFORM AS BOX_TG
+
+  ROUTE TS.fraction_changed TO PI.set_fraction
+  ROUTE PI.value_changed TO BOX_TG.set_translation
+}
+
+ProtoMover {}

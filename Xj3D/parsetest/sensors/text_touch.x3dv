@@ -1,0 +1,56 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Group {
+  children [
+    Group {
+      children [
+        Shape {
+          geometry Text { string "Hello Worldy"}
+          appearance Appearance {
+            material DEF MAT Material {
+              diffuseColor 1 0 0
+            }
+          }
+        }
+        DEF TS TouchSensor {}
+      ]
+    }
+
+    Shape {
+      geometry LineSet {
+        vertexCount [2 2]
+        coord Coordinate {
+          point [ 0 0 0 3 0 0 0 0 0 0 -1 0 ]
+        }
+      }
+      appearance Appearance {
+        material DEF MAT2 Material {
+          diffuseColor 0 1 0
+        }
+      }
+    }
+  ]
+}
+
+DEF S Script {
+  inputOnly SFBool set_isOver 
+  outputOnly SFColor color_changed
+  url "ecmascript:
+     function set_isOver(value) {
+         if(value) {
+           color_changed.r = 0;
+           color_changed.g = 1;
+           color_changed.b = 0;
+         } else {
+           color_changed.r = 1;
+           color_changed.g = 0;
+           color_changed.b = 0;
+         }
+     }
+  "
+}
+
+ROUTE TS.isOver TO S.set_isOver
+ROUTE S.color_changed TO MAT.diffuseColor

@@ -1,0 +1,82 @@
+<!--
+		Xj3D Proposed Surfaces Document Type Definition (DTD)
+
+ Description:	An overlay system as proposed by Yumetech
+
+ Status:	Experimental
+
+ Authors:	Alan Hudson and Justin Couch
+
+ Reference:	www.xj3d.org/extensions/overlays.html
+
+ Created:	12 November 2002
+
+ Revised:	12 November 2002
+-->
+
+<!-- element nodes -->
+
+<!ENTITY % SurfaceLayoutNodeType "BorderLayout | XYLayout | GridLayout" >
+<!ENTITY % SurfaceChildNodeType "Image2D | Text2D" >
+
+<!ELEMENT Overlay (IS?, (%SurfaceLayoutNodeType;)*)>
+<!ATTLIST Overlay
+	DEF ID #IMPLIED
+	USE IDREF #IMPLIED
+>
+
+<!ELEMENT BorderLayout (IS?, (%SurfaceChildNodeType;)*)>
+<!ATTLIST BorderLayout
+	horizontalAlign %SFString; "&quot;LEFT&quot;"
+	horizontalFraction %SFFloat; "0"
+	verticalAlign %SFString; "&quot;TOP&quot;"
+	verticalFraction %SFFloat; "0"	
+	bboxSize %SFVec2f; "-1 -1"
+	visible %SFBool; "true"
+	containerField NMTOKEN "layout"    
+	DEF ID #IMPLIED
+	USE IDREF #IMPLIED
+>
+
+<!ELEMENT GridLayout (IS?, (%SurfaceChildNodeType;)*)>
+<!ATTLIST GridLayout
+	gridSize %SFVec2f; "1 1"
+	bboxSize %SFVec2f; "-1 -1"	
+	visible %SFBool; "true"	
+	containerField NMTOKEN "layout"    
+	DEF ID #IMPLIED
+	USE IDREF #IMPLIED
+>
+
+<!ELEMENT XYLayout (IS?, (%SurfaceChildNodeType;)*)>
+<!ATTLIST XYLayout
+	positions %MFVec2f; ""
+	bboxSize %SFVec2f; "-1 -1"	
+	visible %SFBool; "true"	
+	containerField NMTOKEN "layout"    
+	DEF ID #IMPLIED
+	USE IDREF #IMPLIED
+>
+
+<!ELEMENT Image2D (IS?, (%TextureNodes;)?)>
+<!ATTLIST Image2D
+	fixedSize %SFBool; "true"
+	visible %SFBool; "true"	
+	containerField NMTOKEN "children"    
+	DEF ID #IMPLIED
+	USE IDREF #IMPLIED
+>
+
+<!ELEMENT Text2D (IS?)>
+<!ATTLIST Text2D
+     text %SFString; ""
+     textColor %SFColor; "1 1 1"
+     backgroundColor %SFColor; "0 0 0"
+     transparency %SFFloat; "1"     
+	fixedSize %SFBool; "true"
+	visible %SFBool; "true"	
+	containerField NMTOKEN "children"    
+	DEF ID #IMPLIED
+	USE IDREF #IMPLIED
+>
+

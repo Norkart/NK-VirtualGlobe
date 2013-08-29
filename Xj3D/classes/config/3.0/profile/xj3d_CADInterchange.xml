@@ -1,0 +1,14 @@
+<profileConfig>
+  <profile name="CADInterchange" title="CADInterchange profile">
+    <component name="Core" level="1"/>
+    <component name="Networking" level="1"/>
+    <component name="Grouping" level="1"/>
+    <component name="Rendering" level="4"/>
+    <component name="Shape" level="2"/>
+    <component name="Geometry3D" level="1"/>
+    <component name="Lighting" level="1"/>
+    <component name="Texturing" level="2"/>
+    <component name="Navigation" level="2"/>
+    <component name="CADGeometry" level="1"/>
+  </profile>
+</profileConfig>

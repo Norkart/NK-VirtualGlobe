@@ -1,0 +1,33 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Group {
+  children [
+    Shape {
+      geometry Box {}
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 0 0
+        }
+      }
+    }
+    DEF TS TouchSensor {}
+ ]
+}
+
+DEF trigger IntegerTrigger {integerKey 42}
+
+DEF SC Script {
+   inputOnly SFInt32 triggerValue
+
+   url ["ecmascript:
+      function triggerValue(val) {
+         Browser.println('success is 42');
+         Browser.println('triggerValue: ' + val);
+      }
+   "]
+}
+
+ROUTE TS.isActive TO trigger.set_boolean
+ROUTE trigger.triggerValue TO SC.triggerValue

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile='Immersive' >
+<head>
+ <meta name='Vizthumbnail' content='Thumb_Untitled_x3d850781141298020.jpg'/>
+ <meta name='ExportTime' content='13:13:40'/>
+ <meta name='ExportDate' content='3/2/2006'/>
+</head>
+<Scene>
+<WorldInfo
+ title='Untitled'
+ info='"This Web3D World was created with Flux Studio, a Web3D authoring tool"
+ "www.mediamachines.com"'
+/>
+ <Transform DEF='TransBox'
+ >
+  <Shape DEF='Box1'
+  >
+   <Appearance
+    containerField='appearance'
+   >
+    <Material DEF='Red_mat'
+     containerField='material'
+     ambientIntensity='0.200'
+     shininess='0.200'
+     diffuseColor='1 0 0'
+    />
+   </Appearance>
+   <Box DEF='GeoBox1'
+    containerField='geometry'
+    size='1 1 1'
+   />
+  </Shape>
+ </Transform>
+<TimeSensor DEF='TimeSensor0'
+ cycleInterval='1.000'
+ loop='true'
+/>
+<PositionInterpolator DEF='PosInt'
+ key='
+  0 .5 1 
+ '
+ keyValue='
+  -1 0 0
+  1 0 0
+  -1 0 0
+ '
+/>
+<ROUTE fromNode='TimeSensor0' fromField='fraction_changed' toNode='PosInt' toField='set_fraction'/>
+<ROUTE fromNode='PosInt' fromField='value_changed' toNode='TransBox' toField='set_translation'/>
+</Scene>
+</X3D>

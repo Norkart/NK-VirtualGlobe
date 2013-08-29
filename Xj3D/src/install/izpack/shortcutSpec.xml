@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+
+<shortcuts>
+	<skipIfNotSupported/>
+	<programGroup defaultName="X3D Extensible 3D Graphics\Xj3D\Xj3D Browser"
+	location="applications"/>
+<shortcut
+	name="Xj3D Browser"
+	target="$INSTALL_PATH\browser.bat"
+	commandLine=""
+	workingDirectory="$INSTALL_PATH"
+	description="Xj3D Browser"
+	iconFile="$INSTALL_PATH\xj3d.ico"
+	iconIndex="0"
+	initialState="normal"
+	programGroup="yes"
+	desktop="yes"
+	applications="yes"
+	startMenu="no"
+	startup="no">
+	
+	<createForPack name="Base"/>
+</shortcut>
+
+<shortcut
+	name="Xj3D Converter"
+	target="$INSTALL_PATH\converter.bat"
+	commandLine=""
+	workingDirectory="$INSTALL_PATH"
+	description="Xj3D Converter"
+	iconFile="$INSTALL_PATH\Xj3D-Convert.ico"
+	iconIndex="0"
+	initialState="normal"
+	programGroup="yes"
+	desktop="yes"
+	applications="yes"
+	startMenu="no"
+	startup="no">
+	
+	<createForPack name="Base"/>
+</shortcut>
+
+</shortcuts>

@@ -1,0 +1,31 @@
+#X3D V3.0 utf8
+
+PROFILE Interactive
+COMPONENT xj3d_ParticleSystem:1
+
+Viewpoint {
+  position 0 0 4
+}
+
+NavigationInfo {
+  headlight FALSE
+}
+
+ParticleSystem {
+  geometryType "QUAD"
+  maxParticles 10
+  emitter PointEmitter {
+    speed 0.1
+  }
+  texCoordRamp TextureCoordinate { 
+      point [   
+      	0.5 0,  0.5 1,  0   1,  0   0,
+	1   0,  1   1,  0.5 1,  0.5 0
+      ]
+  }
+  texCoordKey [ 0 2.5 ]
+  appearance Appearance {
+    material Material { emissiveColor 1 0 0 }
+    texture ImageTexture { url "4_color.png" }
+  }
+}

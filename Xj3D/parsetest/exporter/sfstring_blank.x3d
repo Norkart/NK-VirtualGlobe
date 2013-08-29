@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Immersive" version="3.0">
+<head>
+</head>
+
+<Scene>
+   <ProtoDeclare name='Humanoid' >
+      <ProtoInterface>
+         <field accessType='inputOutput' type='SFString' name='name'  value='' />
+      </ProtoInterface>
+      <ProtoBody>
+         <Transform/>
+      </ProtoBody>
+   </ProtoDeclare>   
+</Scene>
+</X3D>

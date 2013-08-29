@@ -1,0 +1,325 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+NavigationInfo {
+  type [ "EXAMINE" "ANY" ]
+}
+
+DEF HUDGroup Group {
+  children [
+    DEF WhereSensor ProximitySensor {
+      size 1000 1000 1000
+    }
+    DEF BillboardWhereTransform Transform {
+      children [
+    Transform {
+      rotation 1 0 0 -0.03
+      translation 0 0 -12
+      children [
+        Billboard {
+          children [
+        DEF BillboardPlaneTransform Transform {
+          children [
+            DEF Toucher TouchSensor {
+            }
+            Shape {
+              appearance Appearance {
+            material Material {
+              diffuseColor 0 1 1
+            }
+              }
+              geometry Text {
+            string [ "Click text to start clock, run"
+              "multiple BooleanSequencers"
+              "" "" ""
+              "See Viewpoint description"
+              "for bound Viewpoint number" ]
+            fontStyle FontStyle {
+              justify [ "MIDDLE" "MIDDLE" ]
+            }
+              }
+            }
+          ]
+        }
+          ]
+        }
+      ]
+    }
+      ]
+    }
+  ]
+  ROUTE WhereSensor.position_changed TO BillboardWhereTransform.set_translation
+  ROUTE WhereSensor.orientation_changed TO BillboardWhereTransform.set_rotation
+}
+DEF Clock TimeSensor {
+  cycleInterval 10
+}
+ROUTE Toucher.touchTime TO Clock.set_startTime
+DEF FrontUpViewpoint Viewpoint {
+  description "View 0, Front Up"
+}
+DEF AnimatedView1 Group {
+  children [
+    DEF LeftViewpoint Viewpoint {
+      description "View 1, Left"
+      orientation 0 1 0 -1.57
+      position -10 0 0
+    }
+    DEF LeftViewBinder BooleanSequencer {
+      key [ 0, 0.1, 0.25 ]
+      keyValue [FALSE TRUE FALSE]
+    }
+  ]
+  ROUTE Clock.fraction_changed TO LeftViewBinder.set_fraction
+  ROUTE LeftViewBinder.value_changed TO LeftViewpoint.set_bind
+}
+DEF AnimatedView2 Group {
+  children [
+    DEF BackViewpoint Viewpoint {
+      description "View 2, Back"
+      orientation 0 1 0 -3.14
+      position 0 0 -10
+    }
+    DEF BackViewBinder BooleanSequencer {
+      key [ 0, 0.375, 0.475 ]
+      keyValue [FALSE TRUE FALSE]
+    }
+  ]
+  ROUTE Clock.fraction_changed TO BackViewBinder.set_fraction
+  ROUTE BackViewBinder.value_changed TO BackViewpoint.set_bind
+}
+DEF AnimatedView3 Group {
+  children [
+    DEF RightViewpoint Viewpoint {
+      description "View 3, Right"
+      orientation 0 1 0 1.57
+      position 10 0 0
+    }
+    DEF RightViewBinder BooleanSequencer {
+      key [ 0, 0.5, 0.6 ]
+      keyValue [FALSE TRUE FALSE]
+    }
+  ]
+  ROUTE Clock.fraction_changed TO RightViewBinder.set_fraction
+  ROUTE RightViewBinder.value_changed TO RightViewpoint.set_bind
+}
+DEF AnimatedView4 Group {
+  children [
+    DEF TopViewpoint Viewpoint {
+      description "View 4, Top"
+      orientation 1 0 0 -1.57
+      position 0 10 0
+    }
+    DEF TopViewBinder BooleanSequencer {
+      key [ 0.625, 0.725 ]
+      keyValue [TRUE FALSE]
+    }
+  ]
+  ROUTE Clock.fraction_changed TO TopViewBinder.set_fraction
+  ROUTE TopViewBinder.value_changed TO TopViewpoint.set_bind
+}
+DEF AnimatedView5 Group {
+  children [
+    DEF FrontDownViewpoint Viewpoint {
+      description "View 5, Front Down"
+      orientation 1 0 0 -3.14
+      position 0 0 -10
+    }
+    DEF FrontDownViewBinder BooleanSequencer {
+      key [ 0.75, 0.85 ]
+      keyValue [TRUE FALSE]
+    }
+  ]
+  ROUTE Clock.fraction_changed TO FrontDownViewBinder.set_fraction
+  ROUTE FrontDownViewBinder.value_changed TO FrontDownViewpoint.set_bind
+}
+DEF AnimatedView6 Group {
+  children [
+    DEF BottomViewpoint Viewpoint {
+      description "View 6, Bottom"
+      orientation 1 0 0 1.57
+      position 0 -10 0
+    }
+    DEF BottomViewBinder BooleanSequencer {
+      key [ 0.875, 0.975 ]
+      keyValue [TRUE FALSE]
+    }
+  ]
+  ROUTE Clock.fraction_changed TO BottomViewBinder.set_fraction
+  ROUTE BottomViewBinder.value_changed TO BottomViewpoint.set_bind
+}
+DEF DebugSwitch Switch {
+  whichChoice 0
+  choice [
+    Group {
+      children [
+    DEF Debug Script {
+      inputOnly SFFloat setFraction
+      inputOnly SFBool setFrontUpViewBind
+      inputOnly SFBool setLeftViewBind
+      inputOnly SFBool setBackViewBind
+      inputOnly SFBool setRightViewBind
+      inputOnly SFBool setTopViewBind
+      inputOnly SFBool setFrontDownViewBind
+      inputOnly SFBool setBottomViewBind
+      inputOnly SFBool setFrontUpBSOutput
+      inputOnly SFBool setLeftBSOutput
+      inputOnly SFBool setBackBSOutput
+      inputOnly SFBool setRightBSOutput
+      inputOnly SFBool setTopBSOutput
+      inputOnly SFBool setFrontDownBSOutput
+      inputOnly SFBool setBottomBSOutput
+      url [ "ecmascript:
+
+        function setFraction(value, timeStamp)
+        {
+          Browser.println('fraction = ' + value);
+        }
+
+        function setFrontUpViewBind(value, timeStamp)
+        {
+          Browser.println('FrontUpView bind: ' + value);
+        }
+
+        function setLeftViewBind(value, timeStamp)
+        {
+          Browser.println('LeftView bind: ' + value);
+        }
+
+        function setBackViewBind(value, timeStamp)
+        {
+          Browser.println('BackView bind: ' + value);
+        }
+
+        function setRightViewBind(value, timeStamp)
+        {
+          Browser.println('RightView bind: ' + value);
+        }
+
+        function setTopViewBind(value, timeStamp)
+        {
+          Browser.println('TopView bind: ' + value);
+        }
+
+        function setFrontDownViewBind(value, timeStamp)
+        {
+          Browser.println('FrontDownView bind: ' + value);
+        }
+
+        function setBottomViewBind(value, timeStamp)
+        {
+          Browser.println('BottomView bind: ' + value);
+        }
+
+        function setFrontUpBSOutput(value, timeStamp)
+        {
+          Browser.println('BooleanSequencer output for FrontUpViewpoint: ' + value);
+        }
+
+        function setLeftBSOutput(value, timeStamp)
+        {
+          Browser.println('BooleanSequencer output for LeftViewpoint: ' + value);
+        }
+
+        function setBackBSOutput(value, timeStamp)
+        {
+          Browser.println('BooleanSequencer output for BackViewpoint: ' + value);
+        }
+
+        function setRightBSOutput(value, timeStamp)
+        {
+          Browser.println('BooleanSequencer output for RightViewpoint: ' + value);
+        }
+
+        function setTopBSOutput(value, timeStamp)
+        {
+          Browser.println('BooleanSequencer output for TopViewpoint: ' + value);
+        }
+
+        function setFrontDownBSOutput(value, timeStamp)
+        {
+          Browser.println('BooleanSequencer output for FrontDownViewpoint: ' + value);
+        }
+
+        function setBottomBSOutput(value, timeStamp)
+        {
+          Browser.println('BooleanSequencer output for BottomViewpoint: ' + value);
+        }
+        " ]
+    }
+      ]
+      ROUTE Clock.fraction_changed TO Debug.setFraction
+      ROUTE FrontUpViewpoint.isBound TO Debug.setFrontUpViewBind
+      ROUTE LeftViewpoint.isBound TO Debug.setLeftViewBind
+      ROUTE BackViewpoint.isBound TO Debug.setBackViewBind
+      ROUTE RightViewpoint.isBound TO Debug.setRightViewBind
+      ROUTE TopViewpoint.isBound TO Debug.setTopViewBind
+      ROUTE FrontDownViewpoint.isBound TO Debug.setFrontDownViewBind
+      ROUTE BottomViewpoint.isBound TO Debug.setBottomViewBind
+      ROUTE LeftViewBinder.value_changed TO Debug.setLeftBSOutput
+      ROUTE BackViewBinder.value_changed TO Debug.setBackBSOutput
+      ROUTE RightViewBinder.value_changed TO Debug.setRightBSOutput
+      ROUTE TopViewBinder.value_changed TO Debug.setTopBSOutput
+      ROUTE FrontDownViewBinder.value_changed TO Debug.setFrontDownBSOutput
+      ROUTE BottomViewBinder.value_changed TO Debug.setBottomBSOutput
+    }
+  ]
+}
+Transform {
+  children [
+    Shape {
+      appearance Appearance {
+    material Material {
+      diffuseColor 1 1 0
+    }
+      }
+      geometry Box {
+    size 2 0.1 0.35
+      }
+    }
+    Transform {
+      translation -1 0 0
+      children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 0 0
+        }
+      }
+      geometry Sphere {
+        radius 0.2
+      }
+    }
+      ]
+    }
+    Transform {
+      translation 1 0 0
+      children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0 1 0
+        }
+      }
+      geometry Sphere {
+        radius 0.2
+      }
+    }
+      ]
+    }
+  ]
+}
+Transform {
+  children [
+    Shape {
+      appearance Appearance {
+    material Material {
+      diffuseColor 0 0 1
+    }
+      }
+      geometry Cone {
+      }
+    }
+  ]
+}

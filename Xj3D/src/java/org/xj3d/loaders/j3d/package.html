@@ -1,0 +1,38 @@
+<HTML>
+<BODY>
+
+Implementations of Java 3D file loaders for Web3D file formats.
+<P>
+
+All the files available here implement the
+{@link com.sun.j3d.loaders.Loader} interface. For more information on how to
+use loaders, see the <a href="http://www.xj3d.org/loader.html">How to use the
+Loader</a> page at Xj3D.org.
+<p>
+
+The loaders have two very different code paths depending on what you want to
+do. If you need just static geometry then the loader will perform a blocking
+load call and will not return until all of the world file is loaded. If the
+world contains inlines then in will recurse into these and load them too before
+returning to the caller. It will also disable all runtime aspects of the scene.
+Scripts will have their initialize() method called, but nothing will be done
+with the script or any changes it may make to the scene graph. If you have a
+proto that depends on the script's initialize() method to build geometry, you
+will not see it
+happen.
+<p>
+If you want the full runtime model of VRML/X3D as part of your loading process,
+then you need to make sure you at least have the LOAD_BEHAVIOR_NODES flag set.
+This will start up the full execution model and the content of the script will
+run as normal. All user interaction will be applied, but due to the limitations
+of the loader, things may not really function correctly. For example, clicking
+on an Anchor node will not do anything, nor will viewpoint binding. Also, by
+default, the navigation code is turned off. This is because we are assuming
+that the user will probably use this to load multiple files over time or even
+simultaneously. If the navigation code is running, each loaded file will be
+fighting for the mouse events, control of the view and picking. Put a few of
+these into a single scene simultanouesly, and there is no telling what will
+happen!
+
+</BODY>
+</HTML>

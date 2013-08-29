@@ -1,0 +1,28 @@
+#VRML V2.0 utf8
+
+# This should cause a parse error as you should not USE a VP
+
+WorldInfo {
+  title "Viewpoint USE barf world"
+}
+
+Shape {
+  geometry Box {}
+  appearance Appearance {
+    material Material {
+      diffuseColor 1 0 0
+    }
+  }
+}
+
+Transform {
+  rotation 0 1 0 0.78
+  translation 4 0 10
+  children DEF vp Viewpoint {}
+}
+
+Transform {
+  rotation 0 1 0 0.78
+  translation 4 0 10
+  children USE vp
+}

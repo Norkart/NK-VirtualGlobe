@@ -1,0 +1,27 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Background {
+   skyColor [0 0 0.25]
+}
+
+NavigationInfo {
+   headlight FALSE
+}
+
+Transform {
+   translation 0 0 10
+   children [
+      DirectionalLight {
+      }
+   ]
+}
+
+Shape {
+   appearance Appearance {
+      material Material {}
+   }
+
+   geometry Box {}
+}

@@ -1,0 +1,10 @@
+#X3D V3.0 utf8
+
+PROFILE Core
+
+COMPONENT Shape:2
+COMPONENT Geometry3D:1
+
+Shape {
+   geometry Box {}
+}

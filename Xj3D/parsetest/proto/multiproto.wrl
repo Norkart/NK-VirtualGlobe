@@ -1,0 +1,45 @@
+#VRML V2.0 utf8
+
+PROTO MyApp [
+  exposedField SFColor color 0 0 0
+] {
+  Appearance {
+    material Material {
+      diffuseColor IS color
+    }
+  }
+}
+
+PROTO MyBox [
+  exposedField SFColor boxColor 0 0 0
+] {
+  Shape {
+    appearance MyApp {
+      color IS boxColor
+    }
+    geometry Box { }
+  }
+}
+
+MyBox { boxColor 1 1 1 }
+
+Transform {
+  translation 0 1 0
+  children MyBox { boxColor 0 1 0 }
+}
+
+Transform {
+  translation 1 0 0
+  children MyBox { boxColor 1 0 0 }
+}
+
+Transform {
+  translation -1 0 0
+  children MyBox { boxColor 0 0 1 }
+}
+
+Transform {
+  translation 0 -1 0
+  children MyBox { boxColor 1 1 0 }
+}
+

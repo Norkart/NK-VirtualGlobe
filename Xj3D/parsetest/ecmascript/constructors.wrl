@@ -1,0 +1,58 @@
+#VRML V2.0 utf8
+
+Script {
+  url [ "javascript:
+        function initialize() {
+            Browser.println('Constructing');
+
+            sfv = new SFVec3f(1,0,0);
+            sfv2 = new SFVec3f();
+
+            mfv = new MFVec3f(sfv, sfv2);
+            Browser.println('mfv: ' + mfv.toString());
+
+            mff = new MFFloat(1.0, 3.0);
+            Browser.println('mff: ' + mff.toString());
+
+            mfs = new MFString('Hello', 'World');
+            Browser.println('mfs: ' + mfs.toString());
+
+            sfc = new SFColor(1,0,0);
+            sfc2 = new SFColor();
+
+            mfc = new MFColor(sfc, sfc2);
+            Browser.println('mfc: ' + mfc.toString());
+            mfc = new MFColor();
+            Browser.println('mfc: ' + mfc.toString());
+
+            mfi = new MFInt32(1, 3);
+            Browser.println('mfi: ' + mfi.toString());
+
+            sfn = new SFNode('Box{}');
+            sfn2 = new SFNode('Sphere{}');
+
+            mfn = new MFNode(sfn, sfn2);
+            Browser.println('mfn: ' + mfn.toString());
+
+            sfr = new SFRotation();
+            sfr2 = new SFRotation(0,1,0,1);
+
+            mfr = new MFRotation(sfr, sfr2);
+            Browser.println('mfr: ' + mfr.toString());
+
+            mft = new MFTime(1.0, 3.0);
+            Browser.println('mft: ' + mft.toString());
+
+            sfv = new SFVec2f(1,0);
+            sfv2 = new SFVec2f();
+
+            mfv = new MFVec2f(sfv, sfv2);
+            Browser.println('mfv: ' + mfv.toString());
+
+        }
+      "]
+}
+
+Shape {
+   geometry Box {}
+}

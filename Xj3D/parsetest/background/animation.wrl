@@ -1,0 +1,44 @@
+#VRML V2.0 utf8 CosmoWorlds V1.0
+
+# Test of the animation of a background. Only rotation is
+# effected by the animation.
+Shape {
+  appearance Appearance {
+    material Material {
+      diffuseColor 1 0 0 
+    }
+  }
+  geometry Box {
+  }
+}
+
+DEF TG Transform {
+  children Background {
+    frontUrl [ "front.gif" ]
+    backUrl [ "back.gif" ]
+    leftUrl [ "left.gif" ]
+    rightUrl [ "right.gif" ]
+    topUrl [ "top.gif" ]
+    bottomUrl [ "bottom.gif" ]
+  }
+}
+
+DEF TS TimeSensor { 
+  cycleInterval 10
+  loop TRUE
+}
+
+
+DEF OI OrientationInterpolator {
+  key [ 0 0.25 0.5 0.75 1 ]
+  keyValue [
+     0 1 0 0
+     0 1 0 1.571 
+     0 1 0 3.142 
+     0 1 0 4.712 
+     0 1 0 6.2831
+  ]
+}
+
+ROUTE TS.fraction_changed TO OI.set_fraction
+ROUTE OI.value_changed TO TG.rotation

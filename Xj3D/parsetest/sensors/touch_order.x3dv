@@ -1,0 +1,33 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Group {
+   children [
+      DEF TS1 TouchSensor {}
+      Group {
+         children [
+            Shape { geometry Box {} }
+            DEF TS2 TouchSensor {}
+         ]
+      }
+   ]
+}
+
+DEF SC Script {
+   inputOnly SFTime touchMe1
+   inputOnly SFTime touchMe2
+   url ["ecmascript:
+      function touchMe1(val) {
+         Browser.println('Incorrect activation');
+      }
+      function touchMe2(val) {
+         Browser.println('Correct activation');
+      }
+   "]
+}
+
+ROUTE TS1.touchTime TO SC.touchMe1
+ROUTE TS2.touchTime TO SC.touchMe2
+
+         

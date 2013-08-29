@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "http://www.web3D.org/TaskGroups/x3d/translation/x3d-compact.dtd"
+                     "file://localhost/www.web3D.org/TaskGroups/x3d/translation/x3d-compact.dtd">
+<X3D>
+  <Header>
+    <meta content="HelloWorld.xml" name="filename"/>
+    <meta content="Simple X3D example" name="description"/>
+    <meta content="12 February 2001" name="revised"/>
+    <meta content="Don Brutzman" name="author"/>
+    <meta
+      content="http://www.web3D.org/TaskGroups/x3d/translation/examples/HelloWorld.xml" name="url"/>
+    <meta content="earth-topo.png" name="image"/>
+    <meta
+      content="http://www.web3D.org/TaskGroups/x3d/translation/examples/earth-topo.png" name="image"/>
+    <meta content="HelloWorld.png" name="diagram"/>
+    <meta
+      content="http://www.web3D.org/TaskGroups/x3d/translation/examples/HelloWorld.png" name="diagram"/>
+    <meta
+      content="X3D-Edit, http://www.web3d.org/TaskGroups/x3d/translation/README.X3D-Edit.html" name="generator"/>
+  </Header>
+  <Scene><!--Example scene to illustrate X3D tags and attributes.-->
+    <Group>
+      <Viewpoint description="hello, world!" orientation="0 1 0 1.57" position="6 -1 0"/>
+      <NavigationInfo type="&quot;EXAMINE&quot; &quot;ANY&quot;"/>
+      <Shape>
+        <Sphere DEF="S"/>
+        <Appearance>
+          <ImageTexture url="&quot;earth-topo.png&quot;&#10;&quot;earth-topo-small.gif&quot;&#10;&quot;http://www.web3D.org/TaskGroups/x3d/translation/examples/earth-topo.png&quot;&#10;&quot;http://www.web3D.org/TaskGroups/x3d/translation/examples/earth-topo-small.gif&quot;"/>
+        </Appearance>
+      </Shape>
+      <Transform rotation="0 1 0 1.57" translation="0 -2 1.25">
+        <Shape>
+          <Text string="&quot;Hello&quot; &quot;world!&quot;"/>
+          <Appearance>
+            <Material diffuseColor="0.1 0.5 1"/>
+          </Appearance>
+        </Shape>
+      </Transform>
+    </Group>
+  </Scene>
+</X3D>

@@ -1,0 +1,17 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+DEF SC Script {
+   metadata MetadataString {
+      name "name"
+      value "value"
+   }
+   
+   url ["ecmascript:"]      
+}
+
+
+Shape {
+   geometry Cone {}
+}

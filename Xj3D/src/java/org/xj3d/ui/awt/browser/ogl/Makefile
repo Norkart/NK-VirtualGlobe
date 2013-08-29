@@ -1,0 +1,43 @@
+#*********************************************************************
+#
+#  (C) 2001 - 2006 Web3d Consortium
+#    http://www.web3d.org/
+#
+# Package makefile for the org.xj3d.ui.awt.browser.ogl directory
+#
+# Author: Justin Couch
+# Version: $Revision: 1.7 $
+#
+#*********************************************************************
+
+PACKAGE = org.xj3d.ui.awt.browser.ogl
+
+# The source files to compile. These are declared in order that they must be
+# compiled in
+SOURCE = \
+  AWTOGLConstruct.java \
+  OffscreenOGLConstruct.java \
+  ThumbnailRecorder.java \
+  TimeSensorSceneRecorder.java \
+  SampleChooser.java \
+  BrowserJPanel.java \
+  X3DBrowserAWTPanel.java \
+  X3DBrowserJPanel.java \
+  X3DOffscreenSurface.java \
+  X3DOGLBrowserFactoryImpl.java \
+  X3DNRBrowserFactoryImpl.java \
+  VRMLBrowserAWTPanel.java \
+  VRMLBrowserJPanel.java \
+  VRMLOGLBrowserFactoryImpl.java \
+
+
+# The list of other files we need to copy from this directory to the classes
+# directory when we are making JAR files.
+EXTRA =
+
+
+# If the package requires extra classes outside the JDK, the JAR files that
+# are required are listed here. These should be found in ${PROJECT_ROOT}/lib
+JARS_3RDPARTY = aviatrix3d-all_2.0.0.jar uri.jar j3d-org-all_0.9.0.jar jogl.jar
+
+include ${PROJECT_ROOT}/make/Makefile.jav

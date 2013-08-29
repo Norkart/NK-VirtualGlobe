@@ -1,0 +1,50 @@
+#X3D V3.2 utf8
+
+PROFILE Interactive
+COMPONENT xj3d_ParticleSystem:1
+
+Viewpoint {
+  position 0 0 4
+}
+
+ParticleSystem {
+  geometryType "POINT"
+  maxParticles 1000
+  emitter PolylineEmitter {
+    speed 0.1
+    coords Coordinate { 
+      point [ 0.5 0 0 -0.5 0 0 ]
+    }
+    coordIndex [0 1]
+  }
+  colorKey [ 0 2 4 9]  
+  colorRamp ColorRGBA {
+    color [
+      1 1 1 1
+      0 0 1 1
+      0.2 0 1 1
+      0 0 1 0
+    ]
+  }  
+}
+
+ParticleSystem {
+  geometryType "POINT"
+  maxParticles 100
+  emitter PolylineEmitter {
+    speed 0.1
+    coords Coordinate { 
+      point [ 0.5 0 0 -0.5 0 0 ]
+    }
+    coordIndex [0 1]
+  }
+  colorKey [ 0 2 4 9]  
+  colorRamp ColorRGBA {
+    color [
+      1 1 1 1
+      1 0 0 1
+      1 1 0 1
+      1 1 0 0
+    ]
+  }
+}

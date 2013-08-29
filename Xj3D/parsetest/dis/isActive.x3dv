@@ -1,0 +1,44 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT DIS:1
+
+Viewpoint {
+   position 0 0 110
+}
+
+DEF ESPDU EspduTransform {
+   address "224.2.181.145"
+   port 62040
+   siteID 0
+   applicationID 1
+   entityID 0
+    children [
+        Shape { appearance Appearance { material DEF MAT Material { diffuseColor 0 1 0 }} geometry Box { size 1 1 1} }
+    ]
+}
+
+DEF SC Script {
+    inputOnly SFBool isActive
+    outputOnly SFColor colorStatus
+    url ["ecmascript:
+       var redColor;
+       var blueColor;
+
+       function initialize() {
+           redColor = new SFColor(1,0,0);
+           blueColor = new SFColor(0,0,1);
+       }
+
+       function isActive(val) {
+           if (val) {
+               colorStatus = blueColor;
+           } else {
+               colorStatus = redColor;
+           }
+       }
+    "]
+}
+
+ROUTE ESPDU.isActive TO SC.isActive
+ROUTE SC.colorStatus TO MAT.set_diffuseColor

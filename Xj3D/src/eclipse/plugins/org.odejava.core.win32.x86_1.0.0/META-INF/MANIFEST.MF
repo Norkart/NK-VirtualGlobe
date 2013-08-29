@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-Version: 1.0.0
+Bundle-Name: %fragmentName
+Bundle-ClassPath: odejava.jar, log4j-1.2.13.jar
+Bundle-ManifestVersion: 2
+Bundle-Vendor: %providerName
+Fragment-Host: org.odejava.core
+Bundle-SymbolicName: org.odejava.core.win32.x86; singleton:=true
+Bundle-Localization: fragment
+Eclipse-PlatformFilter: (& (osgi.ws=win32) (osgi.os=win32) (osgi.arch=x86))
+

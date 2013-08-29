@@ -1,0 +1,97 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+COMPONENT xj3d_ParticleSystem:1
+COMPONENT Rendering:4
+
+Viewpoint {
+  position 0 0 40
+}
+
+
+DEF KEYS KeySensor {
+}
+
+DEF SC Script {
+  inputOnly SFInt32 actionKeyPress
+  inputOnly SFInt32 actionKeyRelease
+  inputOnly SFBool  altKey
+  inputOnly SFBool  controlKey
+  inputOnly SFBool  isActive
+  inputOnly SFString keyPress
+  inputOnly SFString keyRelease
+  inputOnly SFBool  shiftKey
+  outputOnly SFBool fireworkSwitch
+
+
+  url ["ecmascript:
+    function actionKeyPress(val) {
+       if (val == 1)
+          fireworkSwitch = true;
+       else
+          fireworkSwitch = false;
+      Browser.println('actionKeyPress ' + val);
+    }
+
+    function actionKeyRelease(val) {
+      Browser.println('actionKeyRelease ' + val);
+    }
+
+    function altKey(val) {
+      Browser.println('altKey ' + val);
+    }
+
+    function controlKey(val) {
+      Browser.println('controlKey ' + val);
+    }
+
+    function isActive(val) {
+      Browser.println('isActive ' + val);
+    }
+
+    function keyPress(val) {
+      Browser.println('keyPress ' + val);
+    }
+
+    function keyRelease(val) {
+      Browser.println('keyRelease ' + val);
+    }
+
+    function shiftKey(val) {
+      Browser.println('shiftKey ' + val);
+    }
+  "]
+}
+
+
+
+DEF Fireworks ParticleSystem {
+  geometryType "POINT"
+  maxParticles 5000
+  enabled FALSE
+  colorRamp ColorRGBA {
+    color [
+      0 0 1 1
+      .3 .3 1 1
+      .8 .8 1 1
+      1 1 1 0
+    ]
+  }
+  colorKey [ 0 3 4 5]
+  emitter ExplosionEmitter {
+    variation 0.25
+    speed 3
+  }
+}
+
+
+ROUTE KEYS.actionKeyPress TO SC.actionKeyPress
+ROUTE KEYS.actionKeyRelease TO SC.actionKeyRelease
+ROUTE KEYS.altKey TO SC.altKey
+ROUTE KEYS.controlKey TO SC.controlKey
+ROUTE KEYS.shiftKey TO SC.shiftKey
+ROUTE KEYS.keyPress TO SC.keyPress
+ROUTE KEYS.keyRelease TO SC.keyRelease
+ROUTE KEYS.isActive TO SC.isActive
+
+ROUTE SC.fireworkSwitch TO Fireworks.enabled

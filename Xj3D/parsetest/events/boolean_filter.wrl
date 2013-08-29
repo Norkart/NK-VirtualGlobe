@@ -1,0 +1,43 @@
+#X3D V3.0 utf8
+
+PROFILE Immersive
+
+Group {
+  children [
+    Shape {
+      geometry Box {}
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 0 0
+        }
+      }
+    }
+    DEF TS TouchSensor {}
+ ]
+}
+
+DEF filter BooleanFilter {}
+
+DEF SC Script {
+   inputOnly SFBool printTrue
+   inputOnly SFBool printFalse
+   inputOnly SFBool printNegate
+
+   url ["ecmascript:
+      function printTrue(val) {
+         Browser.println('true: ' + val);
+      }
+      function printFalse(val) {
+         Browser.println('false: ' + val);
+      }
+      function printNegate(val) {
+         Browser.println('negate: ' + val);
+      }
+
+   "]
+}
+
+ROUTE TS.isActive TO filter.set_boolean
+ROUTE filter.inputTrue TO SC.printTrue
+ROUTE filter.inputFalse TO SC.printFalse
+ROUTE filter.inputNegate TO SC.printNegate
